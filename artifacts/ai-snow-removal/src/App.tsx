@@ -585,6 +585,9 @@ function Contact() {
         website,
       });
       setSubmissionState('success');
+      setValues({ name: '', phone: '', email: '', address: '' });
+      setWebsite('');
+      submissionIdRef.current = null;
     } catch (error) {
       const status =
         typeof error === 'object' && error !== null && 'status' in error
@@ -730,7 +733,7 @@ function Contact() {
                 data-testid="button-submit-quote"
               >
                 {isSending ? (
-                  <>Sending request <LoaderCircle size={18} className="animate-spin" /></>
+                  <>Sending Request… <LoaderCircle size={18} className="animate-spin" /></>
                 ) : (
                   <>{submissionState === 'error' ? 'Try Again' : 'Request Quote'} <Send size={18} /></>
                 )}
