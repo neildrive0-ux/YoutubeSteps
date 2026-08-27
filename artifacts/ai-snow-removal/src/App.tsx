@@ -397,6 +397,8 @@ function Footer() {
 }
 
 function SignUpModal({ onClose }: { onClose: () => void }) {
+  const [contractOpen, setContractOpen] = useState(false);
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
@@ -413,7 +415,33 @@ function SignUpModal({ onClose }: { onClose: () => void }) {
         </button>
         <p className="section-kicker">Winter service</p>
         <h2 id="modal-title">Let’s get your property on the list.</h2>
-        <p>Choose a seasonal plan, then send us your property details. We’ll confirm availability and follow up with the contract — no automated booking or payment is taken here.</p>
+        <p>Review the actual seasonal service agreement below, then send us your property details. We’ll confirm availability and follow up directly — no automated booking or payment is taken here.</p>
+        <button
+          className="contract-preview-toggle"
+          type="button"
+          onClick={() => setContractOpen((open) => !open)}
+          aria-expanded={contractOpen}
+          data-testid="button-toggle-contract"
+        >
+          {contractOpen ? 'Hide contract' : 'View actual contract'} <ArrowRight size={15} />
+        </button>
+        {contractOpen && (
+          <div className="contract-preview" data-testid="contract-preview">
+            <iframe
+              src="/snow-removal-service-agreement.pdf#view=FitH"
+              title="Ai Landscaping & SnowRemoval service agreement"
+            />
+            <a
+              className="contract-download"
+              href="/snow-removal-service-agreement.pdf"
+              target="_blank"
+              rel="noreferrer"
+              data-testid="link-download-contract"
+            >
+              Open contract in a new tab <ArrowRight size={14} />
+            </a>
+          </div>
+        )}
         <div className="modal-actions">
           <button className="btn-primary" type="button" onClick={() => { onClose(); scrollToQuote(); }} data-testid="button-modal-quote">
             Request a quote <ArrowRight size={15} />
