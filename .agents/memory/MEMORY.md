@@ -1,0 +1,1 @@
+- [Customer proof policy](customer-proof-policy.md) — use verified customer quotes only; show service standards until real testimonials are supplied.

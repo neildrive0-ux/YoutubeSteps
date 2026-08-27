@@ -1,4 +1,4 @@
-import { type ChangeEvent, type FormEvent, type ReactNode, useEffect, useState } from 'react';
+import { type ChangeEvent, type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   ArrowDownRight,
@@ -73,53 +73,130 @@ const reasons = [
   { title: 'Local & Trusted', description: 'A crew that knows your roads and weather.', icon: Users },
 ];
 
+const navigationItems = [
+  { href: '#services', id: 'services', label: 'Services', testId: 'link-services' },
+  { href: '#how-it-works', id: 'how-it-works', label: 'How it works', testId: 'link-how-it-works' },
+  { href: '#why-us', id: 'why-us', label: 'Why us', testId: 'link-why-us' },
+  { href: '#contracts', id: 'contracts', label: 'Contracts', testId: 'link-contracts' },
+] as const;
+
 function scrollToQuote() {
   document.getElementById('quote')?.scrollIntoView({ behavior: 'smooth' });
 }
 
-function Brand() {
-  return (
-    <a className="brand-lockup" href="#top" data-testid="link-brand">
-      <span className="brand-logo-shell">
-        <img
-          className="brand-logo"
-          src={logoPath}
-          alt="Ai Landscaping & SnowRemoval"
-          data-testid="img-brand-logo"
-        />
-      </span>
-    </a>
-  );
-}
-
 function Header({ onSignUp }: { onSignUp: () => void }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const sections = navigationItems
+      .map(({ id }) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section !== null);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((first, second) => second.intersectionRatio - first.intersectionRatio)[0];
+        if (visibleEntry) setActiveSection(visibleEntry.target.id);
+      },
+      { rootMargin: '-22% 0px -62% 0px', threshold: [0, 0.1, 0.35] },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    return () => document.removeEventListener('keydown', closeOnEscape);
+  }, [menuOpen]);
 
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className="topbar" id="top">
-      <div className="nav-inner">
-        <Brand />
-        <button
-          className="menu-button"
-          type="button"
-          aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
-          data-testid="button-mobile-menu"
-        >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-        <nav className={`nav-links ${menuOpen ? 'open' : ''}`} aria-label="Main navigation">
-          <a className="nav-link" href="#services" onClick={closeMenu} data-testid="link-services">Services</a>
-          <a className="nav-link" href="#how-it-works" onClick={closeMenu} data-testid="link-how-it-works">How it works</a>
-          <a className="nav-link" href="#why-us" onClick={closeMenu} data-testid="link-why-us">Why us</a>
-          <a className="nav-link" href="#contracts" onClick={closeMenu} data-testid="link-contracts">Contracts</a>
-          <button className="nav-cta" type="button" onClick={() => { closeMenu(); scrollToQuote(); }} data-testid="button-header-quote">
-            Get a Quote <ArrowRight size={14} />
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md border-b border-slate-200 py-3 shadow-sm' : 'bg-transparent py-5'}`} id="top">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="flex items-center justify-between">
+          <a className="inline-flex items-center" href="#top" data-testid="link-brand">
+            <span className="inline-flex items-center bg-[#071118] px-3 py-2.5 rounded-md shadow-md">
+              <img
+                className="h-8 w-auto"
+                src={logoPath}
+                alt="Ai Landscaping & SnowRemoval"
+                data-testid="img-brand-logo"
+              />
+            </span>
+          </a>
+          
+          <button
+            className={`lg:hidden p-2 rounded-md ${scrolled ? 'text-slate-900' : 'text-white'}`}
+            type="button"
+            aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
+            aria-expanded={menuOpen}
+            aria-controls="main-navigation"
+            onClick={() => setMenuOpen(!menuOpen)}
+            data-testid="button-mobile-menu"
+          >
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-        </nav>
+          
+          <nav id="main-navigation" className={`
+            absolute lg:relative top-full left-0 right-0 
+            lg:top-auto lg:flex lg:items-center lg:gap-8 
+            bg-white lg:bg-transparent border-b lg:border-none border-slate-200 
+            shadow-xl lg:shadow-none p-6 lg:p-0
+            transition-all duration-300 origin-top
+            ${menuOpen ? 'opacity-100 scale-y-100' : 'opacity-0 scale-y-0 lg:opacity-100 lg:scale-y-100 hidden lg:flex'}
+          `} aria-label="Main navigation">
+            <div className="flex flex-col lg:flex-row lg:items-center gap-6 lg:gap-8 mb-6 lg:mb-0">
+              {navigationItems.map((item) => {
+                const isActive = activeSection === item.id;
+                return (
+                  <a
+                    key={item.id}
+                    className={`relative text-sm font-semibold transition-colors after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:bg-sky-500 after:transition-all ${
+                      isActive
+                        ? 'text-sky-500 after:w-full'
+                        : `${scrolled || menuOpen ? 'text-slate-700' : 'text-slate-300 hover:text-white'} hover:text-sky-500 after:w-0 hover:after:w-full`
+                    }`}
+                    href={item.href}
+                    onClick={closeMenu}
+                    aria-current={isActive ? 'location' : undefined}
+                    data-testid={item.testId}
+                  >
+                    {item.label}
+                  </a>
+                );
+              })}
+            </div>
+            
+            <button 
+              className={`w-full lg:w-auto inline-flex items-center justify-center gap-2 font-bold px-6 py-3 rounded-md transition-all duration-200 ${
+                scrolled || menuOpen 
+                  ? 'bg-[#071118] hover:bg-slate-800 text-white' 
+                  : 'bg-white hover:bg-sky-50 text-[#071118]'
+              }`}
+              type="button" 
+              onClick={() => { closeMenu(); scrollToQuote(); }} 
+              data-testid="button-header-quote"
+            >
+              Get a Quote <ArrowRight size={16} />
+            </button>
+          </nav>
+        </div>
       </div>
     </header>
   );
@@ -127,34 +204,71 @@ function Header({ onSignUp }: { onSignUp: () => void }) {
 
 function Hero({ onSignUp }: { onSignUp: () => void }) {
   return (
-    <section className="hero" aria-labelledby="hero-title">
-      <div className="hero-inner">
-        <div className="reveal">
-          <div className="eyebrow">Winter readiness, handled</div>
-          <h1 id="hero-title">Reliable Snow Removal You Can <em>Count On</em> All Winter</h1>
-          <p className="hero-copy">Serving Grande Prairie and surrounding areas with professional, insured snow removal services</p>
-          <div className="hero-actions">
-            <button className="btn-primary" type="button" onClick={scrollToQuote} data-testid="button-hero-quote">
-              Get a Quote <ArrowRight size={15} />
-            </button>
-            <button className="btn-outline" type="button" onClick={onSignUp} data-testid="button-hero-signup">
-              Sign Up for Winter Service
-            </button>
+    <section className="relative bg-[#071118] text-white pt-40 pb-24 lg:pt-48 lg:pb-32 overflow-hidden" aria-labelledby="hero-title">
+      {/* Decorative icy elements */}
+      <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[800px] h-[800px] bg-sky-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+      
+      <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="lg:col-span-7 animate-fade-in-up">
+            <div className="inline-flex items-center gap-3 text-sky-400 font-bold text-xs tracking-widest uppercase mb-8">
+              <span className="w-8 h-px bg-sky-400"></span>
+              Winter readiness, handled
+            </div>
+            <h1 id="hero-title" className="font-display text-5xl lg:text-7xl font-semibold leading-[1.05] tracking-tight mb-8">
+              Reliable Snow Removal You Can <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-sky-500">Count On</span> All Winter
+            </h1>
+            <p className="text-slate-300 text-lg lg:text-xl max-w-xl mb-10 leading-relaxed">
+              Serving Grande Prairie and surrounding areas with professional, insured snow removal services.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button 
+                onClick={scrollToQuote} 
+                className="inline-flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 text-[#071118] font-bold px-8 py-4 rounded-md transition-all duration-200"
+                data-testid="button-hero-quote"
+              >
+                Get a Quote <ArrowRight size={18} />
+              </button>
+              <button 
+                onClick={onSignUp} 
+                className="inline-flex items-center justify-center gap-2 bg-transparent border border-slate-600 hover:border-slate-400 hover:bg-slate-800 text-white font-semibold px-8 py-4 rounded-md transition-all duration-200"
+                data-testid="button-hero-signup"
+              >
+                Sign Up for Winter Service
+              </button>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-slate-400 mt-8">
+              <ShieldCheck size={18} className="text-sky-400" /> Insured service for homes and properties across Grande Prairie
+            </div>
           </div>
-          <div className="hero-note"><ShieldCheck size={15} /> Insured service for homes and properties across Grande Prairie and surrounding areas</div>
+          
+          <div className="lg:col-span-5 animate-fade-in-up delay-200">
+            <div className="bg-slate-900/50 backdrop-blur-md border border-slate-800 rounded-2xl p-8 lg:p-10 relative overflow-hidden shadow-2xl">
+              <div className="absolute top-0 right-0 p-6 text-sky-500/10 font-display font-bold text-7xl pointer-events-none select-none">01</div>
+              <div className="text-sky-400 text-xs font-bold tracking-widest uppercase mb-4">Before the first storm</div>
+              <h2 className="font-display text-2xl lg:text-3xl font-semibold mb-4 leading-tight text-white">Make a plan while the forecast is clear.</h2>
+              <p className="text-slate-400 text-sm leading-relaxed mb-8">
+                Seasonal customers get a dependable plan in place before winter demands your attention.
+              </p>
+              
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3 text-sm text-slate-300 pt-4 border-t border-slate-800/50">
+                  <Check size={18} className="text-sky-400 shrink-0 mt-0.5" /> 
+                  <span>Pre-season scheduling</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-slate-300 pt-4 border-t border-slate-800/50">
+                  <Check size={18} className="text-sky-400 shrink-0 mt-0.5" /> 
+                  <span>Storm-aware service planning</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-slate-300 pt-4 border-t border-slate-800/50">
+                  <Check size={18} className="text-sky-400 shrink-0 mt-0.5" /> 
+                  <span>Clear, straightforward contracts</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <aside className="hero-aside reveal reveal-delay" aria-label="Service readiness">
-          <div className="storm-card">
-            <div className="eyebrow">Before the first storm</div>
-            <h2>Make a plan while the forecast is clear.</h2>
-            <p>Seasonal customers get a dependable plan in place before winter demands your attention.</p>
-          </div>
-          <ul className="readiness-list">
-            <li><Check size={15} /> Pre-season scheduling</li>
-            <li><Check size={15} /> Storm-aware service planning</li>
-            <li><Check size={15} /> Clear, straightforward contracts</li>
-          </ul>
-        </aside>
       </div>
     </section>
   );
@@ -162,22 +276,36 @@ function Hero({ onSignUp }: { onSignUp: () => void }) {
 
 function Services() {
   return (
-    <section className="services-section" id="services" aria-labelledby="services-title">
-      <div className="section">
-        <div className="section-header reveal">
-          <div>
-            <p className="section-kicker">What we clear</p>
-            <h2 className="section-title" id="services-title">The whole property.<br />Ready for winter.</h2>
+    <section className="py-24 lg:py-32 bg-slate-50 border-b border-slate-200" id="services" aria-labelledby="services-title">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 animate-fade-in-up">
+          <div className="max-w-2xl">
+            <p className="text-sky-600 font-bold text-xs tracking-widest uppercase mb-4">What we clear</p>
+            <h2 id="services-title" className="font-display text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 leading-[1.1]">
+              The whole property.<br />Ready for winter.
+            </h2>
           </div>
-          <p className="section-intro">From the first flurry to the last thaw, we keep the places that matter moving.</p>
+          <p className="text-slate-600 max-w-sm text-lg leading-relaxed">
+            From the first flurry to the last thaw, we keep the places that matter moving.
+          </p>
         </div>
-        <div className="services-grid">
-          {services.map(({ number, title, description, icon: Icon }) => (
-            <article className="service-card reveal" key={title} data-testid={`card-service-${number}`}>
-              <span className="service-number">{number}</span>
-              <div className="service-icon"><Icon size={20} strokeWidth={1.7} /></div>
-              <h3>{title}</h3>
-              <p>{description}</p>
+        
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {services.map(({ number, title, description, icon: Icon }, i) => (
+            <article 
+              key={title} 
+              data-testid={`card-service-${number}`}
+              className="bg-white border border-slate-200 rounded-xl p-8 transition-all duration-300 hover:shadow-xl hover:shadow-sky-900/5 hover:-translate-y-1 animate-fade-in-up"
+              style={{ animationDelay: `${i * 100}ms` }}
+            >
+              <div className="flex justify-between items-start mb-12">
+                <div className="w-12 h-12 bg-sky-50 rounded-lg flex items-center justify-center text-sky-600">
+                  <Icon size={24} strokeWidth={2} />
+                </div>
+                <span className="text-slate-200 font-display font-bold text-xl">{number}</span>
+              </div>
+              <h3 className="font-display text-xl font-semibold text-slate-900 mb-3 leading-tight">{title}</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">{description}</p>
             </article>
           ))}
         </div>
@@ -190,25 +318,40 @@ function HowItWorks() {
   const steps = [
     { number: '01', title: 'Request a Quote', description: 'Tell us about your property and the areas you need cleared.' },
     { number: '02', title: 'Choose 4 or 5 Month Plan', description: 'Pick the seasonal coverage that fits your winter and your budget.' },
-    { number: '03', title: 'We Handle the Snow All Season', description: 'Your service is planned, scheduled, and looked after through the thaw.' },
+    { number: '03', title: 'We Handle the Snow', description: 'Your service is planned, scheduled, and looked after through the thaw.' },
   ];
 
   return (
-    <section className="band" id="how-it-works" aria-labelledby="process-title">
-      <div className="section">
-        <div className="section-header reveal">
+    <section className="py-24 lg:py-32 bg-white" id="how-it-works" aria-labelledby="process-title">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8 animate-fade-in-up">
           <div>
-            <p className="section-kicker">A simpler winter</p>
-            <h2 className="section-title" id="process-title">Three steps.<br />Zero snow stress.</h2>
+            <p className="text-sky-600 font-bold text-xs tracking-widest uppercase mb-4">A simpler winter</p>
+            <h2 id="process-title" className="font-display text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 leading-[1.1]">
+              Three steps.<br />Zero snow stress.
+            </h2>
           </div>
-          <ArrowDownRight size={28} color="#2783a4" />
+          <div className="hidden md:block">
+            <ArrowDownRight size={48} className="text-sky-100" strokeWidth={1.5} />
+          </div>
         </div>
-        <div className="steps">
-          {steps.map((step) => (
-            <article className="step reveal" key={step.number} data-testid={`step-process-${step.number}`}>
-              <div className="step-number">{step.number}</div>
-              <h3>{step.title}</h3>
-              <p>{step.description}</p>
+        
+        <div className="grid md:grid-cols-3 gap-12 relative">
+          {/* Connecting line */}
+          <div className="hidden md:block absolute top-[28px] left-[60px] right-[calc(33.33%+60px)] h-px bg-slate-100" />
+          
+          {steps.map((step, i) => (
+            <article 
+              key={step.number} 
+              data-testid={`step-process-${step.number}`}
+              className="relative animate-fade-in-up"
+              style={{ animationDelay: `${i * 150}ms` }}
+            >
+              <div className="w-14 h-14 bg-white border-2 border-slate-100 rounded-full flex items-center justify-center font-display font-bold text-sky-600 text-lg relative z-10 mb-8 shadow-sm">
+                {step.number}
+              </div>
+              <h3 className="font-display text-2xl font-semibold text-slate-900 mb-4">{step.title}</h3>
+              <p className="text-slate-600 leading-relaxed text-sm md:text-base">{step.description}</p>
             </article>
           ))}
         </div>
@@ -219,21 +362,31 @@ function HowItWorks() {
 
 function WhyChooseUs() {
   return (
-    <section className="why-section" id="why-us" aria-labelledby="why-title">
-      <div className="section">
-        <div className="section-header reveal">
-          <div>
-            <p className="section-kicker">The safe choice</p>
-            <h2 className="section-title" id="why-title">Prepared is better<br />than surprised.</h2>
-          </div>
-          <p className="section-intro" style={{ color: '#9ab2bd' }}>A calm, accountable crew makes a difference when the driveway disappears overnight.</p>
+    <section className="py-24 lg:py-32 bg-[#071118] text-white" id="why-us" aria-labelledby="why-title">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="max-w-3xl mb-16 animate-fade-in-up">
+          <p className="text-sky-400 font-bold text-xs tracking-widest uppercase mb-4">The safe choice</p>
+          <h2 id="why-title" className="font-display text-4xl lg:text-5xl font-semibold tracking-tight mb-6 leading-[1.1]">
+            Prepared is better than surprised.
+          </h2>
+          <p className="text-slate-400 text-lg max-w-xl leading-relaxed">
+            A calm, accountable crew makes a difference when the driveway disappears overnight.
+          </p>
         </div>
-        <div className="why-grid">
-          {reasons.map(({ title, description, icon: Icon }) => (
-            <article className="why-item reveal" key={title} data-testid={`benefit-${title.slice(0, 8).replace(/\s/g, '-').toLowerCase()}`}>
-              <div className="why-icon"><Icon size={21} strokeWidth={1.6} /></div>
-              <h3>{title}</h3>
-              <p>{description}</p>
+        
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          {reasons.map(({ title, description, icon: Icon }, i) => (
+            <article 
+              key={title} 
+              data-testid={`benefit-${title.slice(0, 8).replace(/\s/g, '-').toLowerCase()}`}
+              className="animate-fade-in-up"
+              style={{ animationDelay: `${i * 100}ms` }}
+            >
+              <div className="w-12 h-12 bg-slate-800/50 border border-slate-700 rounded-lg flex items-center justify-center text-sky-400 mb-6 shadow-inner">
+                <Icon size={22} strokeWidth={2} />
+              </div>
+              <h3 className="font-display text-xl font-semibold mb-3 leading-tight">{title}</h3>
+              <p className="text-slate-400 text-sm leading-relaxed">{description}</p>
             </article>
           ))}
         </div>
@@ -244,30 +397,66 @@ function WhyChooseUs() {
 
 function Contracts({ onSignUp }: { onSignUp: () => void }) {
   return (
-    <section className="section" id="contracts" aria-labelledby="contracts-title">
-      <div className="contracts-layout">
-        <div className="contract-copy reveal">
-          <p className="section-kicker">Stay covered</p>
-          <h2 className="section-title" id="contracts-title">4 or 5 Month Seasonal Contracts Available</h2>
-          <p>Choose the length that matches your property and let us take snow off your list. Simple pricing, consistent service, no winter surprises.</p>
-          <div className="contract-facts">
-            <span className="fact"><CalendarRange size={14} /> 4 or 5 months</span>
-            <span className="fact"><Check size={14} /> Pay upfront or monthly</span>
-            <span className="fact"><BadgeCheck size={14} /> No hidden fees</span>
+    <section className="py-24 lg:py-32 bg-sky-50 overflow-hidden border-y border-sky-100" id="contracts" aria-labelledby="contracts-title">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          <div className="animate-fade-in-left">
+            <p className="text-sky-600 font-bold text-xs tracking-widest uppercase mb-4">Stay covered</p>
+            <h2 id="contracts-title" className="font-display text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 mb-6 leading-[1.1]">
+              4 or 5 Month Seasonal Contracts
+            </h2>
+            <p className="text-slate-600 text-lg mb-8 leading-relaxed max-w-md">
+              Choose the length that matches your property and let us take snow off your list. Simple pricing, consistent service, no winter surprises.
+            </p>
+            
+            <div className="flex flex-wrap gap-4 mb-8">
+              <span className="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
+                <CalendarRange size={16} className="text-sky-500" /> 4 or 5 months
+              </span>
+              <span className="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
+                <Check size={16} className="text-sky-500" /> Pay upfront or monthly
+              </span>
+              <span className="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
+                <BadgeCheck size={16} className="text-sky-500" /> No hidden fees
+              </span>
+            </div>
           </div>
-        </div>
-        <div className="contract-card reveal reveal-delay">
-          <div className="contract-card-inner">
-            <div className="contract-label">Seasonal service agreement</div>
-            <h3>Snow handled before it becomes your problem.</h3>
-            <ul>
-              <li><Check size={15} /> Service planned around snowfall</li>
-              <li><Check size={15} /> Residential and commercial coverage</li>
-              <li><Check size={15} /> Clear terms, direct communication</li>
-            </ul>
-            <button className="btn-primary" type="button" onClick={onSignUp} data-testid="button-contract-signup">
-              View Contract / Sign Up <ArrowRight size={15} />
-            </button>
+          
+          <div className="relative animate-fade-in-right">
+            {/* Decorative background blob */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-sky-200/50 rounded-full blur-[80px] pointer-events-none" />
+            
+            <div className="bg-white border border-sky-100 shadow-xl shadow-sky-900/5 rounded-2xl p-8 lg:p-12 relative z-10">
+              <div className="inline-block bg-sky-50 text-sky-700 border border-sky-100 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-md mb-6">
+                Seasonal service agreement
+              </div>
+              <h3 className="font-display text-3xl font-semibold text-slate-900 mb-6 leading-tight">
+                Snow handled before it becomes your problem.
+              </h3>
+              
+              <ul className="space-y-4 mb-10">
+                <li className="flex items-start gap-3 text-slate-600">
+                  <Check size={20} className="text-sky-500 shrink-0 mt-0.5" />
+                  <span>Service planned around snowfall</span>
+                </li>
+                <li className="flex items-start gap-3 text-slate-600">
+                  <Check size={20} className="text-sky-500 shrink-0 mt-0.5" />
+                  <span>Residential and commercial coverage</span>
+                </li>
+                <li className="flex items-start gap-3 text-slate-600">
+                  <Check size={20} className="text-sky-500 shrink-0 mt-0.5" />
+                  <span>Clear terms, direct communication</span>
+                </li>
+              </ul>
+              
+              <button 
+                onClick={onSignUp}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#071118] hover:bg-slate-800 text-white font-bold px-8 py-4 rounded-md transition-all duration-200"
+                data-testid="button-contract-signup"
+              >
+                View Contract / Sign Up <ArrowRight size={18} />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -275,33 +464,48 @@ function Contracts({ onSignUp }: { onSignUp: () => void }) {
   );
 }
 
-function Testimonials() {
-  const reviews = [
-    { quote: 'Placeholder review copy: dependable service, clear communication, and one less thing to think about after every storm.', name: 'Residential customer', location: 'Alberta homeowner', initial: 'R' },
-    { quote: 'Placeholder review copy: our property stays accessible and the crew is easy to work with all season.', name: 'Property manager', location: 'Alberta commercial site', initial: 'P' },
-    { quote: 'Placeholder review copy: professional, prepared, and exactly what we needed for winter.', name: 'Local customer', location: 'Alberta service area', initial: 'L' },
+function ServiceStandards() {
+  const serviceStandards = [
+    {
+      title: 'Dependable planning',
+      description: 'Service is organized around the forecast so your property is not an afterthought when snow arrives.',
+      icon: CalendarRange,
+    },
+    {
+      title: 'Clear communication',
+      description: 'Straightforward terms and direct contact make it easier to know what is covered all season.',
+      icon: Mail,
+    },
+    {
+      title: 'Property-ready service',
+      description: 'Residential and commercial areas are handled with the equipment and attention the site requires.',
+      icon: ShieldCheck,
+    },
   ];
 
   return (
-    <section className="testimonials-section" aria-labelledby="testimonials-title">
-      <div className="section">
-        <div className="section-header reveal">
-          <div>
-            <p className="section-kicker">Good words, earned</p>
-            <h2 className="section-title" id="testimonials-title">People sleep better<br />when snow is covered.</h2>
-          </div>
+    <section className="py-24 lg:py-32 bg-white" aria-labelledby="service-standards-title">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="text-center max-w-2xl mx-auto mb-16 lg:mb-20 animate-fade-in-up">
+          <p className="text-sky-600 font-bold text-xs tracking-widest uppercase mb-4">What to expect</p>
+          <h2 id="service-standards-title" className="font-display text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 leading-[1.1]">
+            A winter service built around clarity.
+          </h2>
         </div>
-        <div className="testimonial-grid">
-          {reviews.map((review, index) => (
-            <article className={`testimonial reveal ${index === 0 ? 'featured' : ''}`} key={review.name} data-testid={`testimonial-${index + 1}`}>
-              <div>
-                <div className="quote-mark">“</div>
-                <blockquote>{review.quote}</blockquote>
+        
+        <div className="grid md:grid-cols-3 gap-8">
+          {serviceStandards.map(({ title, description, icon: Icon }, index) => (
+            <article 
+              key={title} 
+              data-testid={`service-standard-${index + 1}`}
+              className="rounded-2xl p-8 bg-slate-50 border border-slate-100 text-slate-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-sky-900/5 animate-fade-in-up"
+              style={{ animationDelay: `${index * 150}ms` }}
+            >
+              <div className="w-12 h-12 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center mb-8">
+                <Icon size={23} strokeWidth={2} />
               </div>
-              <div className="testimonial-author">
-                <span className="author-dot">{review.initial}</span>
-                <span><span className="author-name">{review.name}</span><span className="author-location">{review.location}</span></span>
-              </div>
+              <h3 className="font-display text-2xl font-semibold mb-4">{title}</h3>
+              <p className="text-slate-600 leading-relaxed">{description}</p>
             </article>
           ))}
         </div>
@@ -311,60 +515,177 @@ function Testimonials() {
 }
 
 type FormValues = { name: string; phone: string; email: string; address: string };
+type FormErrors = Partial<Record<keyof FormValues, string>>;
 
 function Contact() {
   const [values, setValues] = useState<FormValues>({ name: '', phone: '', email: '', address: '' });
+  const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
 
   const update = (field: keyof FormValues) => (event: ChangeEvent<HTMLInputElement>) => {
     setSubmitted(false);
     setValues((current) => ({ ...current, [field]: event.target.value }));
+    setErrors((current) => {
+      if (!current[field]) return current;
+      const nextErrors = { ...current };
+      delete nextErrors[field];
+      return nextErrors;
+    });
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const nextErrors: FormErrors = {};
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneDigits = values.phone.replace(/\D/g, '');
+
+    if (!values.name.trim()) nextErrors.name = 'Please enter your name.';
+    if (phoneDigits.length < 10) nextErrors.phone = 'Please enter a valid phone number.';
+    if (!emailPattern.test(values.email.trim())) nextErrors.email = 'Please enter a valid email address.';
+    if (!values.address.trim()) nextErrors.address = 'Please enter the property address.';
+
+    if (Object.keys(nextErrors).length > 0) {
+      const formElement = event.currentTarget;
+      const firstInvalidName = Object.keys(nextErrors)[0] as keyof FormValues;
+      setErrors(nextErrors);
+      setSubmitted(false);
+      window.requestAnimationFrame(() => {
+        const firstInvalidField = formElement.elements.namedItem(firstInvalidName);
+        if (firstInvalidField instanceof HTMLElement) firstInvalidField.focus();
+      });
+      return;
+    }
+
+    setErrors({});
     setSubmitted(true);
   };
 
   return (
-    <section className="contact-section" id="quote" aria-labelledby="quote-title">
-      <div className="section">
-        <div className="contact-layout">
-          <div className="contact-copy reveal">
-            <p className="section-kicker">Start here</p>
-            <h2 className="section-title" id="quote-title">Get Your Spot Before Winter Fills Up</h2>
-            <p>Send a few details and we’ll follow up with a straightforward quote. This form is a request only — no commitment until you’re ready.</p>
-            <div className="contact-detail"><Phone size={15} /> <a href="tel:+17809957459" data-testid="link-phone">780-995-7459</a></div>
-            <div className="contact-detail"><Mail size={15} /> <a href="mailto:ailandscapinggp@gmail.com" data-testid="link-email">ailandscapinggp@gmail.com</a></div>
-            <div className="contact-detail"><MapPin size={15} /> Serving Grande Prairie and surrounding areas</div>
-          </div>
-          <form className="contact-form reveal reveal-delay" onSubmit={handleSubmit} noValidate data-testid="form-quote">
-            <div className="form-grid">
-              <div className="field">
-                <label htmlFor="name">Name</label>
-                <input id="name" name="name" value={values.name} onChange={update('name')} placeholder="Your name" required data-testid="input-name" />
+    <section className="py-24 lg:py-32 bg-slate-50 border-t border-slate-200" id="quote" aria-labelledby="quote-title">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+          <div className="animate-fade-in-left lg:pt-8">
+            <p className="text-sky-600 font-bold text-xs tracking-widest uppercase mb-4">Start here</p>
+            <h2 id="quote-title" className="font-display text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 mb-6 leading-[1.1]">
+              Get Your Spot Before Winter Fills Up
+            </h2>
+            <p className="text-slate-600 text-lg mb-12 leading-relaxed max-w-md">
+              Send a few details and we'll follow up with a straightforward quote. This form is a request only — no commitment until you're ready.
+            </p>
+            
+            <div className="space-y-8">
+              <div className="flex items-center gap-5 text-slate-700">
+                <div className="w-14 h-14 bg-white border border-slate-200 rounded-full flex items-center justify-center text-sky-500 shadow-sm shrink-0">
+                  <Phone size={24} />
+                </div>
+                <div>
+                  <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Call Us</div>
+                  <a href="tel:+17809957459" className="text-lg font-semibold hover:text-sky-600 transition-colors" data-testid="link-phone">780-995-7459</a>
+                </div>
               </div>
-              <div className="field">
-                <label htmlFor="phone">Phone</label>
-                <input id="phone" name="phone" type="tel" value={values.phone} onChange={update('phone')} placeholder="Your phone number" required data-testid="input-phone" />
+              <div className="flex items-center gap-5 text-slate-700">
+                <div className="w-14 h-14 bg-white border border-slate-200 rounded-full flex items-center justify-center text-sky-500 shadow-sm shrink-0">
+                  <Mail size={24} />
+                </div>
+                <div>
+                  <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Email Us</div>
+                  <a href="mailto:ailandscapinggp@gmail.com" className="text-lg font-semibold hover:text-sky-600 transition-colors" data-testid="link-email">ailandscapinggp@gmail.com</a>
+                </div>
               </div>
-              <div className="field">
-                <label htmlFor="email">Email</label>
-                <input id="email" name="email" type="email" value={values.email} onChange={update('email')} placeholder="you@example.com" required data-testid="input-email" />
-              </div>
-              <div className="field">
-                <label htmlFor="address">Address</label>
-                <input id="address" name="address" value={values.address} onChange={update('address')} placeholder="Property address" required data-testid="input-address" />
+              <div className="flex items-center gap-5 text-slate-700">
+                <div className="w-14 h-14 bg-white border border-slate-200 rounded-full flex items-center justify-center text-sky-500 shadow-sm shrink-0">
+                  <MapPin size={24} />
+                </div>
+                <div>
+                  <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Service Area</div>
+                  <div className="text-lg font-semibold">Grande Prairie & Surrounding</div>
+                </div>
               </div>
             </div>
-            <button className="btn-primary" type="submit" data-testid="button-submit-quote">Get Your Spot Before Winter Fills Up <Send size={15} /></button>
-            <p className="form-note">We’ll use these details to respond to your quote request. No automated service has been booked.</p>
-            {submitted && (
-              <div className="success-message" role="status" data-testid="status-quote-success">
-                <CheckCircle2 size={17} /> Thanks — your request is ready for our team. We’ll be in touch using the details you provided.
+          </div>
+          
+          <div className="animate-fade-in-right">
+            <form 
+              className="bg-white border border-slate-200 rounded-2xl p-8 lg:p-10 shadow-xl shadow-slate-200/50" 
+              onSubmit={handleSubmit} 
+              noValidate 
+              data-testid="form-quote"
+            >
+              <div className="grid sm:grid-cols-2 gap-6 mb-8">
+                <div className="space-y-2">
+                  <label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-slate-500">Name</label>
+                  <input 
+                    id="name" name="name" 
+                    value={values.name} onChange={update('name')} 
+                    placeholder="Your name" required 
+                    aria-invalid={Boolean(errors.name)}
+                    aria-describedby={errors.name ? 'name-error' : undefined}
+                    className={`w-full bg-slate-50 border rounded-md px-4 py-3.5 text-slate-900 focus:outline-none focus:ring-2 transition-all ${errors.name ? 'border-red-400 focus:border-red-500 focus:ring-red-200' : 'border-slate-200 focus:ring-sky-500/50 focus:border-sky-500'}`}
+                    data-testid="input-name" 
+                  />
+                  {errors.name && <p id="name-error" className="text-sm text-red-700" data-testid="error-name">{errors.name}</p>}
+                </div>
+                <div className="space-y-2">
+                  <label htmlFor="phone" className="text-xs font-bold uppercase tracking-widest text-slate-500">Phone</label>
+                  <input 
+                    id="phone" name="phone" type="tel" 
+                    value={values.phone} onChange={update('phone')} 
+                    placeholder="Your phone number" required 
+                    aria-invalid={Boolean(errors.phone)}
+                    aria-describedby={errors.phone ? 'phone-error' : undefined}
+                    className={`w-full bg-slate-50 border rounded-md px-4 py-3.5 text-slate-900 focus:outline-none focus:ring-2 transition-all ${errors.phone ? 'border-red-400 focus:border-red-500 focus:ring-red-200' : 'border-slate-200 focus:ring-sky-500/50 focus:border-sky-500'}`}
+                    data-testid="input-phone" 
+                  />
+                  {errors.phone && <p id="phone-error" className="text-sm text-red-700" data-testid="error-phone">{errors.phone}</p>}
+                </div>
+                <div className="space-y-2 sm:col-span-2">
+                  <label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-slate-500">Email</label>
+                  <input 
+                    id="email" name="email" type="email" 
+                    value={values.email} onChange={update('email')} 
+                    placeholder="you@example.com" required 
+                    aria-invalid={Boolean(errors.email)}
+                    aria-describedby={errors.email ? 'email-error' : undefined}
+                    className={`w-full bg-slate-50 border rounded-md px-4 py-3.5 text-slate-900 focus:outline-none focus:ring-2 transition-all ${errors.email ? 'border-red-400 focus:border-red-500 focus:ring-red-200' : 'border-slate-200 focus:ring-sky-500/50 focus:border-sky-500'}`}
+                    data-testid="input-email" 
+                  />
+                  {errors.email && <p id="email-error" className="text-sm text-red-700" data-testid="error-email">{errors.email}</p>}
+                </div>
+                <div className="space-y-2 sm:col-span-2">
+                  <label htmlFor="address" className="text-xs font-bold uppercase tracking-widest text-slate-500">Address</label>
+                  <input 
+                    id="address" name="address" 
+                    value={values.address} onChange={update('address')} 
+                    placeholder="Property address" required 
+                    aria-invalid={Boolean(errors.address)}
+                    aria-describedby={errors.address ? 'address-error' : undefined}
+                    className={`w-full bg-slate-50 border rounded-md px-4 py-3.5 text-slate-900 focus:outline-none focus:ring-2 transition-all ${errors.address ? 'border-red-400 focus:border-red-500 focus:ring-red-200' : 'border-slate-200 focus:ring-sky-500/50 focus:border-sky-500'}`}
+                    data-testid="input-address" 
+                  />
+                  {errors.address && <p id="address-error" className="text-sm text-red-700" data-testid="error-address">{errors.address}</p>}
+                </div>
               </div>
-            )}
-          </form>
+              
+              <button 
+                type="submit" 
+                className="w-full inline-flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 text-[#071118] font-bold px-8 py-4 rounded-md transition-all duration-200 mb-4"
+                data-testid="button-submit-quote"
+              >
+                Request Quote <Send size={18} />
+            </button>
+              
+              <p className="text-center text-xs text-slate-500">
+                We'll use these details to respond to your quote request. No automated service has been booked.
+              </p>
+              
+              {submitted && (
+                <div className="mt-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-md flex items-start gap-3 animate-fade-in-up" role="status" data-testid="status-quote-success">
+                  <CheckCircle2 size={20} className="text-emerald-500 shrink-0 mt-0.5" /> 
+                  <span className="text-sm font-medium">Thanks — your request is ready for our team. We'll be in touch using the details you provided.</span>
+                </div>
+              )}
+            </form>
+          </div>
         </div>
       </div>
     </section>
@@ -373,24 +694,46 @@ function Contact() {
 
 function Footer() {
   return (
-    <footer className="footer">
-      <div className="footer-inner">
-        <div>
-          <Brand />
-          <p className="footer-copy">Calm, prepared, accountable snow removal for homes and properties across Grande Prairie and surrounding areas.</p>
+    <footer className="bg-[#071118] text-white pt-20 pb-8 border-t border-slate-800">
+      <div className="container mx-auto px-6 max-w-7xl">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
+          <div className="lg:col-span-2">
+            <a className="inline-flex items-center bg-[#071118] p-2 -ml-2 rounded-md mb-6" href="#top" data-testid="link-footer-brand">
+              <img
+                className="h-10 w-auto"
+                src={logoPath}
+                alt="Ai Landscaping & SnowRemoval"
+                data-testid="img-footer-brand-logo"
+              />
+            </a>
+            <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
+              Calm, prepared, accountable snow removal for homes and properties across Grande Prairie and surrounding areas.
+            </p>
+          </div>
+          
+          <div>
+            <h4 className="text-sky-400 font-bold text-xs tracking-widest uppercase mb-6">Contact</h4>
+            <div className="space-y-4 text-sm text-slate-300">
+              <a href="tel:+17809957459" className="block hover:text-sky-400 transition-colors" data-testid="link-footer-phone">780-995-7459</a>
+              <a href="mailto:ailandscapinggp@gmail.com" className="block hover:text-sky-400 transition-colors" data-testid="link-footer-email">ailandscapinggp@gmail.com</a>
+              <p className="text-slate-500 pt-2">Response within one business day</p>
+            </div>
+          </div>
+          
+          <div>
+            <h4 className="text-sky-400 font-bold text-xs tracking-widest uppercase mb-6">Service Area</h4>
+            <ul className="space-y-3 text-sm text-slate-300">
+              <li>Grande Prairie & surrounding</li>
+              <li>Residential properties</li>
+              <li>Commercial properties</li>
+            </ul>
+          </div>
         </div>
-        <div>
-          <p className="footer-heading">Contact</p>
-          <p className="footer-detail"><a href="tel:+17809957459" data-testid="link-footer-phone">780-995-7459</a><br /><a href="mailto:ailandscapinggp@gmail.com" data-testid="link-footer-email">ailandscapinggp@gmail.com</a><br />Response within one business day</p>
+        
+        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-slate-800 text-xs text-slate-500 gap-4">
+          <span data-testid="text-copyright">© {new Date().getFullYear()} Ai Landscaping & SnowRemoval</span>
+          <a href="#top" className="hover:text-sky-400 transition-colors" data-testid="link-back-to-top">Back to top</a>
         </div>
-        <div>
-          <p className="footer-heading">Service area</p>
-          <p className="footer-detail">Grande Prairie &amp; surrounding areas<br />Residential properties<br />Commercial properties</p>
-        </div>
-      </div>
-      <div className="footer-bottom">
-        <span data-testid="text-copyright">Copyright 2026 Ai Landscaping &amp; SnowRemoval</span>
-        <a href="#top" data-testid="link-back-to-top">Back to top</a>
       </div>
     </footer>
   );
@@ -398,55 +741,139 @@ function Footer() {
 
 function SignUpModal({ onClose }: { onClose: () => void }) {
   const [contractOpen, setContractOpen] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== 'Tab' || !dialogRef.current) return;
+      const focusableElements = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), iframe, input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => element.getAttribute('aria-hidden') !== 'true');
+
+      if (focusableElements.length === 0) {
+        event.preventDefault();
+        dialogRef.current.focus();
+        return;
+      }
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      } else if (!dialogRef.current.contains(document.activeElement)) {
+        event.preventDefault();
+        firstElement.focus();
+      }
     };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus();
     document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+    };
   }, [onClose]);
 
   return (
-    <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <button className="modal-close" type="button" aria-label="Close sign up dialog" onClick={onClose} data-testid="button-close-signup">
-          <X size={19} />
-        </button>
-        <p className="section-kicker">Winter service</p>
-        <h2 id="modal-title">Let’s get your property on the list.</h2>
-        <p>Review the actual seasonal service agreement below, then send us your property details. We’ll confirm availability and follow up directly — no automated booking or payment is taken here.</p>
-        <button
-          className="contract-preview-toggle"
-          type="button"
-          onClick={() => setContractOpen((open) => !open)}
-          aria-expanded={contractOpen}
-          data-testid="button-toggle-contract"
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/70 backdrop-blur-sm animate-fade-in" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <div
+        ref={dialogRef}
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative animate-fade-in-up"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+        tabIndex={-1}
+      >
+        <button 
+          ref={closeButtonRef}
+          className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-colors" 
+          type="button" 
+          aria-label="Close sign up dialog" 
+          onClick={onClose} 
+          data-testid="button-close-signup"
         >
-          {contractOpen ? 'Hide contract' : 'View actual contract'} <ArrowRight size={15} />
+          <X size={20} />
         </button>
-        {contractOpen && (
-          <div className="contract-preview" data-testid="contract-preview">
-            <iframe
-              src="/snow-removal-service-agreement.pdf#view=FitH"
-              title="Ai Landscaping & SnowRemoval service agreement"
-            />
-            <a
-              className="contract-download"
-              href="/snow-removal-service-agreement.pdf"
-              target="_blank"
-              rel="noreferrer"
-              data-testid="link-download-contract"
-            >
-              Open contract in a new tab <ArrowRight size={14} />
-            </a>
-          </div>
-        )}
-        <div className="modal-actions">
-          <button className="btn-primary" type="button" onClick={() => { onClose(); scrollToQuote(); }} data-testid="button-modal-quote">
-            Request a quote <ArrowRight size={15} />
+        
+        <div className="p-8 sm:p-12">
+          <p className="text-sky-600 font-bold text-xs tracking-widest uppercase mb-4">Winter service</p>
+          <h2 id="modal-title" className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 mb-4 leading-[1.1]">
+            Let's get your property on the list.
+          </h2>
+          <p id="modal-description" className="text-slate-600 mb-8 leading-relaxed max-w-lg">
+            Review the actual seasonal service agreement below, then send us your property details. We'll confirm availability and follow up directly — no automated booking or payment is taken here.
+          </p>
+          
+          <button
+            className="flex items-center justify-between w-full p-4 sm:p-5 bg-sky-50 hover:bg-sky-100 border border-sky-100 hover:border-sky-200 rounded-xl text-sky-800 font-semibold text-sm transition-all duration-200 mb-6 group"
+            type="button"
+            onClick={() => setContractOpen((open) => !open)}
+            aria-expanded={contractOpen}
+            aria-controls="contract-preview"
+            data-testid="button-toggle-contract"
+          >
+            <span className="flex items-center gap-3">
+              <CalendarRange size={20} className="text-sky-600" />
+              {contractOpen ? 'Hide actual contract' : 'View actual contract'}
+            </span>
+            <ArrowRight size={18} className={`text-sky-600 transition-transform duration-300 ${contractOpen ? 'rotate-90' : 'group-hover:translate-x-1'}`} />
           </button>
-          <button className="btn-outline" type="button" onClick={onClose} data-testid="button-modal-close">Not right now</button>
+          
+          {contractOpen && (
+            <div id="contract-preview" className="mb-8 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 animate-fade-in-up" data-testid="contract-preview">
+              <iframe
+                src="/snow-removal-service-agreement.pdf#view=FitH"
+                title="Ai Landscaping & SnowRemoval service agreement"
+                className="w-full h-[350px] sm:h-[450px] border-0 bg-white"
+              />
+              <div className="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+                <a
+                  className="inline-flex items-center gap-2 text-sky-600 hover:text-sky-700 font-semibold text-sm transition-colors"
+                  href="/snow-removal-service-agreement.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  data-testid="link-download-contract"
+                >
+                  Open in a new tab <ArrowRight size={14} />
+                </a>
+              </div>
+            </div>
+          )}
+          
+          <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-slate-100 mt-2">
+            <button 
+              className="flex-1 inline-flex items-center justify-center gap-2 bg-[#071118] hover:bg-slate-800 text-white font-bold px-6 py-4 rounded-md transition-colors" 
+              type="button" 
+              onClick={() => { onClose(); scrollToQuote(); }} 
+              data-testid="button-modal-quote"
+            >
+              Request a quote <ArrowRight size={16} />
+            </button>
+            <button 
+              className="flex-1 inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold px-6 py-4 rounded-md transition-colors" 
+              type="button" 
+              onClick={onClose} 
+              data-testid="button-modal-close"
+            >
+              Not right now
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -455,21 +882,38 @@ function SignUpModal({ onClose }: { onClose: () => void }) {
 
 function Home() {
   const [modalOpen, setModalOpen] = useState(false);
+  const modalTriggerRef = useRef<HTMLElement | null>(null);
+
+  const openSignUp = () => {
+    modalTriggerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setModalOpen(true);
+  };
+
+  const closeSignUp = () => {
+    setModalOpen(false);
+    window.requestAnimationFrame(() => modalTriggerRef.current?.focus());
+  };
 
   return (
-    <div className="site-shell">
-      <Header onSignUp={() => setModalOpen(true)} />
-      <main>
-        <Hero onSignUp={() => setModalOpen(true)} />
-        <Services />
-        <HowItWorks />
-        <WhyChooseUs />
-        <Contracts onSignUp={() => setModalOpen(true)} />
-        <Testimonials />
-        <Contact />
-      </main>
-      <Footer />
-      {modalOpen && <SignUpModal onClose={() => setModalOpen(false)} />}
+    <div className="min-h-screen bg-white selection:bg-sky-200 selection:text-sky-900">
+      <div
+        aria-hidden={modalOpen ? true : undefined}
+        inert={modalOpen ? true : undefined}
+        data-testid="site-background"
+      >
+        <Header onSignUp={openSignUp} />
+        <main>
+          <Hero onSignUp={openSignUp} />
+          <Services />
+          <HowItWorks />
+          <WhyChooseUs />
+          <Contracts onSignUp={openSignUp} />
+          <ServiceStandards />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
+      {modalOpen && <SignUpModal onClose={closeSignUp} />}
     </div>
   );
 }
