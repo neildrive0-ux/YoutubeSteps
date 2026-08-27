@@ -25,6 +25,7 @@ import {
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { useSendQuoteRequest } from '@workspace/api-client-react';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import logoPath from '@assets/ai-landscaping-logo-no-bg.png';
@@ -521,9 +522,12 @@ function Contact() {
   const [values, setValues] = useState<FormValues>({ name: '', phone: '', email: '', address: '' });
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const sendQuoteRequest = useSendQuoteRequest();
 
   const update = (field: keyof FormValues) => (event: ChangeEvent<HTMLInputElement>) => {
     setSubmitted(false);
+    setSubmitError('');
     setValues((current) => ({ ...current, [field]: event.target.value }));
     setErrors((current) => {
       if (!current[field]) return current;
@@ -533,7 +537,7 @@ function Contact() {
     });
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const nextErrors: FormErrors = {};
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -549,6 +553,7 @@ function Contact() {
       const firstInvalidName = Object.keys(nextErrors)[0] as keyof FormValues;
       setErrors(nextErrors);
       setSubmitted(false);
+      setSubmitError('');
       window.requestAnimationFrame(() => {
         const firstInvalidField = formElement.elements.namedItem(firstInvalidName);
         if (firstInvalidField instanceof HTMLElement) firstInvalidField.focus();
@@ -557,7 +562,35 @@ function Contact() {
     }
 
     setErrors({});
-    setSubmitted(true);
+    setSubmitted(false);
+    setSubmitError('');
+
+    try {
+      await sendQuoteRequest.mutateAsync({
+        data: {
+          name: values.name.trim(),
+          phone: values.phone.trim(),
+          email: values.email.trim(),
+          address: values.address.trim(),
+        },
+      });
+      setSubmitted(true);
+      setValues({ name: '', phone: '', email: '', address: '' });
+    } catch (error) {
+      const apiMessage =
+        error &&
+        typeof error === 'object' &&
+        'data' in error &&
+        error.data &&
+        typeof error.data === 'object' &&
+        'message' in error.data &&
+        typeof error.data.message === 'string'
+          ? error.data.message
+          : '';
+      setSubmitError(
+        apiMessage || "We couldn't send your request right now. Please call us at 780-995-7459.",
+      );
+    }
   };
 
   return (
@@ -668,10 +701,11 @@ function Contact() {
               
               <button 
                 type="submit" 
-                className="w-full inline-flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 text-[#071118] font-bold px-8 py-4 rounded-md transition-all duration-200 mb-4"
+                disabled={sendQuoteRequest.isPending}
+                className="w-full inline-flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 disabled:bg-slate-300 disabled:text-slate-600 disabled:cursor-wait text-[#071118] font-bold px-8 py-4 rounded-md transition-all duration-200 mb-4"
                 data-testid="button-submit-quote"
               >
-                Request Quote <Send size={18} />
+                {sendQuoteRequest.isPending ? 'Sending Request…' : 'Request Quote'} <Send size={18} />
             </button>
               
               <p className="text-center text-xs text-slate-500">
@@ -681,7 +715,13 @@ function Contact() {
               {submitted && (
                 <div className="mt-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-md flex items-start gap-3 animate-fade-in-up" role="status" data-testid="status-quote-success">
                   <CheckCircle2 size={20} className="text-emerald-500 shrink-0 mt-0.5" /> 
-                  <span className="text-sm font-medium">Thanks — your request is ready for our team. We'll be in touch using the details you provided.</span>
+                  <span className="text-sm font-medium">Thanks — your request was sent to our team. We'll be in touch using the details you provided.</span>
+                </div>
+              )}
+              {submitError && (
+                <div className="mt-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-md flex items-start gap-3 animate-fade-in-up" role="alert" data-testid="status-quote-error">
+                  <X size={20} className="text-red-500 shrink-0 mt-0.5" />
+                  <span className="text-sm font-medium">{submitError}</span>
                 </div>
               )}
             </form>

@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: quotes
+    description: Quote request operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,43 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /quote-requests:
+    post:
+      operationId: sendQuoteRequest
+      tags: [quotes]
+      summary: Send a quote request
+      description: Sends a website quote request to the Ai Landscaping & SnowRemoval team.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuoteRequest"
+      responses:
+        "200":
+          description: Quote request sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuoteRequestResponse"
+        "400":
+          description: Invalid quote request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Too many quote requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "502":
+          description: Email provider error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +72,43 @@ components:
           type: string
       required:
         - status
+    QuoteRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        phone:
+          type: string
+          minLength: 10
+          maxLength: 40
+        email:
+          type: string
+          pattern: '^[^@\s]+@[^@\s]+\.[^@\s]+$'
+          maxLength: 320
+        address:
+          type: string
+          minLength: 1
+          maxLength: 300
+      required:
+        - name
+        - phone
+        - email
+        - address
+    QuoteRequestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [sent]
+      required:
+        - status
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
 
