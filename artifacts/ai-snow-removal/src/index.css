@@ -173,11 +173,9 @@
   z-index: 20;
 }
 .nav-inner { align-items: center; display: flex; justify-content: space-between; width: min(1180px, calc(100% - 48px)); }
-.brand-lockup { align-items: center; color: #0b151e; display: inline-flex; gap: 11px; text-decoration: none; }
-.brand-mark { align-items: center; background: #0b151e; color: #b9e9fa; display: inline-flex; font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; height: 34px; justify-content: center; letter-spacing: -.08em; position: relative; width: 34px; }
-.brand-mark::after { border: 1px solid #61c9ef; content: ''; inset: 4px; position: absolute; }
-.brand-name { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: -.03em; line-height: 1.05; max-width: 170px; }
-.brand-sub { color: #607985; display: block; font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: .17em; margin-top: 3px; text-transform: uppercase; }
+.brand-lockup { align-items: center; color: #0b151e; display: inline-flex; text-decoration: none; }
+.brand-logo-shell { align-items: center; background: #0b151e; display: inline-flex; padding: 10px 12px; }
+.brand-logo { display: block; height: auto; max-width: 228px; width: 100%; }
 .nav-links { align-items: center; display: flex; gap: 29px; }
 .nav-link { color: #526c7a; font-size: 12px; font-weight: 700; text-decoration: none; transition: color .2s ease; }
 .nav-link:hover { color: #0b151e; }
@@ -289,8 +287,8 @@
 .footer { background: #0b151e; color: #eaf5f8; }
 .footer-inner { display: grid; gap: 40px; grid-template-columns: 1.3fr .8fr .8fr; margin: 0 auto; max-width: 1180px; padding: 65px 0 27px; }
 .footer .brand-lockup { color: #eaf5f8; }
-.footer .brand-mark { background: #b9e9fa; color: #0b151e; }
-.footer .brand-sub, .footer-copy, .footer-detail { color: #78919d; }
+.footer .brand-logo-shell { padding-left: 0; padding-right: 0; }
+.footer-copy, .footer-detail { color: #78919d; }
 .footer-copy { font-size: 12px; line-height: 1.65; margin: 21px 0 0; max-width: 275px; }
 .footer-heading { color: #61c9ef; font-size: 10px; font-weight: 700; letter-spacing: .18em; margin: 4px 0 17px; text-transform: uppercase; }
 .footer-detail { font-size: 12px; line-height: 1.8; }
@@ -339,7 +337,8 @@
 }
 @media (max-width: 520px) {
   .nav-inner, .hero-inner, .section, .footer-inner, .footer-bottom { width: calc(100% - 36px); }
-  .brand-name { font-size: 12px; max-width: 130px; }
+  .brand-logo { max-width: 190px; }
+  .brand-logo-shell { padding: 9px 10px; }
   .hero h1 { font-size: clamp(43px, 13vw, 65px); }
   .hero-copy { font-size: 15px; }
   .section { padding: 78px 0; }

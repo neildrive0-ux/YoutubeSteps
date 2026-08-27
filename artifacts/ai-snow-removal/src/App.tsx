@@ -27,6 +27,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
+import logoPath from '@assets/ai-landscaping-logo-no-bg.png';
 
 const queryClient = new QueryClient();
 
@@ -79,10 +80,13 @@ function scrollToQuote() {
 function Brand() {
   return (
     <a className="brand-lockup" href="#top" data-testid="link-brand">
-      <span className="brand-mark" aria-hidden="true">Ai</span>
-      <span>
-        <span className="brand-name">Ai Landscaping<br />&amp; SnowRemoval</span>
-        <span className="brand-sub">Alberta winter services</span>
+      <span className="brand-logo-shell">
+        <img
+          className="brand-logo"
+          src={logoPath}
+          alt="Ai Landscaping & SnowRemoval"
+          data-testid="img-brand-logo"
+        />
       </span>
     </a>
   );
