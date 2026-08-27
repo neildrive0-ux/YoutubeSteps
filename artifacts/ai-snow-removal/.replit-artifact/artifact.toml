@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Ai Landscaping & SnowRemoval"
+description = "A professional Canadian snow removal company website focused on reliable seasonal service contracts, clear pricing, and fast quote requests for residential and commercial customers."
+version = "1.0.0"
+id = "artifacts/ai-snow-removal"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23518
+
+[services.development]
+run = "pnpm --filter @workspace/ai-snow-removal run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ai-snow-removal", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/ai-snow-removal/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23518"
+BASE_PATH = "/"
