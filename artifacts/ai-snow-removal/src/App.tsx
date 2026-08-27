@@ -132,7 +132,7 @@ function Hero({ onSignUp }: { onSignUp: () => void }) {
         <div className="reveal">
           <div className="eyebrow">Winter readiness, handled</div>
           <h1 id="hero-title">Reliable Snow Removal You Can <em>Count On</em> All Winter</h1>
-          <p className="hero-copy">Serving Alberta with professional, insured snow removal services</p>
+          <p className="hero-copy">Serving Grande Prairie and surrounding areas with professional, insured snow removal services</p>
           <div className="hero-actions">
             <button className="btn-primary" type="button" onClick={scrollToQuote} data-testid="button-hero-quote">
               Get a Quote <ArrowRight size={15} />
@@ -141,7 +141,7 @@ function Hero({ onSignUp }: { onSignUp: () => void }) {
               Sign Up for Winter Service
             </button>
           </div>
-          <div className="hero-note"><ShieldCheck size={15} /> Insured service for homes and properties across Alberta</div>
+          <div className="hero-note"><ShieldCheck size={15} /> Insured service for homes and properties across Grande Prairie and surrounding areas</div>
         </div>
         <aside className="hero-aside reveal reveal-delay" aria-label="Service readiness">
           <div className="storm-card">
@@ -334,9 +334,9 @@ function Contact() {
             <p className="section-kicker">Start here</p>
             <h2 className="section-title" id="quote-title">Get Your Spot Before Winter Fills Up</h2>
             <p>Send a few details and we’ll follow up with a straightforward quote. This form is a request only — no commitment until you’re ready.</p>
-            <div className="contact-detail"><Phone size={15} /> Phone placeholder</div>
-            <div className="contact-detail"><Mail size={15} /> Email placeholder</div>
-            <div className="contact-detail"><MapPin size={15} /> Serving Alberta</div>
+            <div className="contact-detail"><Phone size={15} /> <a href="tel:+17809957459" data-testid="link-phone">780-995-7459</a></div>
+            <div className="contact-detail"><Mail size={15} /> <a href="mailto:ailandscapinggp@gmail.com" data-testid="link-email">ailandscapinggp@gmail.com</a></div>
+            <div className="contact-detail"><MapPin size={15} /> Serving Grande Prairie and surrounding areas</div>
           </div>
           <form className="contact-form reveal reveal-delay" onSubmit={handleSubmit} noValidate data-testid="form-quote">
             <div className="form-grid">
@@ -377,15 +377,15 @@ function Footer() {
       <div className="footer-inner">
         <div>
           <Brand />
-          <p className="footer-copy">Calm, prepared, accountable snow removal for homes and properties across Alberta.</p>
+          <p className="footer-copy">Calm, prepared, accountable snow removal for homes and properties across Grande Prairie and surrounding areas.</p>
         </div>
         <div>
           <p className="footer-heading">Contact</p>
-          <p className="footer-detail">Phone placeholder<br />Email placeholder<br />Response within one business day</p>
+          <p className="footer-detail"><a href="tel:+17809957459" data-testid="link-footer-phone">780-995-7459</a><br /><a href="mailto:ailandscapinggp@gmail.com" data-testid="link-footer-email">ailandscapinggp@gmail.com</a><br />Response within one business day</p>
         </div>
         <div>
           <p className="footer-heading">Service area</p>
-          <p className="footer-detail">Alberta<br />Residential properties<br />Commercial properties</p>
+          <p className="footer-detail">Grande Prairie &amp; surrounding areas<br />Residential properties<br />Commercial properties</p>
         </div>
       </div>
       <div className="footer-bottom">

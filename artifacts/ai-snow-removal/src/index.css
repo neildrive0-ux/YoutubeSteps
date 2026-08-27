@@ -272,6 +272,8 @@
 .contact-copy > p { color: #5a727f; font-size: 14px; line-height: 1.65; margin: 25px 0 30px; max-width: 325px; }
 .contact-detail { align-items: center; color: #315463; display: flex; font-size: 12px; gap: 11px; margin: 13px 0; }
 .contact-detail svg { color: #2786a8; }
+.contact-detail a { color: inherit; text-decoration: none; }
+.contact-detail a:hover { color: #0b151e; text-decoration: underline; text-underline-offset: 3px; }
 .contact-form { background: #fff; border: 1px solid #c9dce2; padding: 29px; }
 .form-grid { display: grid; gap: 18px 14px; grid-template-columns: 1fr 1fr; }
 .field { display: flex; flex-direction: column; gap: 7px; }
@@ -292,6 +294,8 @@
 .footer-copy { font-size: 12px; line-height: 1.65; margin: 21px 0 0; max-width: 275px; }
 .footer-heading { color: #61c9ef; font-size: 10px; font-weight: 700; letter-spacing: .18em; margin: 4px 0 17px; text-transform: uppercase; }
 .footer-detail { font-size: 12px; line-height: 1.8; }
+.footer-detail a { color: inherit; text-decoration: none; }
+.footer-detail a:hover { color: #eaf5f8; text-decoration: underline; text-underline-offset: 3px; }
 .footer-bottom { border-top: 1px solid #263944; color: #627d89; display: flex; font-size: 10px; justify-content: space-between; margin: 0 auto; max-width: 1180px; padding: 18px 0 24px; }
 .footer-bottom a { color: #9ab2bd; text-decoration: none; }
 .modal-backdrop { align-items: center; background: rgba(4,12,18,.68); display: flex; inset: 0; justify-content: center; padding: 20px; position: fixed; z-index: 50; }
