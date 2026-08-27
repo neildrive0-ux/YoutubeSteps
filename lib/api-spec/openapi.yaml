@@ -10,7 +10,7 @@ servers:
 tags:
   - name: health
     description: Health operations
-  - name: quotes
+  - name: quote-requests
     description: Quote request operations
 paths:
   /healthz:
@@ -28,41 +28,35 @@ paths:
                 $ref: "#/components/schemas/HealthStatus"
   /quote-requests:
     post:
-      operationId: sendQuoteRequest
-      tags: [quotes]
-      summary: Send a quote request
-      description: Sends a website quote request to the Ai Landscaping & SnowRemoval team.
+      operationId: createQuoteRequest
+      tags: [quote-requests]
+      summary: Submit a quote request
+      description: Stores a quote request for the business team.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/QuoteRequest"
+              $ref: "#/components/schemas/QuoteRequestInput"
       responses:
-        "200":
-          description: Quote request sent
+        "201":
+          description: Quote request stored
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/QuoteRequestResponse"
+                $ref: "#/components/schemas/QuoteRequest"
+        "200":
+          description: Existing request returned for a safe retry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuoteRequest"
         "400":
           description: Invalid quote request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
         "429":
-          description: Too many quote requests
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "502":
-          description: Email provider error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
+          description: Too many requests
+        "500":
+          description: Unable to store quote request
 components:
   schemas:
     HealthStatus:
@@ -72,43 +66,65 @@ components:
           type: string
       required:
         - status
-    QuoteRequest:
+    QuoteRequestInput:
       type: object
       properties:
+        requestId:
+          type: string
+          minLength: 16
+          maxLength: 100
         name:
           type: string
-          minLength: 1
-          maxLength: 120
+          minLength: 2
+          maxLength: 160
         phone:
           type: string
           minLength: 10
           maxLength: 40
         email:
           type: string
-          pattern: '^[^@\s]+@[^@\s]+\.[^@\s]+$'
           maxLength: 320
         address:
           type: string
-          minLength: 1
-          maxLength: 300
+          minLength: 3
+          maxLength: 500
+        website:
+          type: string
+          maxLength: 200
       required:
+        - requestId
         - name
         - phone
         - email
         - address
-    QuoteRequestResponse:
+    QuoteRequest:
       type: object
       properties:
+        id:
+          type: number
+        requestId:
+          type: string
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        address:
+          type: string
         status:
           type: string
-          enum: [sent]
-      required:
-        - status
-    ErrorResponse:
-      type: object
-      properties:
-        message:
+          enum: [new]
+        createdAt:
           type: string
+          format: date-time
       required:
-        - message
+        - id
+        - requestId
+        - name
+        - phone
+        - email
+        - address
+        - status
+        - createdAt
 

@@ -1,5 +1,6 @@
 import { type ChangeEvent, type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createQuoteRequest } from '@workspace/api-client-react';
 import {
   ArrowDownRight,
   ArrowRight,
@@ -13,6 +14,7 @@ import {
   Mail,
   MapPin,
   Menu,
+  LoaderCircle,
   Phone,
   ShieldCheck,
   Send,
@@ -25,7 +27,6 @@ import {
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { useSendQuoteRequest } from '@workspace/api-client-react';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import logoPath from '@assets/ai-landscaping-logo-no-bg.png';
@@ -517,17 +518,21 @@ function ServiceStandards() {
 
 type FormValues = { name: string; phone: string; email: string; address: string };
 type FormErrors = Partial<Record<keyof FormValues, string>>;
+type SubmissionState = 'idle' | 'sending' | 'success' | 'error';
 
 function Contact() {
   const [values, setValues] = useState<FormValues>({ name: '', phone: '', email: '', address: '' });
   const [errors, setErrors] = useState<FormErrors>({});
-  const [submitted, setSubmitted] = useState(false);
+  const [website, setWebsite] = useState('');
+  const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
   const [submitError, setSubmitError] = useState('');
-  const sendQuoteRequest = useSendQuoteRequest();
+  const submissionIdRef = useRef<string | null>(null);
+  const isSending = submissionState === 'sending';
 
   const update = (field: keyof FormValues) => (event: ChangeEvent<HTMLInputElement>) => {
-    setSubmitted(false);
+    setSubmissionState((current) => current === 'sending' ? current : 'idle');
     setSubmitError('');
+    submissionIdRef.current = null;
     setValues((current) => ({ ...current, [field]: event.target.value }));
     setErrors((current) => {
       if (!current[field]) return current;
@@ -539,20 +544,22 @@ function Contact() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSending) return;
+
     const nextErrors: FormErrors = {};
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneDigits = values.phone.replace(/\D/g, '');
 
-    if (!values.name.trim()) nextErrors.name = 'Please enter your name.';
+    if (values.name.trim().length < 2) nextErrors.name = 'Please enter your name.';
     if (phoneDigits.length < 10) nextErrors.phone = 'Please enter a valid phone number.';
     if (!emailPattern.test(values.email.trim())) nextErrors.email = 'Please enter a valid email address.';
-    if (!values.address.trim()) nextErrors.address = 'Please enter the property address.';
+    if (values.address.trim().length < 3) nextErrors.address = 'Please enter the property address.';
 
     if (Object.keys(nextErrors).length > 0) {
       const formElement = event.currentTarget;
       const firstInvalidName = Object.keys(nextErrors)[0] as keyof FormValues;
       setErrors(nextErrors);
-      setSubmitted(false);
+      setSubmissionState('idle');
       setSubmitError('');
       window.requestAnimationFrame(() => {
         const firstInvalidField = formElement.elements.namedItem(firstInvalidName);
@@ -562,34 +569,34 @@ function Contact() {
     }
 
     setErrors({});
-    setSubmitted(false);
     setSubmitError('');
+    setSubmissionState('sending');
+
+    const requestId = submissionIdRef.current ?? crypto.randomUUID();
+    submissionIdRef.current = requestId;
 
     try {
-      await sendQuoteRequest.mutateAsync({
-        data: {
-          name: values.name.trim(),
-          phone: values.phone.trim(),
-          email: values.email.trim(),
-          address: values.address.trim(),
-        },
+      await createQuoteRequest({
+        requestId,
+        name: values.name.trim(),
+        phone: values.phone.trim(),
+        email: values.email.trim(),
+        address: values.address.trim(),
+        website,
       });
-      setSubmitted(true);
-      setValues({ name: '', phone: '', email: '', address: '' });
+      setSubmissionState('success');
     } catch (error) {
-      const apiMessage =
-        error &&
-        typeof error === 'object' &&
-        'data' in error &&
-        error.data &&
-        typeof error.data === 'object' &&
-        'message' in error.data &&
-        typeof error.data.message === 'string'
-          ? error.data.message
-          : '';
+      const status =
+        typeof error === 'object' && error !== null && 'status' in error
+          ? error.status
+          : null;
+
       setSubmitError(
-        apiMessage || "We couldn't send your request right now. Please call us at 780-995-7459.",
+        status === 429
+          ? 'We received several requests from this connection. Please wait a few minutes, or call us at 780-995-7459.'
+          : 'We could not send your request right now. Please try again, or call us at 780-995-7459.',
       );
+      setSubmissionState('error');
     }
   };
 
@@ -642,8 +649,21 @@ function Contact() {
               className="bg-white border border-slate-200 rounded-2xl p-8 lg:p-10 shadow-xl shadow-slate-200/50" 
               onSubmit={handleSubmit} 
               noValidate 
+              aria-busy={isSending}
               data-testid="form-quote"
             >
+              <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+                <label htmlFor="website">Website</label>
+                <input
+                  id="website"
+                  name="website"
+                  value={website}
+                  onChange={(event) => setWebsite(event.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  data-testid="input-quote-website"
+                />
+              </div>
               <div className="grid sm:grid-cols-2 gap-6 mb-8">
                 <div className="space-y-2">
                   <label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-slate-500">Name</label>
@@ -651,6 +671,7 @@ function Contact() {
                     id="name" name="name" 
                     value={values.name} onChange={update('name')} 
                     placeholder="Your name" required 
+                    disabled={isSending}
                     aria-invalid={Boolean(errors.name)}
                     aria-describedby={errors.name ? 'name-error' : undefined}
                     className={`w-full bg-slate-50 border rounded-md px-4 py-3.5 text-slate-900 focus:outline-none focus:ring-2 transition-all ${errors.name ? 'border-red-400 focus:border-red-500 focus:ring-red-200' : 'border-slate-200 focus:ring-sky-500/50 focus:border-sky-500'}`}
@@ -664,6 +685,7 @@ function Contact() {
                     id="phone" name="phone" type="tel" 
                     value={values.phone} onChange={update('phone')} 
                     placeholder="Your phone number" required 
+                    disabled={isSending}
                     aria-invalid={Boolean(errors.phone)}
                     aria-describedby={errors.phone ? 'phone-error' : undefined}
                     className={`w-full bg-slate-50 border rounded-md px-4 py-3.5 text-slate-900 focus:outline-none focus:ring-2 transition-all ${errors.phone ? 'border-red-400 focus:border-red-500 focus:ring-red-200' : 'border-slate-200 focus:ring-sky-500/50 focus:border-sky-500'}`}
@@ -677,6 +699,7 @@ function Contact() {
                     id="email" name="email" type="email" 
                     value={values.email} onChange={update('email')} 
                     placeholder="you@example.com" required 
+                    disabled={isSending}
                     aria-invalid={Boolean(errors.email)}
                     aria-describedby={errors.email ? 'email-error' : undefined}
                     className={`w-full bg-slate-50 border rounded-md px-4 py-3.5 text-slate-900 focus:outline-none focus:ring-2 transition-all ${errors.email ? 'border-red-400 focus:border-red-500 focus:ring-red-200' : 'border-slate-200 focus:ring-sky-500/50 focus:border-sky-500'}`}
@@ -690,6 +713,7 @@ function Contact() {
                     id="address" name="address" 
                     value={values.address} onChange={update('address')} 
                     placeholder="Property address" required 
+                    disabled={isSending}
                     aria-invalid={Boolean(errors.address)}
                     aria-describedby={errors.address ? 'address-error' : undefined}
                     className={`w-full bg-slate-50 border rounded-md px-4 py-3.5 text-slate-900 focus:outline-none focus:ring-2 transition-all ${errors.address ? 'border-red-400 focus:border-red-500 focus:ring-red-200' : 'border-slate-200 focus:ring-sky-500/50 focus:border-sky-500'}`}
@@ -701,24 +725,36 @@ function Contact() {
               
               <button 
                 type="submit" 
-                disabled={sendQuoteRequest.isPending}
-                className="w-full inline-flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 disabled:bg-slate-300 disabled:text-slate-600 disabled:cursor-wait text-[#071118] font-bold px-8 py-4 rounded-md transition-all duration-200 mb-4"
+                disabled={isSending}
+                className="w-full inline-flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 disabled:opacity-70 disabled:cursor-not-allowed text-[#071118] font-bold px-8 py-4 rounded-md transition-all duration-200 mb-4"
                 data-testid="button-submit-quote"
               >
-                {sendQuoteRequest.isPending ? 'Sending Request…' : 'Request Quote'} <Send size={18} />
+                {isSending ? (
+                  <>Sending request <LoaderCircle size={18} className="animate-spin" /></>
+                ) : (
+                  <>{submissionState === 'error' ? 'Try Again' : 'Request Quote'} <Send size={18} /></>
+                )}
             </button>
               
               <p className="text-center text-xs text-slate-500">
                 We'll use these details to respond to your quote request. No automated service has been booked.
               </p>
               
-              {submitted && (
+              {submissionState === 'sending' && (
+                <div className="mt-6 p-4 bg-sky-50 border border-sky-200 text-sky-900 rounded-md flex items-start gap-3" role="status" data-testid="status-quote-sending">
+                  <LoaderCircle size={20} className="text-sky-500 shrink-0 mt-0.5 animate-spin" />
+                  <span className="text-sm font-medium">Sending your request securely to our team…</span>
+                </div>
+              )}
+
+              {submissionState === 'success' && (
                 <div className="mt-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-md flex items-start gap-3 animate-fade-in-up" role="status" data-testid="status-quote-success">
                   <CheckCircle2 size={20} className="text-emerald-500 shrink-0 mt-0.5" /> 
                   <span className="text-sm font-medium">Thanks — your request was sent to our team. We'll be in touch using the details you provided.</span>
                 </div>
               )}
-              {submitError && (
+
+              {submissionState === 'error' && (
                 <div className="mt-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-md flex items-start gap-3 animate-fade-in-up" role="alert" data-testid="status-quote-error">
                   <X size={20} className="text-red-500 shrink-0 mt-0.5" />
                   <span className="text-sm font-medium">{submitError}</span>

@@ -20,10 +20,9 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  ErrorResponse,
   HealthStatus,
   QuoteRequest,
-  QuoteRequestResponse
+  QuoteRequestInput
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -131,7 +130,7 @@ export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, 
 
 
 
-export const getSendQuoteRequestUrl = () => {
+export const getCreateQuoteRequestUrl = () => {
 
 
 
@@ -140,17 +139,17 @@ export const getSendQuoteRequestUrl = () => {
 }
 
 /**
- * Sends a website quote request to the Ai Landscaping & SnowRemoval team.
- * @summary Send a quote request
+ * Stores a quote request for the business team.
+ * @summary Submit a quote request
  */
-export const sendQuoteRequest = async (quoteRequest: QuoteRequest, options?: Parameters<typeof customFetch>[1]): Promise<QuoteRequestResponse> => {
+export const createQuoteRequest = async (quoteRequestInput: QuoteRequestInput, options?: Parameters<typeof customFetch>[1]): Promise<QuoteRequest> => {
 
-  return customFetch<QuoteRequestResponse>(getSendQuoteRequestUrl(),
+  return customFetch<QuoteRequest>(getCreateQuoteRequestUrl(),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(quoteRequest)
+    body: JSON.stringify(quoteRequestInput)
   }
 );}
 
@@ -158,11 +157,11 @@ export const sendQuoteRequest = async (quoteRequest: QuoteRequest, options?: Par
 
 
 
-export const getSendQuoteRequestMutationOptions = <TError = ErrorType<ErrorResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendQuoteRequest>>, TError,{data: BodyType<QuoteRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof sendQuoteRequest>>, TError,{data: BodyType<QuoteRequest>}, TContext> => {
+export const getCreateQuoteRequestMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuoteRequest>>, TError,{data: BodyType<QuoteRequestInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createQuoteRequest>>, TError,{data: BodyType<QuoteRequestInput>}, TContext> => {
 
-const mutationKey = ['sendQuoteRequest'];
+const mutationKey = ['createQuoteRequest'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -172,10 +171,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof sendQuoteRequest>>, {data: BodyType<QuoteRequest>}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createQuoteRequest>>, {data: BodyType<QuoteRequestInput>}> = (props) => {
           const {data} = props ?? {};
 
-          return  sendQuoteRequest(data,requestOptions)
+          return  createQuoteRequest(data,requestOptions)
         }
 
 
@@ -185,21 +184,21 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type SendQuoteRequestMutationResult = NonNullable<Awaited<ReturnType<typeof sendQuoteRequest>>>
-    export type SendQuoteRequestMutationBody = BodyType<QuoteRequest>
-    export type SendQuoteRequestMutationError = ErrorType<ErrorResponse>
+    export type CreateQuoteRequestMutationResult = NonNullable<Awaited<ReturnType<typeof createQuoteRequest>>>
+    export type CreateQuoteRequestMutationBody = BodyType<QuoteRequestInput>
+    export type CreateQuoteRequestMutationError = ErrorType<void>
 
     /**
- * @summary Send a quote request
+ * @summary Submit a quote request
  */
-export const useSendQuoteRequest = <TError = ErrorType<ErrorResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendQuoteRequest>>, TError,{data: BodyType<QuoteRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+export const useCreateQuoteRequest = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createQuoteRequest>>, TError,{data: BodyType<QuoteRequestInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
-        Awaited<ReturnType<typeof sendQuoteRequest>>,
+        Awaited<ReturnType<typeof createQuoteRequest>>,
         TError,
-        {data: BodyType<QuoteRequest>},
+        {data: BodyType<QuoteRequestInput>},
         TContext
       > => {
-      return useMutation(getSendQuoteRequestMutationOptions(options));
+      return useMutation(getCreateQuoteRequestMutationOptions(options));
     }
 

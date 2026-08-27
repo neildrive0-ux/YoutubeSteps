@@ -9,10 +9,15 @@ export interface HealthStatus {
   status: string;
 }
 
-export interface QuoteRequest {
+export interface QuoteRequestInput {
   /**
-     * @minLength 1
-     * @maxLength 120
+     * @minLength 16
+     * @maxLength 100
+     */
+  requestId: string;
+  /**
+     * @minLength 2
+     * @maxLength 160
      */
   name: string;
   /**
@@ -20,30 +25,32 @@ export interface QuoteRequest {
      * @maxLength 40
      */
   phone: string;
-  /**
-     * @maxLength 320
-     * @pattern ^[^@\s]+@[^@\s]+\.[^@\s]+$
-     */
+  /** @maxLength 320 */
   email: string;
   /**
-     * @minLength 1
-     * @maxLength 300
+     * @minLength 3
+     * @maxLength 500
      */
   address: string;
+  /** @maxLength 200 */
+  website?: string;
 }
 
-export type QuoteRequestResponseStatus = typeof QuoteRequestResponseStatus[keyof typeof QuoteRequestResponseStatus];
+export type QuoteRequestStatus = typeof QuoteRequestStatus[keyof typeof QuoteRequestStatus];
 
 
-export const QuoteRequestResponseStatus = {
-  sent: 'sent',
+export const QuoteRequestStatus = {
+  new: 'new',
 } as const;
 
-export interface QuoteRequestResponse {
-  status: QuoteRequestResponseStatus;
-}
-
-export interface ErrorResponse {
-  message: string;
+export interface QuoteRequest {
+  id: number;
+  requestId: string;
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  status: QuoteRequestStatus;
+  createdAt: string;
 }
 

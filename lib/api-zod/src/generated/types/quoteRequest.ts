@@ -5,26 +5,15 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { QuoteRequestStatus } from './quoteRequestStatus';
 
 export interface QuoteRequest {
-  /**
-     * @minLength 1
-     * @maxLength 120
-     */
+  id: number;
+  requestId: string;
   name: string;
-  /**
-     * @minLength 10
-     * @maxLength 40
-     */
   phone: string;
-  /**
-     * @maxLength 320
-     * @pattern ^[^@\s]+@[^@\s]+\.[^@\s]+$
-     */
   email: string;
-  /**
-     * @minLength 1
-     * @maxLength 300
-     */
   address: string;
+  status: QuoteRequestStatus;
+  createdAt: Date;
 }

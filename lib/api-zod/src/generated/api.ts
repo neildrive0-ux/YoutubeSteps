@@ -18,31 +18,45 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
- * Sends a website quote request to the Ai Landscaping & SnowRemoval team.
- * @summary Send a quote request
+ * Stores a quote request for the business team.
+ * @summary Submit a quote request
  */
-export const sendQuoteRequestBodyNameMax = 120;
+export const createQuoteRequestBodyRequestIdMin = 16;
+export const createQuoteRequestBodyRequestIdMax = 100;
 
-export const sendQuoteRequestBodyPhoneMin = 10;
-export const sendQuoteRequestBodyPhoneMax = 40;
+export const createQuoteRequestBodyNameMin = 2;
+export const createQuoteRequestBodyNameMax = 160;
 
-export const sendQuoteRequestBodyEmailMax = 320;
+export const createQuoteRequestBodyPhoneMin = 10;
+export const createQuoteRequestBodyPhoneMax = 40;
+
+export const createQuoteRequestBodyEmailMax = 320;
+
+export const createQuoteRequestBodyAddressMin = 3;
+export const createQuoteRequestBodyAddressMax = 500;
+
+export const createQuoteRequestBodyWebsiteMax = 200;
 
 
-export const sendQuoteRequestBodyEmailRegExp = new RegExp('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
-export const sendQuoteRequestBodyAddressMax = 300;
 
-
-
-export const SendQuoteRequestBody = zod.object({
-  "name": zod.string().min(1).max(sendQuoteRequestBodyNameMax),
-  "phone": zod.string().min(sendQuoteRequestBodyPhoneMin).max(sendQuoteRequestBodyPhoneMax),
-  "email": zod.string().max(sendQuoteRequestBodyEmailMax).regex(sendQuoteRequestBodyEmailRegExp),
-  "address": zod.string().min(1).max(sendQuoteRequestBodyAddressMax)
+export const CreateQuoteRequestBody = zod.object({
+  "requestId": zod.string().min(createQuoteRequestBodyRequestIdMin).max(createQuoteRequestBodyRequestIdMax),
+  "name": zod.string().min(createQuoteRequestBodyNameMin).max(createQuoteRequestBodyNameMax),
+  "phone": zod.string().min(createQuoteRequestBodyPhoneMin).max(createQuoteRequestBodyPhoneMax),
+  "email": zod.string().max(createQuoteRequestBodyEmailMax),
+  "address": zod.string().min(createQuoteRequestBodyAddressMin).max(createQuoteRequestBodyAddressMax),
+  "website": zod.string().max(createQuoteRequestBodyWebsiteMax).optional()
 })
 
-export const SendQuoteRequestResponse = zod.object({
-  "status": zod.enum(['sent'])
+export const CreateQuoteRequestResponse = zod.object({
+  "id": zod.number(),
+  "requestId": zod.string(),
+  "name": zod.string(),
+  "phone": zod.string(),
+  "email": zod.string(),
+  "address": zod.string(),
+  "status": zod.enum(['new']),
+  "createdAt": zod.coerce.date()
 })
 
 

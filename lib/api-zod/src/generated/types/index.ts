@@ -6,8 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export * from './errorResponse';
 export * from './healthStatus';
 export * from './quoteRequest';
-export * from './quoteRequestResponse';
-export * from './quoteRequestResponseStatus';
+export * from './quoteRequestInput';
+export * from './quoteRequestStatus';

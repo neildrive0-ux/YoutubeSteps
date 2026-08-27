@@ -30,7 +30,7 @@ _Populate as you build — non-obvious choices a reader couldn't infer from the 
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Quote requests are validated by the API and stored in PostgreSQL for team follow-up.
 
 ## User preferences
 
@@ -43,3 +43,4 @@ _Populate as you build — sharp edges, "always run X before Y" rules._
 ## Pointers
 
 - See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- The protected business lead list is the `quote_requests` table in the Replit Database pane; do not expose customer details through a public endpoint.
