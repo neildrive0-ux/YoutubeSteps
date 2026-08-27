@@ -1,0 +1,25 @@
+{
+  "name": "Ai Landscaping & SnowRemoval",
+  "short_name": "Ai SnowRemoval",
+  "description": "Reliable, insured snow removal for Grande Prairie and surrounding areas.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b151e",
+  "theme_color": "#0b151e",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
