@@ -92,7 +92,7 @@ const propertyAreaOptions = [
 type PropertyArea = (typeof propertyAreaOptions)[number]['value'];
 
 function scrollToQuote() {
-  document.getElementById('quote')?.scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function Header({ onSignUp }: { onSignUp: () => void }) {
@@ -694,7 +694,8 @@ function Contact() {
           
           <div className="animate-fade-in-right">
             <form 
-              className="bg-white border border-slate-200 rounded-2xl p-8 lg:p-10 shadow-xl shadow-slate-200/50" 
+              id="quote-form"
+              className="bg-white border border-slate-200 rounded-2xl p-8 lg:p-10 shadow-xl shadow-slate-200/50 scroll-mt-24"
               onSubmit={handleSubmit} 
               noValidate 
               aria-busy={isSending}
