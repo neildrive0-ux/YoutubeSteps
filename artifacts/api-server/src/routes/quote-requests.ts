@@ -51,6 +51,30 @@ function formatPropertyAreas(propertyAreas: string[]): string {
   return propertyAreas.map((area) => propertyAreaLabels[area] ?? area).join(", ");
 }
 
+type QuoteEmailData = {
+  from: string;
+  to: string[];
+  reply_to?: string;
+  subject: string;
+  text: string;
+  html: string;
+};
+
+async function sendEmail(email: QuoteEmailData): Promise<void> {
+  const connectors = new ReplitConnectors();
+  const providerResponse = await connectors.proxy("resend", "/emails", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(email),
+  });
+
+  if (!providerResponse.ok) {
+    throw new Error(
+      `Resend rejected email with status ${providerResponse.status}`,
+    );
+  }
+}
+
 async function sendQuoteNotification(
   quote: {
     name: string;
@@ -61,7 +85,6 @@ async function sendQuoteNotification(
   },
   req: Request,
 ): Promise<void> {
-  const connectors = new ReplitConnectors();
   const from = process.env.QUOTE_FROM_EMAIL?.trim() || DEFAULT_FROM_EMAIL;
   const subject = `New quote request from ${quote.name}`;
   const text = [
@@ -85,26 +108,68 @@ async function sendQuoteNotification(
     </table>
   `;
 
-  const providerResponse = await connectors.proxy("resend", "/emails", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from,
-      to: [RECIPIENT_EMAIL],
-      reply_to: quote.email,
-      subject,
-      text,
-      html,
-    }),
+  await sendEmail({
+    from,
+    to: [RECIPIENT_EMAIL],
+    reply_to: quote.email,
+    subject,
+    text,
+    html,
   });
 
-  if (!providerResponse.ok) {
-    throw new Error(
-      `Resend rejected quote notification with status ${providerResponse.status}`,
-    );
-  }
-
   req.log.info("Quote request email sent");
+}
+
+async function sendClientConfirmation(
+  quote: {
+    name: string;
+    phone: string;
+    email: string;
+    address: string;
+    propertyAreas: string[];
+  },
+  req: Request,
+): Promise<void> {
+  const from = process.env.QUOTE_FROM_EMAIL?.trim() || DEFAULT_FROM_EMAIL;
+  const areas = formatPropertyAreas(quote.propertyAreas);
+  const subject = "We received your quote request";
+  const text = [
+    `Hi ${quote.name},`,
+    "",
+    "Thanks for contacting Ai Landscaping & SnowRemoval.",
+    "We received your quote request and our team will review the details and follow up with you directly.",
+    "",
+    `Property address: ${quote.address}`,
+    `Areas to clear: ${areas}`,
+    "",
+    "This email confirms receipt of your request only. No service has been scheduled or booked.",
+    "",
+    "Ai Landscaping & SnowRemoval",
+    "780-995-7459",
+    "ailandscapinggp@gmail.com",
+  ].join("\n");
+  const html = `
+    <h2>We received your quote request</h2>
+    <p>Hi ${escapeHtml(quote.name)},</p>
+    <p>Thanks for contacting Ai Landscaping &amp; SnowRemoval. Our team will review your details and follow up with you directly.</p>
+    <table cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
+      <tr><td><strong>Property address</strong></td><td>${escapeHtml(quote.address)}</td></tr>
+      <tr><td><strong>Areas to clear</strong></td><td>${escapeHtml(areas)}</td></tr>
+    </table>
+    <p>This email confirms receipt of your request only. No service has been scheduled or booked.</p>
+    <p>Ai Landscaping &amp; SnowRemoval<br />780-995-7459<br />ailandscapinggp@gmail.com</p>
+  `;
+
+  await sendEmail({
+    from,
+    to: [quote.email],
+    reply_to: RECIPIENT_EMAIL,
+    subject,
+    text,
+    html,
+  });
+
+  req.log.info("Quote confirmation email sent to client");
 }
 
 function normalizeBody(body: unknown) {
@@ -246,11 +311,22 @@ router.post("/quote-requests", async (req, res): Promise<void> => {
     req.log.info({ quoteRequestId: quoteRequest.id }, "Quote request stored");
     res.status(201).json(CreateQuoteRequestResponse.parse(quoteRequest));
 
-    void sendQuoteNotification(quoteRequest, req).catch((notificationError) => {
-      req.log.error(
-        { err: notificationError, quoteRequestId: quoteRequest.id },
-        "Quote request stored but email notification failed",
-      );
+    void Promise.allSettled([
+      sendQuoteNotification(quoteRequest, req),
+      sendClientConfirmation(quoteRequest, req),
+    ]).then(([businessEmail, clientEmail]) => {
+      if (businessEmail.status === "rejected") {
+        req.log.error(
+          { err: businessEmail.reason, quoteRequestId: quoteRequest.id },
+          "Quote request stored but business email failed",
+        );
+      }
+      if (clientEmail.status === "rejected") {
+        req.log.error(
+          { err: clientEmail.reason, quoteRequestId: quoteRequest.id },
+          "Quote request stored but client confirmation email failed",
+        );
+      }
     });
   } catch (error) {
     if (isDuplicateKeyError(error)) {
