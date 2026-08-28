@@ -88,6 +88,17 @@ components:
           type: string
           minLength: 3
           maxLength: 500
+        propertyAreas:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items:
+            type: string
+            enum:
+              - driveway
+              - sidewalk
+              - staircase
+              - back-alley-parking-pad
         website:
           type: string
           maxLength: 200
@@ -97,6 +108,7 @@ components:
         - phone
         - email
         - address
+        - propertyAreas
     QuoteRequest:
       type: object
       properties:
@@ -112,6 +124,15 @@ components:
           type: string
         address:
           type: string
+        propertyAreas:
+          type: array
+          items:
+            type: string
+            enum:
+              - driveway
+              - sidewalk
+              - staircase
+              - back-alley-parking-pad
         status:
           type: string
           enum: [new]
@@ -125,6 +146,7 @@ components:
         - phone
         - email
         - address
+        - propertyAreas
         - status
         - createdAt
 

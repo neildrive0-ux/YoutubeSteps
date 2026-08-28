@@ -20,6 +20,12 @@ const RECIPIENT_EMAIL = "ailandscapinggp@gmail.com";
 const DEFAULT_FROM_EMAIL =
   "Ai Landscaping & SnowRemoval <onboarding@resend.dev>";
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const propertyAreaLabels: Record<string, string> = {
+  driveway: "Driveway",
+  sidewalk: "Sidewalk",
+  staircase: "Staircase",
+  "back-alley-parking-pad": "Back-Alley Parking Pad",
+};
 const configuredRateLimitSecret = process.env.SESSION_SECRET;
 
 if (!configuredRateLimitSecret) {
@@ -41,8 +47,18 @@ function formatPhone(value: string): string {
   return value.replace(/[^\d+().\-\s]/g, "").trim();
 }
 
+function formatPropertyAreas(propertyAreas: string[]): string {
+  return propertyAreas.map((area) => propertyAreaLabels[area] ?? area).join(", ");
+}
+
 async function sendQuoteNotification(
-  quote: { name: string; phone: string; email: string; address: string },
+  quote: {
+    name: string;
+    phone: string;
+    email: string;
+    address: string;
+    propertyAreas: string[];
+  },
   req: Request,
 ): Promise<void> {
   const connectors = new ReplitConnectors();
@@ -55,6 +71,7 @@ async function sendQuoteNotification(
     `Phone: ${quote.phone}`,
     `Email: ${quote.email}`,
     `Property address: ${quote.address}`,
+    `Property areas: ${formatPropertyAreas(quote.propertyAreas)}`,
   ].join("\n");
   const html = `
     <h2>New quote request</h2>
@@ -64,6 +81,7 @@ async function sendQuoteNotification(
       <tr><td><strong>Phone</strong></td><td>${escapeHtml(quote.phone)}</td></tr>
       <tr><td><strong>Email</strong></td><td>${escapeHtml(quote.email)}</td></tr>
       <tr><td><strong>Property address</strong></td><td>${escapeHtml(quote.address)}</td></tr>
+      <tr><td><strong>Areas to clear</strong></td><td>${escapeHtml(formatPropertyAreas(quote.propertyAreas))}</td></tr>
     </table>
   `;
 
@@ -104,6 +122,7 @@ function normalizeBody(body: unknown) {
     phone: normalizeString(candidate.phone),
     email: normalizeString(candidate.email),
     address: normalizeString(candidate.address),
+    propertyAreas: candidate.propertyAreas,
     website: normalizeString(candidate.website),
   };
 }
@@ -220,6 +239,7 @@ router.post("/quote-requests", async (req, res): Promise<void> => {
         phone: formatPhone(parsed.data.phone),
         email: parsed.data.email.toLowerCase(),
         address: parsed.data.address,
+        propertyAreas: parsed.data.propertyAreas,
       })
       .returning();
 

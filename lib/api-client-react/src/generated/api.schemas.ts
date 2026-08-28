@@ -9,6 +9,16 @@ export interface HealthStatus {
   status: string;
 }
 
+export type QuoteRequestInputPropertyAreasItem = typeof QuoteRequestInputPropertyAreasItem[keyof typeof QuoteRequestInputPropertyAreasItem];
+
+
+export const QuoteRequestInputPropertyAreasItem = {
+  driveway: 'driveway',
+  sidewalk: 'sidewalk',
+  staircase: 'staircase',
+  'back-alley-parking-pad': 'back-alley-parking-pad',
+} as const;
+
 export interface QuoteRequestInput {
   /**
      * @minLength 16
@@ -32,9 +42,24 @@ export interface QuoteRequestInput {
      * @maxLength 500
      */
   address: string;
+  /**
+     * @minItems 1
+     * @maxItems 4
+     */
+  propertyAreas: QuoteRequestInputPropertyAreasItem[];
   /** @maxLength 200 */
   website?: string;
 }
+
+export type QuoteRequestPropertyAreasItem = typeof QuoteRequestPropertyAreasItem[keyof typeof QuoteRequestPropertyAreasItem];
+
+
+export const QuoteRequestPropertyAreasItem = {
+  driveway: 'driveway',
+  sidewalk: 'sidewalk',
+  staircase: 'staircase',
+  'back-alley-parking-pad': 'back-alley-parking-pad',
+} as const;
 
 export type QuoteRequestStatus = typeof QuoteRequestStatus[keyof typeof QuoteRequestStatus];
 
@@ -50,6 +75,7 @@ export interface QuoteRequest {
   phone: string;
   email: string;
   address: string;
+  propertyAreas: QuoteRequestPropertyAreasItem[];
   status: QuoteRequestStatus;
   createdAt: string;
 }

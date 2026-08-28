@@ -9,4 +9,6 @@
 export * from './healthStatus';
 export * from './quoteRequest';
 export * from './quoteRequestInput';
+export * from './quoteRequestInputPropertyAreasItem';
+export * from './quoteRequestPropertyAreasItem';
 export * from './quoteRequestStatus';

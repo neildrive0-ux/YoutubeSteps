@@ -1,4 +1,5 @@
 import { createInsertSchema } from "drizzle-zod";
+import { sql } from "drizzle-orm";
 import { integer, pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
 import { z } from "zod/v4";
 
@@ -11,6 +12,10 @@ export const quoteRequestsTable = pgTable(
     phone: text("phone").notNull(),
     email: text("email").notNull(),
     address: text("address").notNull(),
+    propertyAreas: text("property_areas")
+      .array()
+      .notNull()
+      .default(sql`ARRAY[]::text[]`),
     status: text("status").notNull().default("new"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },

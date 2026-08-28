@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { QuoteRequestInputPropertyAreasItem } from './quoteRequestInputPropertyAreasItem';
 
 export interface QuoteRequestInput {
   /**
@@ -29,6 +30,11 @@ export interface QuoteRequestInput {
      * @maxLength 500
      */
   address: string;
+  /**
+     * @minItems 1
+     * @maxItems 4
+     */
+  propertyAreas: QuoteRequestInputPropertyAreasItem[];
   /** @maxLength 200 */
   website?: string;
 }

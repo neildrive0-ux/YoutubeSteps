@@ -82,6 +82,15 @@ const navigationItems = [
   { href: '#contracts', id: 'contracts', label: 'Contracts', testId: 'link-contracts' },
 ] as const;
 
+const propertyAreaOptions = [
+  { value: 'driveway', label: 'Driveway' },
+  { value: 'sidewalk', label: 'Sidewalk' },
+  { value: 'staircase', label: 'Staircase' },
+  { value: 'back-alley-parking-pad', label: 'Back-Alley Parking Pad' },
+] as const;
+
+type PropertyArea = (typeof propertyAreaOptions)[number]['value'];
+
 function scrollToQuote() {
   document.getElementById('quote')?.scrollIntoView({ behavior: 'smooth' });
 }
@@ -516,12 +525,24 @@ function ServiceStandards() {
   );
 }
 
-type FormValues = { name: string; phone: string; email: string; address: string };
+type FormValues = {
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  propertyAreas: PropertyArea[];
+};
 type FormErrors = Partial<Record<keyof FormValues, string>>;
 type SubmissionState = 'idle' | 'sending' | 'success' | 'error';
 
 function Contact() {
-  const [values, setValues] = useState<FormValues>({ name: '', phone: '', email: '', address: '' });
+  const [values, setValues] = useState<FormValues>({
+    name: '',
+    phone: '',
+    email: '',
+    address: '',
+    propertyAreas: [],
+  });
   const [errors, setErrors] = useState<FormErrors>({});
   const [website, setWebsite] = useState('');
   const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
@@ -542,6 +563,24 @@ function Contact() {
     });
   };
 
+  const togglePropertyArea = (area: PropertyArea) => {
+    setSubmissionState((current) => current === 'sending' ? current : 'idle');
+    setSubmitError('');
+    submissionIdRef.current = null;
+    setValues((current) => ({
+      ...current,
+      propertyAreas: current.propertyAreas.includes(area)
+        ? current.propertyAreas.filter((currentArea) => currentArea !== area)
+        : [...current.propertyAreas, area],
+    }));
+    setErrors((current) => {
+      if (!current.propertyAreas) return current;
+      const nextErrors = { ...current };
+      delete nextErrors.propertyAreas;
+      return nextErrors;
+    });
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSending) return;
@@ -554,6 +593,7 @@ function Contact() {
     if (phoneDigits.length < 10) nextErrors.phone = 'Please enter a valid phone number.';
     if (!emailPattern.test(values.email.trim())) nextErrors.email = 'Please enter a valid email address.';
     if (values.address.trim().length < 3) nextErrors.address = 'Please enter the property address.';
+    if (values.propertyAreas.length === 0) nextErrors.propertyAreas = 'Please select at least one area to clear.';
 
     if (Object.keys(nextErrors).length > 0) {
       const formElement = event.currentTarget;
@@ -562,6 +602,10 @@ function Contact() {
       setSubmissionState('idle');
       setSubmitError('');
       window.requestAnimationFrame(() => {
+        if (firstInvalidName === 'propertyAreas') {
+          document.getElementById('property-area-driveway')?.focus();
+          return;
+        }
         const firstInvalidField = formElement.elements.namedItem(firstInvalidName);
         if (firstInvalidField instanceof HTMLElement) firstInvalidField.focus();
       });
@@ -582,10 +626,11 @@ function Contact() {
         phone: values.phone.trim(),
         email: values.email.trim(),
         address: values.address.trim(),
+        propertyAreas: values.propertyAreas,
         website,
       });
       setSubmissionState('success');
-      setValues({ name: '', phone: '', email: '', address: '' });
+      setValues({ name: '', phone: '', email: '', address: '', propertyAreas: [] });
       setWebsite('');
       submissionIdRef.current = null;
     } catch (error) {
@@ -724,6 +769,45 @@ function Contact() {
                   />
                   {errors.address && <p id="address-error" className="text-sm text-red-700" data-testid="error-address">{errors.address}</p>}
                 </div>
+                <fieldset
+                  className="sm:col-span-2 space-y-3"
+                  aria-invalid={Boolean(errors.propertyAreas)}
+                  aria-describedby={errors.propertyAreas ? 'property-areas-error' : undefined}
+                >
+                  <legend className="text-xs font-bold uppercase tracking-widest text-slate-500">
+                    Areas to clear
+                  </legend>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {propertyAreaOptions.map(({ value, label }) => (
+                      <label
+                        key={value}
+                        htmlFor={`property-area-${value}`}
+                        className={`flex items-center gap-3 rounded-md border px-4 py-3.5 cursor-pointer transition-colors ${
+                          values.propertyAreas.includes(value)
+                            ? 'border-sky-500 bg-sky-50 text-slate-900'
+                            : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-sky-300'
+                        }`}
+                      >
+                        <input
+                          id={`property-area-${value}`}
+                          name="propertyAreas"
+                          type="checkbox"
+                          checked={values.propertyAreas.includes(value)}
+                          onChange={() => togglePropertyArea(value)}
+                          disabled={isSending}
+                          className="h-4 w-4 accent-sky-500"
+                          data-testid={`checkbox-property-area-${value}`}
+                        />
+                        <span className="text-sm font-medium">{label}</span>
+                      </label>
+                    ))}
+                  </div>
+                  {errors.propertyAreas && (
+                    <p id="property-areas-error" className="text-sm text-red-700" data-testid="error-property-areas">
+                      {errors.propertyAreas}
+                    </p>
+                  )}
+                </fieldset>
               </div>
               
               <button 

@@ -5,6 +5,7 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { QuoteRequestPropertyAreasItem } from './quoteRequestPropertyAreasItem';
 import type { QuoteRequestStatus } from './quoteRequestStatus';
 
 export interface QuoteRequest {
@@ -14,6 +15,7 @@ export interface QuoteRequest {
   phone: string;
   email: string;
   address: string;
+  propertyAreas: QuoteRequestPropertyAreasItem[];
   status: QuoteRequestStatus;
   createdAt: Date;
 }
