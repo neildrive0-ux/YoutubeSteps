@@ -95,6 +95,10 @@ function scrollToQuote() {
   document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function Header({ onSignUp }: { onSignUp: () => void }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -141,7 +145,15 @@ function Header({ onSignUp }: { onSignUp: () => void }) {
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md border-b border-slate-200 py-3 shadow-sm' : 'bg-transparent py-5'}`} id="top">
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="flex items-center justify-between">
-          <a className="inline-flex items-center" href="#top" data-testid="link-brand">
+          <a
+            className="inline-flex items-center"
+            href="#top"
+            onClick={(event) => {
+              event.preventDefault();
+              scrollToTop();
+            }}
+            data-testid="link-brand"
+          >
             <span className="inline-flex items-center bg-[#071118] px-3 py-2.5 rounded-md shadow-md">
               <img
                 className="h-8 w-auto"
