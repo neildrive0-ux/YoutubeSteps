@@ -54,7 +54,7 @@ const sections = [
           We may also disclose information when you direct us to do so, when disclosure is required or authorized by law, or when reasonably necessary to protect legal rights, safety, or the operation of our services.
         </p>
         <p>
-          We do not sell personal information as part of the quote-request process. <strong>Owner confirmation required before publication:</strong> confirm this statement reflects all current marketing, lead-generation, and business practices.
+          <strong>Owner confirmation required before publication:</strong> confirm how the policy should distinguish sharing with service providers needed to operate the website and deliver email from sharing or selling information for other purposes.
         </p>
       </>
     ),
@@ -90,7 +90,7 @@ const sections = [
     title: 'How long we keep information',
     content: (
       <p>
-        We keep personal information only as long as reasonably needed for the purposes described in this policy, to manage our business records, and to meet legal requirements. When it is no longer needed, we take reasonable steps to securely destroy it or make it anonymous. <strong>Owner confirmation required before publication:</strong> set and follow a practical retention period for quote requests, including requests that do not become customers.
+        We keep quote-request information for one month. We may keep information for longer where needed to provide services, manage business records, or meet legal requirements. When personal information is no longer needed, we take reasonable steps to securely destroy it or make it anonymous. <strong>Owner confirmation required before publication:</strong> confirm when the one-month period starts, whether it applies to all quote requests or only requests that do not become customers, and how old information is deleted.
       </p>
     ),
   },
@@ -125,7 +125,7 @@ const sections = [
           <p><strong>Service area:</strong> Grande Prairie and surrounding areas, Alberta</p>
         </address>
         <p className="mt-4">
-          <strong>Owner confirmation required before publication:</strong> confirm the legal business name and whether a specific privacy contact or mailing address should be listed.
+          <strong>Owner confirmation required before publication:</strong> confirm whether “Ai Landscaping &amp; SnowRemoval” is the registered legal name or a trade name, and whether a mailing address should be listed.
         </p>
       </>
     ),
