@@ -90,7 +90,7 @@ const sections = [
     title: 'How long we keep information',
     content: (
       <p>
-        Our intended retention period for quote requests is one month. <strong>Owner confirmation required before publication:</strong> the website currently stores quote requests without automatically deleting them after one month. Confirm whether you manually delete them, or whether an automatic deletion process should be added before publishing this retention commitment. Also confirm whether the one-month period applies to all quote requests or only requests that do not become customers, and how long copies in email and provider systems are retained.
+        We automatically delete quote request records from our database when they are more than one calendar month old. This cleanup runs periodically, so a record may remain until the next cleanup after the one-month point. This does not delete copies of email notifications or information retained by service providers, which may follow their own retention practices.
       </p>
     ),
   },

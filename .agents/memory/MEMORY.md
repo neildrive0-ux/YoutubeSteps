@@ -1,2 +1,3 @@
 - [Customer proof policy](customer-proof-policy.md) — use verified customer quotes only; show service standards until real testimonials are supplied.
 - [OpenAPI validator compatibility](openapi-validator-compatibility.md) — avoid schema formats that make Orval emit Zod helpers unsupported by this workspace.
+- [Quote request privacy](quote-request-privacy.md) — retain quote records in the app database for one calendar month; distinguish service-provider processing from independent sharing.

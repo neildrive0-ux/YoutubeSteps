@@ -1,5 +1,6 @@
 import app from "./app";
 import { logger } from "./lib/logger";
+import { startQuoteRequestRetentionCleanup } from "./lib/quote-request-retention";
 
 const rawPort = process.env["PORT"];
 
@@ -14,6 +15,8 @@ const port = Number(rawPort);
 if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
+
+startQuoteRequestRetentionCleanup();
 
 app.listen(port, (err) => {
   if (err) {
