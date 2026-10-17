@@ -54,7 +54,7 @@ const sections = [
           We may also disclose information when you direct us to do so, when disclosure is required or authorized by law, or when reasonably necessary to protect legal rights, safety, or the operation of our services.
         </p>
         <p>
-          <strong>Owner confirmation required before publication:</strong> confirm how the policy should distinguish sharing with service providers needed to operate the website and deliver email from sharing or selling information for other purposes.
+          We do not sell personal information or share it with other people or businesses for their own independent purposes. As described below, necessary service providers may process information to support the website, store quote requests, and deliver email.
         </p>
       </>
     ),
@@ -90,7 +90,7 @@ const sections = [
     title: 'How long we keep information',
     content: (
       <p>
-        We keep quote-request information for one month. We may keep information for longer where needed to provide services, manage business records, or meet legal requirements. When personal information is no longer needed, we take reasonable steps to securely destroy it or make it anonymous. <strong>Owner confirmation required before publication:</strong> confirm when the one-month period starts, whether it applies to all quote requests or only requests that do not become customers, and how old information is deleted.
+        Our intended retention period for quote requests is one month. <strong>Owner confirmation required before publication:</strong> the website currently stores quote requests without automatically deleting them after one month. Confirm whether you manually delete them, or whether an automatic deletion process should be added before publishing this retention commitment. Also confirm whether the one-month period applies to all quote requests or only requests that do not become customers, and how long copies in email and provider systems are retained.
       </p>
     ),
   },
