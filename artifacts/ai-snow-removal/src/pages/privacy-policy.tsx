@@ -182,19 +182,12 @@ export function PrivacyPolicy() {
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg">
               How we handle information you share when requesting snow removal services in Grande Prairie and surrounding areas.
             </p>
-            <p className="mt-6 text-sm text-slate-400">Draft for owner review · October 17, 2026</p>
+            <p className="mt-6 text-sm text-slate-400">Last updated · October 17, 2026</p>
           </div>
         </div>
       </header>
 
       <main className="container mx-auto max-w-7xl px-6 py-10 md:py-14">
-        <div className="mb-10 rounded-md border border-amber-300 bg-amber-50 p-5 text-amber-950 shadow-sm" role="note">
-          <p className="font-semibold">Draft — not ready to publish</p>
-          <p className="mt-1 text-sm leading-relaxed">
-            The policy below is a review draft. Confirm the final wording reflects actual business practices before publishing. This is general information, not legal advice.
-          </p>
-        </div>
-
         <div className="grid gap-10 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-16">
           <aside className="h-fit rounded-md border border-slate-200 bg-white p-5 lg:sticky lg:top-8">
             <h2 className="font-display text-lg font-semibold text-slate-900">On this page</h2>
