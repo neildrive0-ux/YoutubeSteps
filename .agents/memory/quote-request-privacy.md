@@ -7,8 +7,8 @@ The business does not sell or share quote-request information for other parties'
 
 Quote-request records in the app database are to be retained for one calendar month, then automatically deleted. This does not delete copies held in email or third-party provider systems.
 
-Ai Landscaping & SnowRemoval is a trade name. The business uses Meta Business Suite and uses two-factor authentication.
+Ai Landscaping & Contracting Services Inc. is the legal business name and operates under the trade name Ai Landscaping & SnowRemoval. The business uses Meta Business Suite and two-factor authentication, with no other business safeguards currently reported.
 
-**Why:** The owner confirmed the trade-name status, Meta Business Suite use, two-factor authentication, one-month retention period, and distinction between independent sharing and necessary service-provider processing.
+**Why:** The owner confirmed the legal entity and trade name, Meta Business Suite use, two-factor authentication, one-month retention period, and distinction between independent sharing and necessary service-provider processing.
 
-**How to apply:** Keep the public privacy policy aligned with the database cleanup and state separately that external email/provider copies may follow their own retention practices. Do not infer the registered legal owner name, Meta Pixel use, or which individual accounts have two-factor authentication enabled.
+**How to apply:** Keep the public privacy policy aligned with the database cleanup and state separately that external email/provider copies may follow their own retention practices. Do not infer Meta Pixel use, exact database hosting/location, or whether every account holding customer information has two-factor authentication enabled.

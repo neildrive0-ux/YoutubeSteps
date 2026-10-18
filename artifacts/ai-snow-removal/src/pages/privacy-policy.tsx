@@ -81,7 +81,7 @@ const sections = [
     title: 'Data security',
     content: (
       <p>
-        We use reasonable administrative, technical, and physical safeguards intended to protect personal information against loss, unauthorized access, use, alteration, or disclosure. We use two-factor authentication to help protect business accounts. No method of transmission or storage can be guaranteed to be completely secure. <strong>Owner confirmation required before publication:</strong> confirm which accounts that hold customer information have two-factor authentication enabled and whether there are other safeguards to describe.
+        At the business level, we use two-factor authentication to help protect business accounts. We do not currently use other safeguards. The website and service providers may apply their own security measures. No method of transmission or storage can be guaranteed to be completely secure.
       </p>
     ),
   },
@@ -117,7 +117,7 @@ const sections = [
     content: (
       <>
         <p>
-          To ask a privacy question or make an access or correction request, contact Ai Landscaping &amp; SnowRemoval:
+          Ai Landscaping &amp; SnowRemoval is a trade name of Ai Landscaping &amp; Contracting Services Inc. To ask a privacy question or make an access or correction request, contact us:
         </p>
         <address className="not-italic space-y-2">
           <p><strong>Email:</strong> <a className="text-sky-700 underline decoration-sky-300 underline-offset-4 hover:text-sky-900" href="mailto:ailandscapinggp@gmail.com">ailandscapinggp@gmail.com</a></p>
@@ -125,7 +125,7 @@ const sections = [
           <p><strong>Service area:</strong> Grande Prairie and surrounding areas, Alberta</p>
         </address>
         <p className="mt-4">
-          <strong>Owner confirmation required before publication:</strong> provide the registered legal name or owner name behind the trade name “Ai Landscaping &amp; SnowRemoval,” and confirm whether a mailing address should be listed.
+          <strong>Owner confirmation required before publication:</strong> confirm whether a mailing address should be listed.
         </p>
       </>
     ),
@@ -222,7 +222,7 @@ export function PrivacyPolicy() {
 
           <article className="min-w-0 rounded-md border border-slate-200 bg-white px-6 py-8 shadow-sm sm:px-10 sm:py-10">
             <p className="mb-8 text-sm leading-relaxed text-slate-600">
-              Ai Landscaping &amp; SnowRemoval (“we,” “us,” or “our”) is a landscaping and snow removal business serving Grande Prairie and surrounding areas in Alberta, Canada. This policy describes how we collect, use, disclose, and safeguard personal information in connection with our website quote requests and Meta lead forms.
+              Ai Landscaping &amp; Contracting Services Inc. operates under the trade name Ai Landscaping &amp; SnowRemoval (“we,” “us,” or “our”), serving Grande Prairie and surrounding areas in Alberta, Canada. This policy describes how we collect, use, disclose, and safeguard personal information in connection with our website quote requests and Meta lead forms.
             </p>
             <div className="space-y-9">
               {sections.map(({ id, title, content }) => (
