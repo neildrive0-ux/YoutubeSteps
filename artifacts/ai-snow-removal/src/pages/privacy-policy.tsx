@@ -66,12 +66,12 @@ const sections = [
       <>
         <p>Services involved in the current website or its lead channels include:</p>
         <ul>
-          <li><strong>Meta (Facebook and Instagram):</strong> may collect information through its lead forms and provide it to us when you submit a form there.</li>
+          <li><strong>Meta (Meta Business Suite, Facebook, and Instagram):</strong> may collect information through its lead forms and provide it to us when you submit a form there.</li>
           <li><strong>Resend:</strong> delivers quote-request email notifications and, when available, customer confirmations.</li>
           <li><strong>Website hosting and database providers:</strong> support the website and storage of submitted quote requests.</li>
         </ul>
         <p>
-          These providers may process information in locations outside Alberta or Canada, where it may be subject to the laws of those locations. <strong>Owner confirmation required before publication:</strong> identify the current hosting and database providers, verify which providers receive personal information, confirm their processing locations and applicable terms, and disclose any analytics tools, advertising pixels, or other tracking technologies in use.
+          These providers may process information in locations outside Alberta or Canada, where it may be subject to the laws of those locations. <strong>Owner confirmation required before publication:</strong> identify the current hosting and database providers, verify which providers receive personal information, confirm their processing locations and applicable terms, and confirm whether Meta Pixel, analytics, or other tracking technologies are in use.
         </p>
       </>
     ),
@@ -81,7 +81,7 @@ const sections = [
     title: 'Data security',
     content: (
       <p>
-        We use reasonable administrative, technical, and physical safeguards intended to protect personal information against loss, unauthorized access, use, alteration, or disclosure. No method of transmission or storage can be guaranteed to be completely secure. <strong>Owner confirmation required before publication:</strong> confirm the safeguards and access practices used by the business and its providers.
+        We use reasonable administrative, technical, and physical safeguards intended to protect personal information against loss, unauthorized access, use, alteration, or disclosure. We use two-factor authentication to help protect business accounts. No method of transmission or storage can be guaranteed to be completely secure. <strong>Owner confirmation required before publication:</strong> confirm which accounts that hold customer information have two-factor authentication enabled and whether there are other safeguards to describe.
       </p>
     ),
   },
@@ -125,7 +125,7 @@ const sections = [
           <p><strong>Service area:</strong> Grande Prairie and surrounding areas, Alberta</p>
         </address>
         <p className="mt-4">
-          <strong>Owner confirmation required before publication:</strong> confirm whether “Ai Landscaping &amp; SnowRemoval” is the registered legal name or a trade name, and whether a mailing address should be listed.
+          <strong>Owner confirmation required before publication:</strong> provide the registered legal name or owner name behind the trade name “Ai Landscaping &amp; SnowRemoval,” and confirm whether a mailing address should be listed.
         </p>
       </>
     ),

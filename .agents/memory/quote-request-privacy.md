@@ -7,6 +7,8 @@ The business does not sell or share quote-request information for other parties'
 
 Quote-request records in the app database are to be retained for one calendar month, then automatically deleted. This does not delete copies held in email or third-party provider systems.
 
-**Why:** The owner confirmed the one-month retention period and the distinction between independent sharing and necessary service-provider processing.
+Ai Landscaping & SnowRemoval is a trade name. The business uses Meta Business Suite and uses two-factor authentication.
 
-**How to apply:** Keep the public privacy policy aligned with the database cleanup and state separately that external email/provider copies may follow their own retention practices.
+**Why:** The owner confirmed the trade-name status, Meta Business Suite use, two-factor authentication, one-month retention period, and distinction between independent sharing and necessary service-provider processing.
+
+**How to apply:** Keep the public privacy policy aligned with the database cleanup and state separately that external email/provider copies may follow their own retention practices. Do not infer the registered legal owner name, Meta Pixel use, or which individual accounts have two-factor authentication enabled.
