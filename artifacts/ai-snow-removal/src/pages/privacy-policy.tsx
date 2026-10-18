@@ -20,9 +20,6 @@ const sections = [
         <p>
           Meta may also provide information you submit through its lead forms to us. Meta independently handles information under its own privacy terms and practices.
         </p>
-        <p>
-          Our website uses Meta Pixel. It may send Meta information about your visit and activity on the website, such as pages viewed, actions taken, and certain browser or device information. We use the Pixel to measure website activity and advertising performance. Meta may process this information under its own privacy terms and practices.
-        </p>
       </>
     ),
   },
@@ -57,7 +54,7 @@ const sections = [
           We may also disclose information when you direct us to do so, when disclosure is required or authorized by law, or when reasonably necessary to protect legal rights, safety, or the operation of our services.
         </p>
         <p>
-          We do not sell personal information. Website activity may be disclosed to Meta through Meta Pixel, and Meta may process it under its own privacy terms and practices. Apart from this Pixel disclosure and the necessary service providers described below, we do not share quote-request information with other businesses for their own independent purposes.
+          We do not sell personal information or share it with other people or businesses for their own independent purposes. Necessary service providers may process information to support the website, store quote requests, and deliver email.
         </p>
       </>
     ),
@@ -69,12 +66,12 @@ const sections = [
       <>
         <p>Services involved in the current website or its lead channels include:</p>
         <ul>
-          <li><strong>Meta (Meta Business Suite, Facebook, and Instagram):</strong> may collect information through its lead forms and provide it to us when you submit a form there. Meta Pixel also sends information about website visits and activity to Meta.</li>
+          <li><strong>Meta (Meta Business Suite, Facebook, and Instagram):</strong> may collect information through its lead forms and provide it to us when you submit a form there. Meta handles information submitted through its forms under its own privacy terms and practices.</li>
           <li><strong>Resend:</strong> delivers quote-request email notifications and, when available, customer confirmations.</li>
           <li><strong>Replit:</strong> hosts the website and PostgreSQL database where quote requests are stored.</li>
         </ul>
         <p>
-          Replit and Resend may process or store information outside Alberta or Canada, where it may be subject to the laws of those locations. We do not know their exact processing locations. Meta may also process Pixel information under its own privacy terms and practices.
+          Replit and Resend may process or store information outside Alberta or Canada, where it may be subject to the laws of those locations. We do not know their exact processing locations.
         </p>
       </>
     ),
@@ -151,7 +148,7 @@ export function PrivacyPolicy() {
 
     document.title = 'Privacy Policy | Ai Landscaping & SnowRemoval';
     if (description) {
-      description.content = 'Learn how Ai Landscaping & SnowRemoval collects and uses quote-request details, Meta lead forms, and website activity measured by Meta Pixel.';
+      description.content = 'Learn how Ai Landscaping & SnowRemoval collects and uses information from website quote requests and Meta lead forms.';
     }
     if (canonical) {
       canonical.href = `${window.location.origin}/privacy-policy`;
