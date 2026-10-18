@@ -68,10 +68,10 @@ const sections = [
         <ul>
           <li><strong>Meta (Meta Business Suite, Facebook, and Instagram):</strong> may collect information through its lead forms and provide it to us when you submit a form there.</li>
           <li><strong>Resend:</strong> delivers quote-request email notifications and, when available, customer confirmations.</li>
-          <li><strong>Website hosting and database providers:</strong> support the website and storage of submitted quote requests.</li>
+          <li><strong>Replit:</strong> hosts the website and PostgreSQL database where quote requests are stored.</li>
         </ul>
         <p>
-          These providers may process information in locations outside Alberta or Canada, where it may be subject to the laws of those locations. <strong>Owner confirmation required before publication:</strong> identify the current hosting and database providers, verify which providers receive personal information, confirm their processing locations and applicable terms, and confirm whether Meta Pixel, analytics, or other tracking technologies are in use.
+          These providers may process information in locations outside Alberta or Canada, where it may be subject to the laws of those locations. <strong>Owner confirmation required before publication:</strong> confirm the processing locations and applicable terms for Replit and Resend, and confirm whether Meta Pixel, analytics, or other tracking technologies are in use.
         </p>
       </>
     ),
