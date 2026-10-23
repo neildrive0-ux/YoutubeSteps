@@ -85,7 +85,7 @@ export function SiteHeader() {
                 return (
                   <Link
                     key={item.href}
-                    className={`relative text-sm font-semibold transition-colors after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:bg-sky-500 after:transition-all ${
+                    className={`relative whitespace-nowrap text-sm font-semibold transition-colors after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:bg-sky-500 after:transition-all ${
                       isActive
                         ? 'text-sky-500 after:w-full'
                         : `${solid ? 'text-slate-700' : 'text-slate-200 hover:text-white'} hover:text-sky-500 after:w-0 hover:after:w-full`
@@ -104,13 +104,13 @@ export function SiteHeader() {
               <a
                 href={SITE.phoneHref}
                 onClick={trackCallClick}
-                className={`inline-flex items-center justify-center gap-2 font-bold px-4 py-3 rounded-md transition-all duration-200 ${solid ? 'text-slate-900 hover:bg-slate-100' : 'text-white hover:bg-white/10'}`}
+                className={`inline-flex lg:hidden xl:inline-flex items-center justify-center gap-2 whitespace-nowrap font-bold px-4 py-3 rounded-md transition-all duration-200 ${solid ? 'text-slate-900 hover:bg-slate-100' : 'text-white hover:bg-white/10'}`}
                 data-testid="link-header-phone"
               >
                 <Phone size={16} /> {SITE.phoneDisplay}
               </a>
               <button
-                className={`w-full lg:w-auto inline-flex items-center justify-center gap-2 font-bold px-6 py-3 rounded-md transition-all duration-200 ${
+                className={`w-full lg:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap font-bold px-6 py-3 rounded-md transition-all duration-200 ${
                   solid ? 'bg-[#071118] hover:bg-slate-800 text-white' : 'bg-white hover:bg-sky-50 text-[#071118]'
                 }`}
                 type="button"
