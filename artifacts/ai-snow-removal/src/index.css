@@ -21,6 +21,7 @@
   --color-base: #071118;
   --color-base-2: #0b1822;
   --color-raise: #0f1f2b;
+  --color-panel: #0e2335;
 
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -118,6 +119,13 @@
   .text-outline {
     color: transparent;
     -webkit-text-stroke: 1.5px rgb(74 176 245 / 0.16);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   .bg-grain {
