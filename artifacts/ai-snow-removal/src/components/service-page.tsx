@@ -12,6 +12,8 @@ export type ServicePageProps = {
     intro: ReactNode;
     points?: string[];
     fallback?: string;
+    /** Falling snow over the hero and the closing band. Off for landscaping. */
+    snow?: boolean;
   };
   quoteHref: string;
   quoteLabel: string;
@@ -40,7 +42,7 @@ export function ServicePage({
   extra,
 }: ServicePageProps) {
   return (
-    <SiteLayout page={page}>
+    <SiteLayout page={page} snow={hero.snow ?? true}>
       <PageHero {...hero} quoteHref={quoteHref} quoteLabel={quoteLabel} />
       {page.breadcrumb && <Breadcrumbs label={page.breadcrumb} />}
 
