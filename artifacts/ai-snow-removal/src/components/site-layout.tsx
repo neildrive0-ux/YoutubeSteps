@@ -97,7 +97,7 @@ export function SiteLayout({
   return (
     <SignUpContext.Provider value={openSignUp}>
       <Seo page={page} />
-      <div className="min-h-screen bg-white pb-[76px] selection:bg-ice/30 selection:text-ink lg:pb-0">
+      <div className="min-h-screen bg-base pb-[76px] selection:bg-ice/30 selection:text-ink lg:pb-0">
         <div aria-hidden={modalOpen ? true : undefined} inert={modalOpen ? true : undefined} data-testid="site-background">
           <SiteHeader />
           <main>
