@@ -26,17 +26,17 @@ export default function DrivewaySnowRemovalPage() {
       <ContentSection eyebrow="What we clear" title="Residential Driveway Snow Clearing">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {areas.map(({ title, text, icon: Icon }) => (
-            <article key={title} className="rounded-3xl border border-slate-200 bg-snow p-6">
-              <Icon size={24} className="text-ice-deep mb-4" aria-hidden="true" />
-              <h3 className="heading-xl text-2xl text-slate-900 mb-2">{title}</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">{text}</p>
+            <article key={title} className="rounded-3xl border border-white/10 bg-base-2 p-6">
+              <Icon size={24} className="text-ice mb-4" aria-hidden="true" />
+              <h3 className="heading-xl text-2xl text-white mb-2">{title}</h3>
+              <p className="text-slate-400 text-sm leading-relaxed">{text}</p>
             </article>
           ))}
         </div>
       </ContentSection>
 
       <ContentSection eyebrow="How it works" title="Snow Plowing After Every Qualifying Snowfall" tone="snow">
-        <div className="max-w-3xl space-y-5 text-slate-700 text-lg leading-relaxed">
+        <div className="max-w-3xl space-y-5 text-slate-300 text-lg leading-relaxed">
           <p>
             Once you are on a seasonal plan, your property is on our route. Our agreement triggers service at about {SITE.triggerCm} cm of snowfall, or as required, so light snowfalls get cleared too and packed snow doesn't build up into ruts and ice.
           </p>
