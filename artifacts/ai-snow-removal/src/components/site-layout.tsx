@@ -1,7 +1,7 @@
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { FileText, Phone } from 'lucide-react';
-import { SiteHeader } from '@/components/site-header';
+import { SiteHeader, useHeroCtaVisible } from '@/components/site-header';
 import { Footer } from '@/components/site-footer';
 import { SignUpModal } from '@/components/signup-modal';
 import { CookieConsent } from '@/components/cookie-consent';
@@ -51,19 +51,8 @@ const QUOTE_PATHS = ['/snow-removal-quote', '/landscaping-quote'];
 function MobileCtaBar() {
   const [location] = useLocation();
   const onQuotePage = QUOTE_PATHS.includes(location);
-  // Pages whose hero has its own buttons ([data-hero-cta]) keep this bar hidden until those buttons scroll away,
-  // so the two sets never show at once. The homepage starts hidden so the prerendered page doesn't flash it.
-  const [hidden, setHidden] = useState(location === '/');
-  useEffect(() => {
-    const heroCta = document.querySelector('[data-hero-cta]');
-    if (!heroCta) {
-      setHidden(false);
-      return;
-    }
-    const observer = new IntersectionObserver(([entry]) => setHidden(entry.isIntersecting));
-    observer.observe(heroCta);
-    return () => observer.disconnect();
-  }, [location]);
+  // Hidden while the page's own hero buttons are on screen, so the two sets never show at once.
+  const hidden = useHeroCtaVisible();
   return (
     <div
       className={`fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-white/10 bg-ink/95 p-2.5 backdrop-blur-md transition-all duration-300 lg:hidden ${hidden ? 'pointer-events-none translate-y-full opacity-0' : ''}`}
