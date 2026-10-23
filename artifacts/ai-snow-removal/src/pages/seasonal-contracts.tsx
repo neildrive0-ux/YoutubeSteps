@@ -21,18 +21,18 @@ function ContractDetails() {
         <div className="grid lg:grid-cols-2 gap-12">
           <ul className="space-y-4">
             {included.map((item) => (
-              <li key={item} className="flex items-start gap-3 text-slate-700 text-lg">
-                <Check size={22} className="text-ice-deep shrink-0 mt-1" aria-hidden="true" />
+              <li key={item} className="flex items-start gap-3 text-slate-300 text-lg">
+                <Check size={22} className="text-ice shrink-0 mt-1" aria-hidden="true" />
                 <span>{item}</span>
               </li>
             ))}
           </ul>
-          <div className="rounded-3xl border border-slate-200 bg-snow p-8">
-            <h3 className="heading-xl text-3xl text-slate-900 mb-4">Why a contract instead of calling per storm?</h3>
-            <p className="text-slate-600 leading-relaxed mb-4">
+          <div className="rounded-3xl border border-white/10 bg-base-2 p-8">
+            <h3 className="heading-xl text-3xl text-white mb-4">Why a contract instead of calling per storm?</h3>
+            <p className="text-slate-400 leading-relaxed mb-4">
               With a seasonal contract you are on our route from the start of your plan. You don't have to watch the forecast, call after a snowfall or wait while one-time jobs are booked in.
             </p>
-            <p className="text-slate-600 leading-relaxed">
+            <p className="text-slate-400 leading-relaxed">
               You also know your cost for the whole winter up front, whether Grande Prairie gets a mild season or a heavy one.
             </p>
           </div>
@@ -45,11 +45,11 @@ function ContractDetails() {
             { name: '4 month plan', text: 'Covers the core of the Grande Prairie winter. A good fit if you want the heaviest months handled.' },
             { name: '5 month plan', text: 'Adds an extra month of coverage for early or late snowfalls at either end of the season.' },
           ].map((plan) => (
-            <article key={plan.name} className="rounded-3xl bg-white border border-slate-200 p-8 shadow-sm">
-              <CalendarRange size={24} className="text-ice-deep mb-4" aria-hidden="true" />
-              <h3 className="heading-xl text-3xl text-slate-900 mb-3">{plan.name}</h3>
-              <p className="text-slate-600 leading-relaxed">{plan.text}</p>
-              <p className="mt-6 text-sm font-semibold text-slate-800">From ${SITE.priceFrom}/month · priced by the size of your driveway</p>
+            <article key={plan.name} className="rounded-3xl bg-raise border border-white/10 p-8 shadow-sm">
+              <CalendarRange size={24} className="text-ice mb-4" aria-hidden="true" />
+              <h3 className="heading-xl text-3xl text-white mb-3">{plan.name}</h3>
+              <p className="text-slate-400 leading-relaxed">{plan.text}</p>
+              <p className="mt-6 text-sm font-semibold text-slate-100">From ${SITE.priceFrom}/month · priced by the size of your driveway</p>
             </article>
           ))}
         </div>
@@ -57,14 +57,14 @@ function ContractDetails() {
 
       <ContentSection eyebrow="No fine print surprises" title="Read the Snow Removal Agreement Before You Sign">
         <div className="max-w-3xl">
-          <p className="text-slate-600 text-lg leading-relaxed mb-8">
+          <p className="text-slate-400 text-lg leading-relaxed mb-8">
             Our seasonal service agreement is short and written in plain language. It covers the term you choose, the services, the snowfall trigger, payment, insurance and what we ask of you as a customer, like keeping the areas accessible and marking hazards.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <a href={CONTRACT_PDF} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 bg-ink hover:bg-steel text-white font-bold px-8 py-4 rounded-full">
+            <a href={CONTRACT_PDF} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 bg-ice hover:bg-ice-soft text-ink font-bold px-8 py-4 rounded-full">
               <FileText size={18} /> Open the contract (PDF)
             </a>
-            <button type="button" onClick={openSignUp} className="inline-flex items-center justify-center gap-2 border border-slate-300 hover:bg-snow text-slate-800 font-bold px-8 py-4 rounded-full">
+            <button type="button" onClick={openSignUp} className="inline-flex items-center justify-center gap-2 border border-white/10 hover:bg-base-2 text-slate-100 font-bold px-8 py-4 rounded-full">
               Sign up for winter service <ArrowRight size={18} />
             </button>
           </div>
