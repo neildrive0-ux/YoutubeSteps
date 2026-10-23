@@ -1,13 +1,12 @@
 {
-  "name": "Ai Landscaping & SnowRemoval",
-  "short_name": "Ai SnowRemoval",
-  "description": "Reliable, insured snow removal for Grande Prairie and surrounding areas.",
+  "name": "Ai Landscaping & Snow Removal",
+  "short_name": "Ai Landscaping",
+  "description": "Snow removal and landscaping in Grande Prairie and Sexsmith, Alberta.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#0b151e",
-  "theme_color": "#0b151e",
-  "orientation": "portrait-primary",
+  "background_color": "#05080c",
+  "theme_color": "#05080c",
   "icons": [
     {
       "src": "/app-icon-192.png",
