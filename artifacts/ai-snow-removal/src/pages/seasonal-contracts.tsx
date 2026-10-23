@@ -49,7 +49,7 @@ function ContractDetails() {
               <CalendarRange size={24} className="text-ice-deep mb-4" aria-hidden="true" />
               <h3 className="heading-xl text-3xl text-slate-900 mb-3">{plan.name}</h3>
               <p className="text-slate-600 leading-relaxed">{plan.text}</p>
-              <p className="mt-6 text-sm font-semibold text-slate-800">From ${SITE.priceFrom}/month for standard driveways · from ${SITE.priceLargeFrom}/month for larger driveways</p>
+              <p className="mt-6 text-sm font-semibold text-slate-800">From ${SITE.priceFrom}/month · priced by the size of your driveway</p>
             </article>
           ))}
         </div>
