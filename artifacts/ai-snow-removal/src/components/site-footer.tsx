@@ -30,7 +30,7 @@ const columns = [
 export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-ink pt-12 pb-10 text-white md:pt-20">
-      <p aria-hidden="true" className="heading-xl text-outline pointer-events-none absolute inset-x-0 bottom-0 select-none whitespace-nowrap text-center text-[24vw] leading-none md:text-[15rem]">
+      <p aria-hidden="true" className="heading-xl text-outline pointer-events-none absolute inset-x-0 bottom-0 select-none whitespace-nowrap text-center text-[13vw] leading-none md:text-[15rem]">
         Grande Prairie
       </p>
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
