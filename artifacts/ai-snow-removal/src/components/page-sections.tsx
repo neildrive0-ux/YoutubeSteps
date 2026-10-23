@@ -91,7 +91,7 @@ export function PageHero({
       <div className="relative mx-auto max-w-5xl px-4 pb-28 pt-40 text-center sm:px-6 md:pb-32 md:pt-48">
         <p className="eyebrow text-ice-soft">{eyebrow}</p>
         <h1 id="page-title" className="heading-xl mt-5 text-[2.6rem] sm:text-6xl md:text-7xl">
-          <span className="block text-ice">{accent}</span>
+          <span className="block text-ice">{accent}</span>{' '}
           <span className="block text-white">{title}</span>
         </h1>
         <div className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-200 md:text-xl">{intro}</div>
