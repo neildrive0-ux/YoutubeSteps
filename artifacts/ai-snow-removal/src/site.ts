@@ -33,7 +33,7 @@ export const TRACKING = {
 export const PHOTOS = {
   hero: '/images/hero-snow-plowing.webp',
   heroMobile: '/images/hero-snow-plowing-mobile.webp',
-  snow: '/images/snow-ice-management.webp',
+  snow: '/images/snow-shovel-walkway.webp',
   landscapeManagement: '/images/landscape-management.webp',
   landscapeEnhancements: '/images/landscape-enhancements.webp',
   process: '/images/plowed-driveway.webp',
