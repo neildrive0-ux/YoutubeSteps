@@ -13,15 +13,29 @@ import {
 } from 'lucide-react';
 import { PAGES, PHOTOS, SITE } from '@/site';
 import { SiteLayout } from '@/components/site-layout';
-import { CallLink, CheckList, ContentSection, FaqSection, PhotoPanel, PillLink, SnowDrift } from '@/components/page-sections';
+import { CallLink, CheckList, ContentSection, FaqSection, PhotoPanel, PillLink } from '@/components/page-sections';
 import { trackCallClick } from '@/lib/tracking';
+
+// The hero photo stays fixed while the hero and the stats band scroll over it (clipped to this block),
+// and the stats band fades the photo into the page colour so the two read as one picture.
+function HeroBackdrop() {
+  return (
+    <div className="pointer-events-none fixed inset-x-0 top-0 h-[100lvh]" aria-hidden="true">
+      {PHOTOS.hero ? (
+        <img src={PHOTOS.hero} alt="" fetchPriority="high" className="h-full w-full object-cover" />
+      ) : (
+        <div className="hero-fallback h-full w-full" />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-b from-base/80 via-base/40 to-base/75" />
+      <div className="snowfall" />
+    </div>
+  );
+}
 
 function Hero() {
   return (
-    <section className={`relative flex min-h-[92svh] items-center overflow-hidden text-white ${PHOTOS.hero ? 'bg-ink' : 'hero-fallback'}`} aria-labelledby="hero-title">
-      {PHOTOS.hero && <img src={PHOTOS.hero} alt="" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover opacity-50" />}
-      <div className="snowfall" aria-hidden="true" />
-      <div className="relative mx-auto w-full max-w-6xl px-4 pb-32 pt-40 text-center sm:px-6 md:pt-44">
+    <section className="relative flex min-h-[92svh] items-center text-white" aria-labelledby="hero-title">
+      <div className="relative mx-auto w-full max-w-6xl px-4 pb-20 pt-40 text-center sm:px-6 md:pt-44">
         <p className="eyebrow text-ice-soft">Grande Prairie · Sexsmith · Clairmont · County of GP</p>
         <h1 id="hero-title" className="heading-xl mt-6 text-[3.1rem] sm:text-7xl md:text-8xl">
           <span className="block text-ice">Snow Removal</span>{' '}
@@ -40,7 +54,6 @@ function Hero() {
           <span className="inline-flex items-center gap-2"><CalendarRange size={16} className="text-ice" aria-hidden="true" /> Limited route spots: book before the first storm</span>
         </p>
       </div>
-      <SnowDrift fill="#05080c" />
     </section>
   );
 }
@@ -54,8 +67,8 @@ const stats = [
 
 function StatsStrip() {
   return (
-    <section className="bg-ink text-white" aria-label="At a glance">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 pb-16 pt-4 sm:px-6 lg:grid-cols-4">
+    <section className="relative bg-gradient-to-b from-transparent via-base/85 to-base text-white" aria-label="At a glance">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 pb-24 pt-10 sm:px-6 lg:grid-cols-4">
         {stats.map((stat) => (
           <div key={stat.label} className="px-2 py-6 text-center" data-reveal>
             <p className="heading-xl text-5xl text-ice md:text-6xl">{stat.value}</p>
@@ -95,6 +108,7 @@ function WinterPlanBand() {
   return (
     <ContentSection
       tone="dark"
+      className="z-10 -mt-12 rounded-t-[2.5rem] shadow-[0_-30px_60px_rgba(0,0,0,0.45)]"
       bigWord="Winter Ready"
       center
       eyebrow="Your snow pros"
@@ -235,7 +249,7 @@ function AllSeasonCare() {
   const [active, setActive] = useState(seasons[0].id);
   return (
     <ContentSection id="all-season-care" eyebrow="One company, all year" title="All-season care">
-      <div role="tablist" aria-label="Seasons" className="mb-8 flex flex-wrap gap-2 border-b border-slate-200" data-reveal>
+      <div role="tablist" aria-label="Seasons" className="mb-8 flex flex-wrap gap-2 border-b border-white/10" data-reveal>
         {seasons.map((season) => (
           <button
             key={season.id}
@@ -245,7 +259,7 @@ function AllSeasonCare() {
             aria-selected={active === season.id}
             aria-controls={`panel-${season.id}`}
             onClick={() => setActive(season.id)}
-            className={`-mb-px border-b-2 px-4 py-3 text-sm font-extrabold uppercase tracking-[0.1em] transition-colors ${active === season.id ? 'border-ice-deep text-ink' : 'border-transparent text-slate-500 hover:text-ink'}`}
+            className={`-mb-px border-b-2 px-4 py-3 text-sm font-extrabold uppercase tracking-[0.1em] transition-colors ${active === season.id ? 'border-ice text-white' : 'border-transparent text-slate-400 hover:text-white'}`}
           >
             {season.label}
           </button>
@@ -254,7 +268,7 @@ function AllSeasonCare() {
       {seasons.map(({ id, heading, items, href, cta, photo, fallback, icon: Icon }) => (
         <div key={id} role="tabpanel" id={`panel-${id}`} aria-labelledby={`tab-${id}`} hidden={active !== id} className="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
           <div>
-            <h3 className="heading-xl text-4xl text-ink">{heading}</h3>
+            <h3 className="heading-xl text-4xl text-white">{heading}</h3>
             <div className="mt-6">
               <CheckList items={items} />
             </div>
@@ -262,11 +276,7 @@ function AllSeasonCare() {
               <PillLink href={href} variant="dark" track={`season-${id}`}>{cta}</PillLink>
             </div>
           </div>
-          <div className="grid grid-cols-3 grid-rows-2 gap-3">
-            <PhotoPanel photo={photo} fallback={fallback} label={heading} icon={<Icon size={72} strokeWidth={1} />} className="col-span-2 row-span-2 min-h-[320px]" />
-            <PhotoPanel fallback={fallback} label="" icon={<Snowflake size={34} strokeWidth={1} />} className="min-h-[150px]" />
-            <PhotoPanel fallback="hero-fallback" label="" icon={<MapPin size={34} strokeWidth={1} />} className="min-h-[150px]" />
-          </div>
+          <PhotoPanel photo={photo} fallback={fallback} label={heading} icon={<Icon size={72} strokeWidth={1} />} className="min-h-[320px] lg:min-h-[420px]" />
         </div>
       ))}
     </ContentSection>
@@ -293,7 +303,7 @@ function Process() {
   return (
     <ContentSection id="how-it-works" tone="snow" bigWord="Our Process" eyebrow="Here's how to get started" title="Three steps to a clear driveway">
       <div className="grid items-center gap-10 lg:grid-cols-2">
-        <ol className="divide-y divide-slate-300 border-y border-slate-300" data-reveal>
+        <ol className="divide-y divide-white/10 border-y border-white/10" data-reveal>
           {steps.map((step, index) => (
             <li key={step.title}>
               <button
@@ -303,13 +313,13 @@ function Process() {
                 aria-controls={`step-${index}`}
                 className="flex w-full items-center gap-4 py-5 text-left"
               >
-                <span className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-display text-xl font-bold ${open === index ? 'bg-ink text-ice' : 'border border-slate-400 text-slate-500'}`}>
+                <span className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-display text-xl font-bold ${open === index ? 'bg-ice text-ink' : 'border border-white/25 text-slate-400'}`}>
                   {index + 1}
                 </span>
-                <span className={`heading-xl text-3xl ${open === index ? 'text-ink' : 'text-slate-500'}`}>{step.title}</span>
+                <span className={`heading-xl text-3xl ${open === index ? 'text-white' : 'text-slate-400'}`}>{step.title}</span>
               </button>
               <div id={`step-${index}`} className={`${open === index ? 'block' : 'hidden'} pb-6 pl-[60px]`}>
-                <p className="text-lg leading-relaxed text-slate-700">{step.text}</p>
+                <p className="text-lg leading-relaxed text-slate-300">{step.text}</p>
                 {index === 0 && (
                   <div className="mt-5">
                     <PillLink href="/snow-removal-quote" variant="dark" track="process">Reach out</PillLink>
@@ -333,12 +343,12 @@ function Plans() {
           { name: 'Standard driveway', price: SITE.priceFrom, items: ['Driveway plowed all season', 'Add walkway, steps or sidewalk', '4 or 5 month plan'] },
           { name: 'Larger driveway or lot', price: null, items: ['Long, wide or double driveways', 'Parking areas and back-alley pads', '4 or 5 month plan'] },
         ].map((plan, index) => (
-          <article key={plan.name} className={`rounded-3xl p-8 text-left ${index === 0 ? 'bg-ink text-white' : 'border border-slate-200 bg-white'}`} data-reveal>
-            <p className={`eyebrow ${index === 0 ? 'text-ice' : 'text-ice-deep'}`}>{plan.name}</p>
+          <article key={plan.name} className={`rounded-3xl p-8 text-left ${index === 0 ? 'border border-ice/40 bg-ice/10 text-white' : 'border border-white/10 bg-raise'}`} data-reveal>
+            <p className="eyebrow text-ice">{plan.name}</p>
             {plan.price ? (
               <p className="heading-xl mt-3 text-6xl">
                 <span className="align-top text-2xl">from </span>${plan.price}
-                <span className={`text-2xl ${index === 0 ? 'text-slate-400' : 'text-slate-500'}`}>/mo</span>
+                <span className="text-2xl text-slate-400">/mo</span>
               </p>
             ) : (
               <p className="heading-xl mt-3 text-5xl">Priced by size</p>
@@ -353,7 +363,7 @@ function Plans() {
         <PillLink href="/snow-removal-quote" track="plans">Get my exact price</PillLink>
         <PillLink href="/seasonal-snow-removal-contracts" variant="outline-dark">How contracts work</PillLink>
       </div>
-      <p className="mt-6 text-center text-sm text-slate-600">Starting prices before tax. Your exact price is set in your written agreement after a free quote.</p>
+      <p className="mt-6 text-center text-sm text-slate-400">Starting prices before tax. Your exact price is set in your written agreement after a free quote.</p>
     </ContentSection>
   );
 }
@@ -362,14 +372,14 @@ function ServiceArea() {
   return (
     <ContentSection id="service-area" tone="snow" eyebrow="Where we work" title="Grande Prairie, Sexsmith, Clairmont & the County">
       <div className="grid items-start gap-10 lg:grid-cols-2">
-        <p className="text-lg leading-relaxed text-slate-700" data-reveal>
+        <p className="text-lg leading-relaxed text-slate-300" data-reveal>
           We clear residential driveways, walkways and sidewalks and take care of yards across the City of Grande Prairie, the Town of Sexsmith, the Hamlet of Clairmont and nearby homes in the County of Grande Prairie. Not sure if you are on our route? Send your address on the quote form and we will confirm.
         </p>
         <ul className="grid grid-cols-2 gap-3" data-reveal>
           {['Grande Prairie', 'Sexsmith', 'Clairmont', 'County of GP'].map((area) => (
-            <li key={area} className="rounded-3xl border border-slate-200 bg-white p-6">
-              <MapPin size={22} className="text-ice-deep" aria-hidden="true" />
-              <h3 className="heading-xl mt-4 text-2xl text-ink">{area}</h3>
+            <li key={area} className="rounded-3xl border border-white/10 bg-raise p-6">
+              <MapPin size={22} className="text-ice" aria-hidden="true" />
+              <h3 className="heading-xl mt-4 text-2xl text-white">{area}</h3>
             </li>
           ))}
         </ul>
@@ -382,8 +392,11 @@ export default function HomePage() {
   const page = PAGES['/'];
   return (
     <SiteLayout page={page}>
-      <Hero />
-      <StatsStrip />
+      <div className="relative" style={{ clipPath: 'inset(0)' }}>
+        <HeroBackdrop />
+        <Hero />
+        <StatsStrip />
+      </div>
       <WinterPlanBand />
       <Services />
       <AllSeasonCare />
