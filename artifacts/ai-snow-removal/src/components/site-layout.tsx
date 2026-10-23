@@ -51,8 +51,26 @@ const QUOTE_PATHS = ['/snow-removal-quote', '/landscaping-quote'];
 function MobileCtaBar() {
   const [location] = useLocation();
   const onQuotePage = QUOTE_PATHS.includes(location);
+  // Pages whose hero has its own buttons ([data-hero-cta]) keep this bar hidden until those buttons scroll away,
+  // so the two sets never show at once. The homepage starts hidden so the prerendered page doesn't flash it.
+  const [hidden, setHidden] = useState(location === '/');
+  useEffect(() => {
+    const heroCta = document.querySelector('[data-hero-cta]');
+    if (!heroCta) {
+      setHidden(false);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => setHidden(entry.isIntersecting));
+    observer.observe(heroCta);
+    return () => observer.disconnect();
+  }, [location]);
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-white/10 bg-ink/95 p-2.5 backdrop-blur-md lg:hidden" data-testid="mobile-cta-bar">
+    <div
+      className={`fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-white/10 bg-ink/95 p-2.5 backdrop-blur-md transition-all duration-300 lg:hidden ${hidden ? 'pointer-events-none translate-y-full opacity-0' : ''}`}
+      aria-hidden={hidden ? true : undefined}
+      inert={hidden ? true : undefined}
+      data-testid="mobile-cta-bar"
+    >
       <a href={SITE.phoneHref} onClick={trackCallClick} className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 py-3.5 text-sm font-extrabold uppercase tracking-[0.06em] text-white">
         <Phone size={17} aria-hidden="true" /> Call Now
       </a>
