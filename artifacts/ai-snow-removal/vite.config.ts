@@ -60,6 +60,10 @@ export default defineConfig({
     dedupe: ['react', 'react-dom'],
   },
   root: path.resolve(import.meta.dirname),
+  ssr: {
+    // Workspace packages ship TypeScript source, so bundle them into the prerender build.
+    noExternal: [/^@workspace\//],
+  },
   build: {
     outDir: path.resolve(import.meta.dirname, 'dist/public'),
     emptyOutDir: true,
