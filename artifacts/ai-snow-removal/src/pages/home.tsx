@@ -34,7 +34,7 @@ function HeroBackdrop() {
             src={PHOTOS.hero}
             alt=""
             fetchPriority="high"
-            className="h-full w-full object-cover object-center"
+            className="h-full w-full object-cover object-center md:object-bottom"
           />
         </picture>
       ) : (
