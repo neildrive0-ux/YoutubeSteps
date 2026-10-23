@@ -156,15 +156,21 @@ export function ContentSection({
   const layers = layered ? 'z-10 -mt-10 rounded-t-[2rem] pb-24 shadow-[0_-24px_48px_rgba(0,0,0,0.35)] md:-mt-12 md:rounded-t-[3rem] md:pb-36' : '';
   const headingId = `${id ?? title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-title`;
   return (
-    <section id={id} className={`relative overflow-hidden py-14 md:py-28 ${bg} ${layers} ${className}`} aria-labelledby={headingId}>
-      {bigWord && (
-        <p aria-hidden="true" className="heading-xl text-outline pointer-events-none absolute inset-x-0 top-6 select-none whitespace-nowrap text-center text-[14vw] md:top-4 md:text-[13rem]">
-          {bigWord}
-        </p>
-      )}
+    <section id={id} className={`relative overflow-hidden py-14 md:py-28 ${bigWord ? 'pt-20 md:pt-40' : ''} ${bg} ${layers} ${className}`} aria-labelledby={headingId}>
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
         <div className={`mb-8 max-w-3xl md:mb-12 ${center ? 'mx-auto text-center' : ''}`} data-reveal>
-          {eyebrow && <p className="eyebrow text-ice">{eyebrow}</p>}
+          {/* The big outline word sits right behind the eyebrow; its lower half fades out under it. */}
+          <div className="relative">
+            {bigWord && (
+              <p
+                aria-hidden="true"
+                className={`big-word heading-xl text-outline pointer-events-none absolute bottom-[-0.12em] select-none whitespace-nowrap text-[14vw] md:text-[11rem] ${center ? 'left-1/2 -translate-x-1/2' : 'left-0'}`}
+              >
+                {bigWord}
+              </p>
+            )}
+            {eyebrow && <p className="eyebrow relative text-ice">{eyebrow}</p>}
+          </div>
           <h2 id={headingId} className="heading-xl mt-3 text-[2.1rem] text-white md:text-6xl">
             {title}
           </h2>
