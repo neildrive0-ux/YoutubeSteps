@@ -29,14 +29,14 @@ export const TRACKING = {
   metaPixelId: '',
 };
 
-// Drop real photos into /public/images and put their paths here, e.g. '/images/hero.webp'.
-// Until then each spot shows a designed winter/landscape background instead of a photo.
+// Photos live in /public/images. Swap a path here to change a photo; an empty string shows a designed fallback.
 export const PHOTOS = {
-  hero: '',
-  snow: '',
-  landscapeManagement: '',
-  landscapeEnhancements: '',
-  process: '',
+  hero: '/images/hero-snow-plowing.webp',
+  heroMobile: '/images/hero-snow-plowing-mobile.webp',
+  snow: '/images/snow-ice-management.webp',
+  landscapeManagement: '/images/landscape-management.webp',
+  landscapeEnhancements: '/images/landscape-enhancements.webp',
+  process: '/images/plowed-driveway.webp',
 };
 
 export type ServiceKind = 'snow' | 'landscaping';
