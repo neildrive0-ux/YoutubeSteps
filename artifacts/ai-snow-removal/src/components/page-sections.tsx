@@ -158,7 +158,7 @@ export function ContentSection({
   return (
     <section id={id} className={`relative overflow-hidden py-14 md:py-28 ${bg} ${layers} ${className}`} aria-labelledby={headingId}>
       {bigWord && (
-        <p aria-hidden="true" className="heading-xl text-outline pointer-events-none absolute inset-x-0 top-6 select-none whitespace-nowrap text-center text-[22vw] md:top-4 md:text-[13rem]">
+        <p aria-hidden="true" className="heading-xl text-outline pointer-events-none absolute inset-x-0 top-6 select-none whitespace-nowrap text-center text-[14vw] md:top-4 md:text-[13rem]">
           {bigWord}
         </p>
       )}
