@@ -22,8 +22,8 @@ export function PillLink({
   const styles = {
     ice: 'bg-ice text-ink hover:bg-ice-soft',
     'outline-light': 'border border-white/30 text-white hover:border-ice hover:text-ice',
-    'outline-dark': 'border border-ink/20 text-ink hover:border-ice-deep hover:text-ice-deep',
-    dark: 'bg-ink text-white hover:bg-steel',
+    'outline-dark': 'border border-white/30 text-white hover:border-ice hover:text-ice',
+    dark: 'bg-ice text-ink hover:bg-ice-soft',
   }[variant];
   const classes = `inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-sm font-extrabold uppercase tracking-[0.08em] transition-colors ${styles} ${className}`;
   const onClick = track ? () => trackQuoteClick(track) : undefined;
@@ -46,14 +46,14 @@ export function CallLink({ variant = 'light', className = '' }: { variant?: 'lig
     <a
       href={SITE.phoneHref}
       onClick={trackCallClick}
-      className={`inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-sm font-extrabold uppercase tracking-[0.08em] transition-colors ${variant === 'light' ? 'border border-white/30 text-white hover:border-ice hover:text-ice' : 'border border-ink/20 text-ink hover:border-ice-deep hover:text-ice-deep'} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-sm font-extrabold uppercase tracking-[0.08em] transition-colors border border-white/30 text-white hover:border-ice hover:text-ice ${className}`}
     >
       <Phone size={17} aria-hidden="true" /> Call {SITE.phoneDisplay}
     </a>
   );
 }
 
-export function SnowDrift({ fill = '#ffffff' }: { fill?: string }) {
+export function SnowDrift({ fill = '#071118' }: { fill?: string }) {
   return (
     <svg className="absolute inset-x-0 bottom-[-1px] h-12 w-full sm:h-16" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
       <path fill={fill} d="M0 50 C 180 20, 320 70, 520 44 S 860 10, 1040 40 S 1320 70, 1440 34 L1440 80 L0 80 Z" />
@@ -71,7 +71,7 @@ export function PageHero({
   quoteLabel = 'Get a Free Quote',
   photo,
   fallback = 'hero-fallback',
-  driftFill = '#ffffff',
+  driftFill = '#071118',
 }: {
   eyebrow: string;
   accent: string;
@@ -117,12 +117,12 @@ export function PageHero({
 export function Breadcrumbs({ label }: { label: string }) {
   return (
     <nav aria-label="Breadcrumb" className="mx-auto max-w-7xl px-4 pt-6 sm:px-6">
-      <ol className="flex flex-wrap items-center gap-1.5 text-sm text-slate-600">
+      <ol className="flex flex-wrap items-center gap-1.5 text-sm text-slate-400">
         <li>
-          <Link href="/" className="hover:text-ice-deep">Home</Link>
+          <Link href="/" className="hover:text-ice">Home</Link>
         </li>
         <li aria-hidden="true"><ChevronRight size={14} /></li>
-        <li aria-current="page" className="font-semibold text-ink">{label}</li>
+        <li aria-current="page" className="font-semibold text-white">{label}</li>
       </ol>
     </nav>
   );
@@ -137,6 +137,7 @@ export function ContentSection({
   tone = 'white',
   bigWord,
   center = false,
+  className = '',
 }: {
   id?: string;
   eyebrow?: string;
@@ -146,11 +147,12 @@ export function ContentSection({
   tone?: Tone;
   bigWord?: string;
   center?: boolean;
+  className?: string;
 }) {
-  const bg = tone === 'dark' ? 'bg-ink text-white' : tone === 'snow' ? 'bg-snow' : 'bg-white';
+  const bg = tone === 'dark' ? 'bg-ink text-white' : tone === 'snow' ? 'bg-base-2 text-white' : 'bg-base text-white';
   const headingId = `${id ?? title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-title`;
   return (
-    <section id={id} className={`relative overflow-hidden py-20 md:py-28 ${bg}`} aria-labelledby={headingId}>
+    <section id={id} className={`relative overflow-hidden py-20 md:py-28 ${bg} ${className}`} aria-labelledby={headingId}>
       {bigWord && (
         <p aria-hidden="true" className="heading-xl text-outline pointer-events-none absolute inset-x-0 top-6 select-none whitespace-nowrap text-center text-[22vw] md:top-4 md:text-[13rem]">
           {bigWord}
@@ -158,11 +160,11 @@ export function ContentSection({
       )}
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
         <div className={`mb-12 max-w-3xl ${center ? 'mx-auto text-center' : ''}`} data-reveal>
-          {eyebrow && <p className={`eyebrow ${tone === 'dark' ? 'text-ice' : 'text-ice-deep'}`}>{eyebrow}</p>}
-          <h2 id={headingId} className={`heading-xl mt-3 text-4xl md:text-6xl ${tone === 'dark' ? 'text-white' : 'text-ink'}`}>
+          {eyebrow && <p className="eyebrow text-ice">{eyebrow}</p>}
+          <h2 id={headingId} className="heading-xl mt-3 text-4xl text-white md:text-6xl">
             {title}
           </h2>
-          {intro && <div className={`mt-5 text-lg leading-relaxed ${tone === 'dark' ? 'text-slate-300' : 'text-slate-700'}`}>{intro}</div>}
+          {intro && <div className="mt-5 text-lg leading-relaxed text-slate-300">{intro}</div>}
         </div>
         {children}
       </div>
@@ -174,9 +176,9 @@ export function CheckList({ items, tone = 'light' }: { items: string[]; tone?: '
   return (
     <ul className="grid gap-3">
       {items.map((item) => (
-        <li key={item} className={`flex items-start gap-3 text-lg ${tone === 'dark' ? 'text-slate-200' : 'text-slate-800'}`}>
+        <li key={item} className={`flex items-start gap-3 text-lg ${tone === 'dark' ? 'text-slate-200' : 'text-slate-100'}`}>
           <span className="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ice/15">
-            <Check size={15} className={tone === 'dark' ? 'text-ice' : 'text-ice-deep'} aria-hidden="true" />
+            <Check size={15} className="text-ice" aria-hidden="true" />
           </span>
           <span>{item}</span>
         </li>
@@ -214,16 +216,16 @@ export function PhotoPanel({
 export function FaqSection({ faqs, title = 'Questions People Ask', eyebrow = 'FAQ', tone = 'white' }: { faqs: Faq[]; title?: string; eyebrow?: string; tone?: Tone }) {
   return (
     <ContentSection id="faq" eyebrow={eyebrow} title={title} tone={tone}>
-      <div className="max-w-4xl divide-y divide-slate-200 border-y border-slate-200" data-reveal>
+      <div className="max-w-4xl divide-y divide-white/10 border-y border-white/10" data-reveal>
         {faqs.map((faq) => (
           <details key={faq.q} className="group py-2">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-4 text-left">
-              <h3 className="font-display text-xl font-bold uppercase tracking-wide text-ink md:text-2xl">{faq.q}</h3>
-              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-300 text-ice-deep transition-transform group-open:rotate-45" aria-hidden="true">
+              <h3 className="font-display text-xl font-bold uppercase tracking-wide text-white md:text-2xl">{faq.q}</h3>
+              <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 text-ice transition-transform group-open:rotate-45" aria-hidden="true">
                 <Plus size={18} />
               </span>
             </summary>
-            <p className="pb-5 pr-14 text-lg leading-relaxed text-slate-700">{faq.a}</p>
+            <p className="pb-5 pr-14 text-lg leading-relaxed text-slate-300">{faq.a}</p>
           </details>
         ))}
       </div>
@@ -265,16 +267,16 @@ const relatedLinks = [
 
 export function RelatedPages({ current }: { current: string }) {
   return (
-    <nav aria-label="More services" className="border-t border-slate-200 bg-snow">
+    <nav aria-label="More services" className="border-t border-white/10 bg-base-2">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-        <h2 className="heading-xl text-3xl text-ink">More from Ai Landscaping</h2>
+        <h2 className="heading-xl text-3xl text-white">More from Ai Landscaping</h2>
         <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {relatedLinks
             .filter((link) => link.href !== current)
             .map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="group flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 font-bold text-ink transition-colors hover:border-ice">
-                  {link.label} <ArrowRight size={17} className="text-ice-deep transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                <Link href={link.href} className="group flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-raise px-5 py-4 font-bold text-white transition-colors hover:border-ice">
+                  {link.label} <ArrowRight size={17} className="text-ice transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Link>
               </li>
             ))}
