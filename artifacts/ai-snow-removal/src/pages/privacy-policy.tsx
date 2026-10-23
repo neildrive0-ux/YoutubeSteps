@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
 import { Link } from 'wouter';
 import { ArrowLeft, Clock3, Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
 import { Footer } from '@/components/site-footer';
+import { Seo } from '@/components/seo';
+import { PAGES } from '@/site';
 
 const sections = [
   {
@@ -117,7 +118,7 @@ const sections = [
     content: (
       <>
         <p>
-          Ai Landscaping &amp; SnowRemoval is a trade name of Ai Landscaping &amp; Contracting Services Inc. To ask a privacy question or make an access or correction request, contact us:
+          Ai Landscaping &amp; Snow Removal is a trade name of Ai Landscaping &amp; Contracting Services Inc. To ask a privacy question or make an access or correction request, contact us:
         </p>
         <address className="not-italic space-y-2">
           <p><strong>Email:</strong> <a className="text-sky-700 underline decoration-sky-300 underline-offset-4 hover:text-sky-900" href="mailto:ailandscapinggp@gmail.com">ailandscapinggp@gmail.com</a></p>
@@ -139,30 +140,10 @@ const sections = [
 ];
 
 export function PrivacyPolicy() {
-  useEffect(() => {
-    const previousTitle = document.title;
-    const description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-    const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    const previousDescription = description?.content;
-    const previousCanonical = canonical?.href;
-
-    document.title = 'Privacy Policy | Ai Landscaping & SnowRemoval';
-    if (description) {
-      description.content = 'Learn how Ai Landscaping & SnowRemoval collects and uses information from website quote requests and Meta lead forms.';
-    }
-    if (canonical) {
-      canonical.href = `${window.location.origin}/privacy-policy`;
-    }
-
-    return () => {
-      document.title = previousTitle;
-      if (description && previousDescription) description.content = previousDescription;
-      if (canonical && previousCanonical) canonical.href = previousCanonical;
-    };
-  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
+      <Seo page={PAGES['/privacy-policy']} />
       <header id="top" className="bg-[#071118] text-white">
         <div className="container mx-auto max-w-7xl px-6 py-5">
           <Link href="/" className="inline-flex items-center gap-2 text-sm font-medium text-slate-300 transition-colors hover:text-white">
@@ -212,7 +193,7 @@ export function PrivacyPolicy() {
 
           <article className="min-w-0 rounded-md border border-slate-200 bg-white px-6 py-8 shadow-sm sm:px-10 sm:py-10">
             <p className="mb-8 text-sm leading-relaxed text-slate-600">
-              Ai Landscaping &amp; Contracting Services Inc. operates under the trade name Ai Landscaping &amp; SnowRemoval (“we,” “us,” or “our”), serving Grande Prairie and surrounding areas in Alberta, Canada. This policy describes how we collect, use, disclose, and safeguard personal information in connection with our website quote requests and Meta lead forms.
+              Ai Landscaping &amp; Contracting Services Inc. operates under the trade name Ai Landscaping &amp; Snow Removal (“we,” “us,” or “our”), serving Grande Prairie and surrounding areas in Alberta, Canada. This policy describes how we collect, use, disclose, and safeguard personal information in connection with our website quote requests and Meta lead forms.
             </p>
             <div className="space-y-9">
               {sections.map(({ id, title, content }) => (
@@ -225,7 +206,7 @@ export function PrivacyPolicy() {
               ))}
             </div>
             <div className="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500">
-              <p>For a quote or service inquiry, return to the <Link className="font-medium text-sky-700 underline decoration-sky-300 underline-offset-4 hover:text-sky-900" href="/">Ai Landscaping &amp; SnowRemoval website</Link>.</p>
+              <p>For a quote or service inquiry, return to the <Link className="font-medium text-sky-700 underline decoration-sky-300 underline-offset-4 hover:text-sky-900" href="/">Ai Landscaping &amp; Snow Removal website</Link>.</p>
             </div>
           </article>
         </div>
