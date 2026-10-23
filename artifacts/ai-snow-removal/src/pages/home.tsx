@@ -54,7 +54,7 @@ function Hero() {
     // On phones the hero is one screen tall: location at the top, the title just above the tractor,
     // a clear gap so the tractor shows, then one row of buttons on the snow.
     <section className="relative flex min-h-[100lvh] items-stretch text-white md:min-h-[92svh] md:items-center" aria-labelledby="hero-title">
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col px-4 pb-[12lvh] pt-28 text-center sm:px-6 md:block md:pb-20 md:pt-44">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col px-4 pb-[12lvh] pt-36 text-center sm:px-6 md:block md:pb-20 md:pt-44">
         <p className="eyebrow text-ice-soft">Grande Prairie · Sexsmith · Clairmont · County of GP</p>
         <h1 id="hero-title" className="heading-xl mt-auto text-[2.6rem] sm:text-7xl md:mt-6 md:text-8xl">
           <span className="block text-ice">Snow Removal</span>{' '}
