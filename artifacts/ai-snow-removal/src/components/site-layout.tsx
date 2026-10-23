@@ -1,10 +1,14 @@
-import { createContext, type ReactNode, useCallback, useContext, useRef, useState } from 'react';
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { Link, useLocation } from 'wouter';
+import { FileText, Phone } from 'lucide-react';
 import { SiteHeader } from '@/components/site-header';
 import { Footer } from '@/components/site-footer';
-import { QuoteSection } from '@/components/quote-section';
 import { SignUpModal } from '@/components/signup-modal';
+import { CookieConsent } from '@/components/cookie-consent';
+import { QuoteCtaBand } from '@/components/page-sections';
 import { Seo } from '@/components/seo';
-import type { PageMeta } from '@/site';
+import { SITE, type PageMeta } from '@/site';
+import { trackCallClick, trackQuoteClick } from '@/lib/tracking';
 
 const SignUpContext = createContext<() => void>(() => {});
 
@@ -12,21 +16,63 @@ export function useSignUp() {
   return useContext(SignUpContext);
 }
 
+function useScrollReveal() {
+  const [location] = useLocation();
+  useEffect(() => {
+    const root = document.documentElement;
+    const targets = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-visible)'));
+    if (!('IntersectionObserver' in window)) {
+      targets.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
+    );
+    targets.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight) el.classList.add('is-visible');
+      else observer.observe(el);
+    });
+    root.classList.add('reveal-ready');
+    return () => observer.disconnect();
+  }, [location]);
+}
+
+function MobileCtaBar() {
+  return (
+    <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-white/10 bg-ink/95 p-2.5 backdrop-blur-md lg:hidden" data-testid="mobile-cta-bar">
+      <a href={SITE.phoneHref} onClick={trackCallClick} className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 py-3.5 text-sm font-extrabold uppercase tracking-[0.06em] text-white">
+        <Phone size={17} aria-hidden="true" /> Call Now
+      </a>
+      <Link href="/snow-removal-quote" onClick={() => trackQuoteClick('mobile-bar')} className="inline-flex items-center justify-center gap-2 rounded-full bg-ice py-3.5 text-sm font-extrabold uppercase tracking-[0.06em] text-ink">
+        <FileText size={17} aria-hidden="true" /> Get a Quote
+      </Link>
+    </div>
+  );
+}
+
 export function SiteLayout({
   page,
   children,
-  quoteTitle,
-  quoteIntro,
-  showQuote = true,
+  cta = true,
+  ctaTitle,
 }: {
   page: PageMeta;
   children: ReactNode;
-  quoteTitle?: string;
-  quoteIntro?: string;
-  showQuote?: boolean;
+  cta?: boolean;
+  ctaTitle?: string;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const modalTriggerRef = useRef<HTMLElement | null>(null);
+  useScrollReveal();
 
   const openSignUp = useCallback(() => {
     modalTriggerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -41,15 +87,17 @@ export function SiteLayout({
   return (
     <SignUpContext.Provider value={openSignUp}>
       <Seo page={page} />
-      <div className="min-h-screen bg-white selection:bg-sky-200 selection:text-sky-900">
+      <div className="min-h-screen bg-white pb-[76px] selection:bg-ice/30 selection:text-ink lg:pb-0">
         <div aria-hidden={modalOpen ? true : undefined} inert={modalOpen ? true : undefined} data-testid="site-background">
           <SiteHeader />
           <main>
             {children}
-            {showQuote && <QuoteSection title={quoteTitle} intro={quoteIntro} />}
+            {cta && <QuoteCtaBand title={ctaTitle} />}
           </main>
           <Footer />
         </div>
+        <MobileCtaBar />
+        <CookieConsent />
         {modalOpen && <SignUpModal onClose={closeSignUp} />}
       </div>
     </SignUpContext.Provider>
