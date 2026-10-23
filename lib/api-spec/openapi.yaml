@@ -91,7 +91,7 @@ components:
         propertyAreas:
           type: array
           minItems: 1
-          maxItems: 4
+          maxItems: 11
           items:
             type: string
             enum:
@@ -99,6 +99,13 @@ components:
               - sidewalk
               - staircase
               - back-alley-parking-pad
+              - ice-control
+              - lawn-mowing
+              - yard-cleanup
+              - garden-beds
+              - hedge-trimming
+              - sod-and-seeding
+              - landscape-project
         website:
           type: string
           maxLength: 200
@@ -133,6 +140,13 @@ components:
               - sidewalk
               - staircase
               - back-alley-parking-pad
+              - ice-control
+              - lawn-mowing
+              - yard-cleanup
+              - garden-beds
+              - hedge-trimming
+              - sod-and-seeding
+              - landscape-project
         status:
           type: string
           enum: [new]
