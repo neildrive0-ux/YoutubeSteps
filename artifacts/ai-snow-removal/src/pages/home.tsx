@@ -193,7 +193,6 @@ function WinterPlanBand() {
       className="z-10 -mt-12 rounded-t-[2.5rem] shadow-[0_-30px_60px_rgba(0,0,0,0.45)]"
       bigWord="Winter Ready"
       center
-      eyebrow="Your snow pros"
       title="Your driveway needs a snow plan, not a shovel."
       intro={
         <p className="hidden md:block">
@@ -310,7 +309,7 @@ const steps = [
 function Process() {
   const [open, setOpen] = useState(0);
   return (
-    <ContentSection id="how-it-works" layered bigWord="Our Process" eyebrow="Here's how to get started" title="Three steps to a clear driveway">
+    <ContentSection id="how-it-works" layered bigWord="Our Process" title="Three steps to a clear driveway">
       <div className="grid items-center gap-10 lg:grid-cols-2">
         <ol className="divide-y divide-white/10 border-y border-white/10" data-reveal>
           {steps.map((step, index) => (
