@@ -31,13 +31,13 @@ export default function SnowRemovalPricesPage() {
             { name: 'Standard driveway', price: `From $${SITE.priceFrom}/month`, items: ['Driveway plowed all season', 'Add walkway, steps or sidewalk', '4 or 5 month plan'] },
             { name: 'Larger driveway or lot', price: 'Priced by size', items: ['Long, wide or double driveways', 'Parking areas and back-alley pads', '4 or 5 month plan'] },
           ].map((tier) => (
-            <article key={tier.name} className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-              <h3 className="heading-xl text-3xl text-slate-900">{tier.name}</h3>
-              <p className="mt-2 mb-6 heading-xl text-5xl text-ice-deep">{tier.price}</p>
+            <article key={tier.name} className="rounded-3xl border border-white/10 bg-raise p-8 shadow-sm">
+              <h3 className="heading-xl text-3xl text-white">{tier.name}</h3>
+              <p className="mt-2 mb-6 heading-xl text-5xl text-ice">{tier.price}</p>
               <ul className="space-y-3">
                 {tier.items.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-slate-700">
-                    <Check size={18} className="text-ice-deep shrink-0 mt-1" aria-hidden="true" />
+                  <li key={item} className="flex items-start gap-3 text-slate-300">
+                    <Check size={18} className="text-ice shrink-0 mt-1" aria-hidden="true" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -45,7 +45,7 @@ export default function SnowRemovalPricesPage() {
             </article>
           ))}
         </div>
-        <p className="mt-8 max-w-3xl text-sm text-slate-600">
+        <p className="mt-8 max-w-3xl text-sm text-slate-400">
           Prices are starting points before tax. Your exact monthly price is set in your written agreement after a free quote.
         </p>
       </ContentSection>
@@ -53,24 +53,24 @@ export default function SnowRemovalPricesPage() {
       <ContentSection eyebrow="How we price" title="What Changes the Cost of Snow Removal" tone="snow">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {factors.map((factor) => (
-            <article key={factor.title} className="rounded-3xl border border-slate-200 bg-white p-6">
-              <h3 className="heading-xl text-2xl text-slate-900 mb-2">{factor.title}</h3>
-              <p className="text-slate-600 text-sm leading-relaxed">{factor.text}</p>
+            <article key={factor.title} className="rounded-3xl border border-white/10 bg-raise p-6">
+              <h3 className="heading-xl text-2xl text-white mb-2">{factor.title}</h3>
+              <p className="text-slate-400 text-sm leading-relaxed">{factor.text}</p>
             </article>
           ))}
         </div>
       </ContentSection>
 
       <ContentSection eyebrow="Seasonal vs per visit" title="Seasonal Contract or Pay Per Visit?">
-        <div className="max-w-3xl space-y-5 text-slate-600 text-lg leading-relaxed">
+        <div className="max-w-3xl space-y-5 text-slate-400 text-lg leading-relaxed">
           <p>
             Paying per visit can look cheaper in October, but every snowfall adds to the bill and you have to book each time. With a seasonal contract your price is set for the whole winter and service starts automatically at about {SITE.triggerCm} cm of snow.
           </p>
           <p>
             Want the details first?{' '}
-            <Link href="/seasonal-snow-removal-contracts" className="font-semibold text-ice-deep underline underline-offset-4">See how our seasonal contracts work</Link>.
+            <Link href="/seasonal-snow-removal-contracts" className="font-semibold text-ice underline underline-offset-4">See how our seasonal contracts work</Link>.
           </p>
-          <Link href="/snow-removal-quote" onClick={() => trackQuoteClick('prices-inline')} className="inline-flex items-center gap-2 font-bold text-slate-900 hover:text-ice-deep">
+          <Link href="/snow-removal-quote" onClick={() => trackQuoteClick('prices-inline')} className="inline-flex items-center gap-2 font-bold text-white hover:text-ice">
             Get your exact price <ArrowRight size={18} />
           </Link>
         </div>
