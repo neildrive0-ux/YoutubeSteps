@@ -13,8 +13,7 @@ export const SITE = {
   city: 'Grande Prairie',
   region: 'AB',
   areas: ['Grande Prairie', 'Sexsmith', 'Clairmont', 'County of Grande Prairie No. 1'],
-  priceFrom: 150,
-  priceLargeFrom: 250,
+  priceFrom: 250,
   triggerCm: '1.5',
   logo: 'https://ailandscaping.ca/logo-512.png',
   image: 'https://ailandscaping.ca/social-preview.png',
@@ -57,7 +56,7 @@ export type PageMeta = {
 export const HOME_FAQS: Faq[] = [
   {
     q: 'How much does snow removal cost in Grande Prairie?',
-    a: `Our residential seasonal plans start from $${SITE.priceFrom} a month, and larger driveways start from $${SITE.priceLargeFrom} a month. Your exact price depends on the size of your driveway, which extra areas you want cleared (walkways, steps, sidewalk, back-alley parking pad) and whether you choose a 4 or 5 month plan. Quotes are free.`,
+    a: `Our residential seasonal plans start from $${SITE.priceFrom} a month. Your exact price depends on the size of your driveway, which extra areas you want cleared (walkways, steps, sidewalk, back-alley parking pad) and whether you choose a 4 or 5 month plan. Quotes are free.`,
   },
   {
     q: 'How much snow before you come out?',
@@ -107,7 +106,7 @@ export const CONTRACT_FAQS: Faq[] = [
 export const PRICE_FAQS: Faq[] = [
   {
     q: 'How much is snow removal per month in Grande Prairie?',
-    a: `Our seasonal plans start from $${SITE.priceFrom} a month for a standard residential driveway. Larger driveways and lots start from $${SITE.priceLargeFrom} a month.`,
+    a: `Our seasonal plans start from $${SITE.priceFrom} a month. Your exact price depends on the size of your driveway and which areas you want cleared.`,
   },
   {
     q: 'What changes the price?',
@@ -201,7 +200,7 @@ export const LANDSCAPE_ENH_FAQS: Faq[] = [
 export const SNOW_QUOTE_FAQS: Faq[] = [
   {
     q: 'How much is seasonal snow removal?',
-    a: `Plans start from $${SITE.priceFrom} a month for a standard driveway and from $${SITE.priceLargeFrom} a month for larger driveways and lots. Your exact price is set in writing after a free quote, with no hidden fees.`,
+    a: `Plans start from $${SITE.priceFrom} a month. Your exact price depends on the size of your driveway and is set in writing after a free quote, with no hidden fees.`,
   },
   {
     q: 'How long are the plans and how do I pay?',
@@ -240,7 +239,7 @@ export const PAGES: Record<string, PageMeta> = {
   '/snow-removal-quote': {
     path: '/snow-removal-quote',
     title: `Snow Removal Grande Prairie | Plans From $${SITE.priceFrom}/Month | ${BRAND}`,
-    description: `Seasonal snow removal in Grande Prairie, Sexsmith and the County. Driveway, walkways and steps cleared after every snowfall. Plans from $${SITE.priceFrom}/month, larger driveways from $${SITE.priceLargeFrom}. Free quote.`,
+    description: `Seasonal snow removal in Grande Prairie, Sexsmith and the County. Driveway, walkways and steps cleared after every snowfall. Plans from $${SITE.priceFrom}/month, priced by driveway size. Free quote.`,
     breadcrumb: 'Snow removal quote',
     faqs: [...SNOW_QUOTE_FAQS, ...QUOTE_FAQS],
   },
@@ -297,7 +296,7 @@ export const PAGES: Record<string, PageMeta> = {
   '/snow-removal-prices': {
     path: '/snow-removal-prices',
     title: `Snow Removal Prices in Grande Prairie | ${BRAND}`,
-    description: `What residential snow removal costs in Grande Prairie: seasonal plans from $${SITE.priceFrom}/month, larger driveways from $${SITE.priceLargeFrom}/month, what changes your price and how to get a free quote.`,
+    description: `What residential snow removal costs in Grande Prairie: seasonal plans from $${SITE.priceFrom}/month, priced by driveway size, what changes your price and how to get a free quote.`,
     breadcrumb: 'Prices',
     faqs: PRICE_FAQS,
   },
