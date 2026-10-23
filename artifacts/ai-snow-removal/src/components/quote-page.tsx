@@ -32,7 +32,7 @@ export function QuotePage({
   return (
     <SiteLayout page={page} cta={false}>
       <section className={`relative overflow-hidden text-white ${fallback}`} aria-labelledby="page-title">
-        <div className="snowfall" aria-hidden="true" />
+        {service !== 'landscaping' && <div className="snowfall" aria-hidden="true" />}
         <div className="relative mx-auto max-w-4xl px-4 pb-20 pt-32 text-center sm:px-6 md:pb-24 md:pt-44">
           <p className="eyebrow text-ice-soft">{eyebrow}</p>
           <h1 id="page-title" className="heading-xl mt-4 text-[2.4rem] sm:text-6xl md:mt-5 md:text-7xl">
