@@ -14,7 +14,7 @@ import {
 import { PAGES, PHOTOS, SITE } from '@/site';
 import { SiteLayout, useSignUp } from '@/components/site-layout';
 import { CallLink, CheckList, ContentSection, FaqSection, PhotoPanel, PillLink } from '@/components/page-sections';
-import { trackCallClick } from '@/lib/tracking';
+import { trackCallClick, trackQuoteClick } from '@/lib/tracking';
 
 // The hero photo stays fixed while the hero and the stats band scroll over it (clipped to this block),
 // and the stats band fades the photo into the page colour so the two read as one picture.
@@ -50,21 +50,35 @@ function HeroBackdrop() {
 
 function Hero() {
   return (
-    <section className="relative flex min-h-[92svh] items-stretch text-white md:items-center" aria-labelledby="hero-title">
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col px-4 pb-14 pt-28 text-center sm:px-6 md:block md:pb-20 md:pt-44">
+    // On phones the hero is one screen tall: location at the top, the title just above the tractor,
+    // a clear gap so the tractor shows, then one row of buttons on the snow.
+    <section className="relative flex min-h-[100lvh] items-stretch text-white md:min-h-[92svh] md:items-center" aria-labelledby="hero-title">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col px-4 pb-[12lvh] pt-28 text-center sm:px-6 md:block md:pb-20 md:pt-44">
         <p className="eyebrow text-ice-soft">Grande Prairie · Sexsmith · Clairmont · County of GP</p>
-        <h1 id="hero-title" className="heading-xl mt-4 text-[2.6rem] sm:text-7xl md:mt-6 md:text-8xl">
+        <h1 id="hero-title" className="heading-xl mt-auto text-[2.6rem] sm:text-7xl md:mt-6 md:text-8xl">
           <span className="block text-ice">Snow Removal</span>{' '}
           <span className="block">Grande Prairie &amp; Sexsmith</span>
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-200 md:mt-7 md:text-xl">
-          Driveways, walkways and steps cleared after every snowfall on seasonal plans from ${SITE.priceFrom}/month<span className="hidden md:inline">, priced by the size of your driveway. Pay monthly or upfront, no hidden fees</span>.
+        <p className="mx-auto mt-7 hidden max-w-2xl leading-relaxed text-slate-200 md:block md:text-xl">
+          Driveways, walkways and steps cleared after every snowfall on seasonal plans from ${SITE.priceFrom}/month, priced by the size of your driveway. Pay monthly or upfront, no hidden fees.
         </p>
-        <div className="mt-auto flex flex-col justify-center gap-3 pt-8 sm:flex-row md:mt-10 md:pt-0">
-          <PillLink href="/snow-removal-quote" track="hero">Get a Snow Quote</PillLink>
-          <CallLink />
+        <div className="h-[24lvh] shrink-0 md:hidden" aria-hidden="true" />
+        {/* The phone bottom bar stays hidden while these buttons are on screen (see MobileCtaBar). */}
+        <div data-hero-cta>
+          <div className="grid grid-cols-2 gap-2 md:hidden">
+            <Link href="/snow-removal-quote" onClick={() => trackQuoteClick('hero')} className="inline-flex items-center justify-center gap-2 rounded-full bg-ice py-3.5 text-sm font-extrabold uppercase tracking-[0.06em] text-ink">
+              Get a Quote <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+            <a href={SITE.phoneHref} onClick={trackCallClick} className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-ink/40 py-3.5 text-sm font-extrabold uppercase tracking-[0.06em] text-white backdrop-blur">
+              <Phone size={16} aria-hidden="true" /> Call Now
+            </a>
+          </div>
+          <div className="mt-10 hidden justify-center gap-3 md:flex">
+            <PillLink href="/snow-removal-quote" track="hero">Get a Snow Quote</PillLink>
+            <CallLink />
+          </div>
         </div>
-        <p className="mt-5 inline-flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-semibold text-slate-300 md:mt-8">
+        <p className="mt-4 inline-flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-semibold text-slate-300 md:mt-8">
           <span className="inline-flex items-center gap-2"><ShieldCheck size={16} className="text-ice" aria-hidden="true" /> Fully insured in Alberta</span>
           <span className="hidden items-center gap-2 md:inline-flex"><Snowflake size={16} className="text-ice" aria-hidden="true" /> Service from ~{SITE.triggerCm} cm of snow</span>
           <span className="hidden items-center gap-2 md:inline-flex"><CalendarRange size={16} className="text-ice" aria-hidden="true" /> Limited route spots: book before the first storm</span>
