@@ -16,17 +16,31 @@ export const SITE = {
   priceFrom: 150,
   priceLargeFrom: 250,
   triggerCm: '1.5',
-  logo: 'https://ailandscaping.ca/app-icon-512.png',
+  logo: 'https://ailandscaping.ca/logo-512.png',
   image: 'https://ailandscaping.ca/social-preview.png',
 };
 
-// Fill these in to turn on conversion tracking. Leave blank to load nothing.
+// Google Ads tag + conversion labels (account 694-901-1492) and the Meta pixel.
+// Leave metaPixelId blank until the client's pixel ID is available.
 export const TRACKING = {
-  googleAdsId: '', // e.g. 'AW-123456789'
-  googleAdsLeadLabel: '', // conversion label for "Quote request"
-  googleAdsCallLabel: '', // optional conversion label for phone clicks
-  metaPixelId: '', // e.g. '123456789012345'
+  googleAdsId: 'AW-18488338467',
+  snowLeadLabel: 'EAliCOLYq6YdEKPQ9u9E',
+  landscapingLeadLabel: 'h-ETCOXYq6YdEKPQ9u9E',
+  callLabel: 'S-VFCOjYq6YdEKPQ9u9E',
+  metaPixelId: '',
 };
+
+// Drop real photos into /public/images and put their paths here, e.g. '/images/hero.webp'.
+// Until then each spot shows a designed winter/landscape background instead of a photo.
+export const PHOTOS = {
+  hero: '',
+  snow: '',
+  landscapeManagement: '',
+  landscapeEnhancements: '',
+  process: '',
+};
+
+export type ServiceKind = 'snow' | 'landscaping';
 
 export type Faq = { q: string; a: string };
 
@@ -34,8 +48,10 @@ export type PageMeta = {
   path: string;
   title: string;
   description: string;
+  breadcrumb?: string;
   noindex?: boolean;
   faqs?: Faq[];
+  service?: { name: string; type: string; description: string };
 };
 
 export const HOME_FAQS: Faq[] = [
@@ -54,6 +70,10 @@ export const HOME_FAQS: Faq[] = [
   {
     q: 'What does a seasonal snow removal contract include?',
     a: 'Plowing of your driveway and parking areas, plus any zones you pick on the quote form: walkways, steps, sidewalks and back-alley parking pads. Everything is written into one agreement you can read before you sign.',
+  },
+  {
+    q: 'Do you do landscaping in the summer?',
+    a: 'Yes. We handle landscape management like lawn mowing, cleanups and trimming, plus landscape enhancements like garden beds, sod and small projects. Use the landscaping quote form and tell us what you need.',
   },
   {
     q: 'Can I pay monthly?',
@@ -133,54 +153,171 @@ export const SENIOR_FAQS: Faq[] = [
   },
 ];
 
+export const SNOW_ICE_FAQS: Faq[] = [
+  {
+    q: 'What is included in snow and ice management?',
+    a: 'Plowing of your driveway and parking areas, clearing of walkways, steps and sidewalks you add to your plan, and salting or ice control where it is needed.',
+  },
+  {
+    q: 'Do you offer one-time snow removal?',
+    a: `Our focus is seasonal contracts so our route stays reliable. If you need a one-time clearing, call ${SITE.phoneDisplay} and we will tell you if we can fit you in.`,
+  },
+  {
+    q: 'How soon after a snowfall do you come?',
+    a: `Service is triggered at about ${SITE.triggerCm} cm of snow. Timing depends on the storm and our route, and it is handled within a reasonable timeframe as set out in your agreement.`,
+  },
+];
+
+export const LANDSCAPE_MGMT_FAQS: Faq[] = [
+  {
+    q: 'What does landscape management include?',
+    a: 'Regular lawn mowing and trimming, spring and fall cleanups, hedge and shrub trimming, and keeping garden beds tidy through the season.',
+  },
+  {
+    q: 'Can I get snow removal and landscaping from the same company?',
+    a: 'Yes. Many homeowners use us for landscaping in the summer and snow removal in the winter, so there is one number to call all year.',
+  },
+  {
+    q: 'How do I get a landscaping price?',
+    a: 'Send the landscaping quote form with your address and what you need, and we will call you back with a price.',
+  },
+];
+
+export const LANDSCAPE_ENH_FAQS: Faq[] = [
+  {
+    q: 'What counts as a landscape enhancement?',
+    a: 'Projects that improve the look of your yard: new garden beds and mulch, sod and seeding, planting, and other small landscape upgrades.',
+  },
+  {
+    q: 'When is the best time to plan a landscaping project in Grande Prairie?',
+    a: 'Planning over the winter and booking early is the easiest way to get on the schedule for spring and early summer.',
+  },
+  {
+    q: 'Do you give free quotes for projects?',
+    a: 'Yes. Send the landscaping quote form with a few details about the project and we will follow up.',
+  },
+];
+
+export const QUOTE_FAQS: Faq[] = [
+  {
+    q: 'Is the quote free?',
+    a: 'Yes. Quotes are free and there is no commitment until you sign an agreement.',
+  },
+  {
+    q: 'How will you contact me?',
+    a: 'We call you back at the number you give us. Email is only used to send a copy of your request.',
+  },
+  {
+    q: 'What areas do you serve?',
+    a: 'Grande Prairie, Sexsmith and nearby homes in the County of Grande Prairie.',
+  },
+];
+
+const BRAND = 'Ai Landscaping';
+
 export const PAGES: Record<string, PageMeta> = {
   '/': {
     path: '/',
-    title: 'Snow Removal Grande Prairie & Sexsmith | Ai Landscaping',
-    description: `Residential snow removal in Grande Prairie & Sexsmith. Driveways, walkways and sidewalks cleared all winter on 4 or 5 month plans from $${SITE.priceFrom}/month. Call ${SITE.phoneDisplay}.`,
+    title: `Snow Removal & Landscaping Grande Prairie | ${BRAND}`,
+    description: `Snow removal and landscaping in Grande Prairie & Sexsmith. Driveways, walkways and sidewalks cleared all winter on plans from $${SITE.priceFrom}/month. Call ${SITE.phoneDisplay}.`,
     faqs: HOME_FAQS,
+  },
+  '/snow-removal-quote': {
+    path: '/snow-removal-quote',
+    title: `Get a Snow Removal Quote in Grande Prairie | ${BRAND}`,
+    description: `Request a free snow removal quote for your driveway, walkway or sidewalk in Grande Prairie or Sexsmith. Seasonal plans from $${SITE.priceFrom}/month. We call you back with a price.`,
+    breadcrumb: 'Snow removal quote',
+    faqs: QUOTE_FAQS,
+  },
+  '/landscaping-quote': {
+    path: '/landscaping-quote',
+    title: `Get a Landscaping Quote in Grande Prairie | ${BRAND}`,
+    description: 'Request a free landscaping quote in Grande Prairie or Sexsmith: lawn care, yard cleanups, garden beds, hedge trimming, sod and landscape projects.',
+    breadcrumb: 'Landscaping quote',
+    faqs: QUOTE_FAQS,
+  },
+  '/snow-and-ice-management': {
+    path: '/snow-and-ice-management',
+    title: `Snow & Ice Management Grande Prairie | ${BRAND}`,
+    description: `Residential snow and ice management in Grande Prairie and Sexsmith: driveway plowing, walkways, steps, sidewalks and ice control on seasonal plans from $${SITE.priceFrom}/month.`,
+    breadcrumb: 'Snow & ice management',
+    faqs: SNOW_ICE_FAQS,
+    service: {
+      name: 'Snow & Ice Management',
+      type: 'Snow removal',
+      description: 'Seasonal residential snow plowing, walkway and sidewalk clearing and ice control.',
+    },
+  },
+  '/landscape-management': {
+    path: '/landscape-management',
+    title: `Landscape Management & Lawn Care Grande Prairie | ${BRAND}`,
+    description: 'Landscape management in Grande Prairie and Sexsmith: lawn mowing, trimming, spring and fall cleanups, hedge and shrub care. One local company for summer and winter.',
+    breadcrumb: 'Landscape management',
+    faqs: LANDSCAPE_MGMT_FAQS,
+    service: {
+      name: 'Landscape Management',
+      type: 'Landscaping',
+      description: 'Residential lawn mowing, trimming, seasonal cleanups and hedge and shrub care.',
+    },
+  },
+  '/landscape-enhancements': {
+    path: '/landscape-enhancements',
+    title: `Landscape Enhancements Grande Prairie | ${BRAND}`,
+    description: 'Landscape enhancements in Grande Prairie and Sexsmith: garden beds and mulch, sod and seeding, planting and small yard projects. Free quotes.',
+    breadcrumb: 'Landscape enhancements',
+    faqs: LANDSCAPE_ENH_FAQS,
+    service: {
+      name: 'Landscape Enhancements',
+      type: 'Landscaping',
+      description: 'Garden beds and mulch, sod and seeding, planting and small landscape projects.',
+    },
   },
   '/seasonal-snow-removal-contracts': {
     path: '/seasonal-snow-removal-contracts',
-    title: 'Seasonal Snow Removal Contracts in Grande Prairie | Ai Landscaping',
+    title: `Seasonal Snow Removal Contracts in Grande Prairie | ${BRAND}`,
     description: `4 or 5 month residential snow removal contracts in Grande Prairie and Sexsmith. Service starts at about ${SITE.triggerCm} cm of snow. Pay upfront or monthly. Read the contract online.`,
+    breadcrumb: 'Seasonal contracts',
     faqs: CONTRACT_FAQS,
   },
   '/snow-removal-prices': {
     path: '/snow-removal-prices',
-    title: 'Snow Removal Prices in Grande Prairie | Ai Landscaping',
+    title: `Snow Removal Prices in Grande Prairie | ${BRAND}`,
     description: `What residential snow removal costs in Grande Prairie: seasonal plans from $${SITE.priceFrom}/month, larger driveways from $${SITE.priceLargeFrom}/month, what changes your price and how to get a free quote.`,
+    breadcrumb: 'Prices',
     faqs: PRICE_FAQS,
   },
   '/driveway-snow-removal': {
     path: '/driveway-snow-removal',
-    title: 'Driveway Snow Removal & Plowing in Grande Prairie | Ai Landscaping',
+    title: `Driveway Snow Removal & Plowing in Grande Prairie | ${BRAND}`,
     description: `Driveway snow plowing in Grande Prairie and Sexsmith, plus walkways, steps, sidewalks and back-alley parking pads. Cleared from about ${SITE.triggerCm} cm of snow, all winter.`,
+    breadcrumb: 'Driveway snow removal',
     faqs: DRIVEWAY_FAQS,
   },
   '/snow-removal-for-seniors': {
     path: '/snow-removal-for-seniors',
-    title: 'Snow Removal for Seniors in Grande Prairie | Ai Landscaping',
+    title: `Snow Removal for Seniors in Grande Prairie | ${BRAND}`,
     description: `Dependable snow removal for seniors in Grande Prairie and Sexsmith. Driveways, walkways and steps cleared all winter, and family can book for a parent. Call ${SITE.phoneDisplay}.`,
+    breadcrumb: 'Snow removal for seniors',
     faqs: SENIOR_FAQS,
   },
   '/privacy-policy': {
     path: '/privacy-policy',
-    title: 'Privacy Policy | Ai Landscaping & Snow Removal',
-    description: 'How Ai Landscaping & Snow Removal collects and uses information from website quote requests and Meta lead forms.',
+    title: `Privacy & Cookie Policy | ${SITE.name}`,
+    description: 'How Ai Landscaping & Snow Removal collects and uses information from quote requests, lead forms, cookies, Google Ads and Meta.',
+    breadcrumb: 'Privacy policy',
   },
   '/thank-you': {
     path: '/thank-you',
-    title: 'Thanks, Your Quote Request Was Sent | Ai Landscaping',
-    description: 'Your snow removal quote request was received.',
+    title: `Thanks, Your Quote Request Was Sent | ${BRAND}`,
+    description: 'Your quote request was received.',
     noindex: true,
   },
 };
 
 export const NOT_FOUND: PageMeta = {
   path: '/404',
-  title: 'Page Not Found | Ai Landscaping & Snow Removal',
-  description: 'This page does not exist. Find snow removal in Grande Prairie and Sexsmith on our home page.',
+  title: `Page Not Found | ${SITE.name}`,
+  description: 'This page does not exist. Find snow removal and landscaping in Grande Prairie and Sexsmith on our home page.',
   noindex: true,
 };
 
@@ -193,32 +330,88 @@ export function canonicalUrl(path: string) {
   return path === '/' ? `${SITE.url}/` : `${SITE.url}${path}`;
 }
 
-export function structuredData(page: PageMeta) {
-  const business = {
-    '@context': 'https://schema.org',
-    '@type': 'HomeAndConstructionBusiness',
-    '@id': `${SITE.url}/#business`,
-    name: SITE.name,
-    legalName: SITE.legalName,
-    url: `${SITE.url}/`,
-    telephone: SITE.phoneE164,
-    email: SITE.email,
-    logo: SITE.logo,
-    image: SITE.image,
-    priceRange: `From $${SITE.priceFrom}/month`,
-    description:
-      'Residential snow removal and seasonal snow clearing contracts for driveways, walkways, steps and sidewalks in Grande Prairie and Sexsmith, Alberta.',
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: SITE.city,
-      addressRegion: SITE.region,
-      addressCountry: 'CA',
-    },
-    areaServed: SITE.areas.map((name) => ({ '@type': 'Place', name: `${name}, AB` })),
-    knowsAbout: ['Snow removal', 'Snow plowing', 'Driveway snow clearing', 'Seasonal snow removal contracts'],
-  };
+const businessId = `${SITE.url}/#business`;
 
-  const blocks: object[] = [business];
+export function structuredData(page: PageMeta) {
+  const areaServed = SITE.areas.map((name) => ({ '@type': 'Place', name: `${name}, AB` }));
+  const blocks: object[] = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'HomeAndConstructionBusiness',
+      '@id': businessId,
+      name: SITE.name,
+      alternateName: SITE.shortName,
+      legalName: SITE.legalName,
+      url: `${SITE.url}/`,
+      telephone: SITE.phoneE164,
+      email: SITE.email,
+      logo: SITE.logo,
+      image: SITE.image,
+      priceRange: `From $${SITE.priceFrom}/month`,
+      description:
+        'Residential snow removal, snow and ice management and landscaping for homes in Grande Prairie and Sexsmith, Alberta.',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: SITE.city,
+        addressRegion: SITE.region,
+        addressCountry: 'CA',
+      },
+      areaServed,
+      knowsAbout: [
+        'Snow removal',
+        'Snow and ice management',
+        'Driveway snow plowing',
+        'Seasonal snow removal contracts',
+        'Landscape management',
+        'Lawn care',
+        'Landscape enhancements',
+      ],
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Services',
+        itemListElement: [
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Snow & Ice Management' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Landscape Management' } },
+          { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Landscape Enhancements' } },
+        ],
+      },
+    },
+  ];
+
+  if (page.path === '/') {
+    blocks.push({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: SITE.name,
+      alternateName: SITE.shortName,
+      url: `${SITE.url}/`,
+    });
+  }
+
+  if (page.service) {
+    blocks.push({
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: page.service.name,
+      serviceType: page.service.type,
+      description: page.service.description,
+      provider: { '@id': businessId },
+      areaServed,
+      url: canonicalUrl(page.path),
+    });
+  }
+
+  if (page.breadcrumb && !page.noindex) {
+    blocks.push({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE.url}/` },
+        { '@type': 'ListItem', position: 2, name: page.breadcrumb, item: canonicalUrl(page.path) },
+      ],
+    });
+  }
+
   if (page.faqs?.length && !page.noindex) {
     blocks.push({
       '@context': 'https://schema.org',
