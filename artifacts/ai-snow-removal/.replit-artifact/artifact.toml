@@ -22,6 +22,26 @@ publicDir = "artifacts/ai-snow-removal/dist/public"
 # Each page is prerendered to its own HTML file at build time.
 # Unknown paths fall through to 404.html so Google gets a real 404 instead of a soft 404.
 [[services.production.rewrites]]
+from = "/snow-removal-quote"
+to = "/snow-removal-quote.html"
+
+[[services.production.rewrites]]
+from = "/landscaping-quote"
+to = "/landscaping-quote.html"
+
+[[services.production.rewrites]]
+from = "/snow-and-ice-management"
+to = "/snow-and-ice-management.html"
+
+[[services.production.rewrites]]
+from = "/landscape-management"
+to = "/landscape-management.html"
+
+[[services.production.rewrites]]
+from = "/landscape-enhancements"
+to = "/landscape-enhancements.html"
+
+[[services.production.rewrites]]
 from = "/seasonal-snow-removal-contracts"
 to = "/seasonal-snow-removal-contracts.html"
 
