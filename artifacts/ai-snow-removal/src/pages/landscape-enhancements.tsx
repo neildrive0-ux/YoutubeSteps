@@ -14,6 +14,7 @@ export default function LandscapeEnhancementsPage() {
         intro: <p>New garden beds, sod, planting and yard upgrades that make your property look finished.</p>,
         points: ['Garden beds & mulch', 'Sod & seeding', 'Planting & projects'],
         fallback: 'photo-fallback-bloom',
+        snow: false,
       }}
       quoteHref="/landscaping-quote"
       quoteLabel="Plan my project"
