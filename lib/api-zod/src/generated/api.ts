@@ -35,7 +35,7 @@ export const createQuoteRequestBodyEmailMax = 320;
 export const createQuoteRequestBodyAddressMin = 3;
 export const createQuoteRequestBodyAddressMax = 500;
 
-export const createQuoteRequestBodyPropertyAreasMax = 4;
+export const createQuoteRequestBodyPropertyAreasMax = 11;
 
 export const createQuoteRequestBodyWebsiteMax = 200;
 
@@ -47,7 +47,7 @@ export const CreateQuoteRequestBody = zod.object({
   "phone": zod.string().min(createQuoteRequestBodyPhoneMin).max(createQuoteRequestBodyPhoneMax),
   "email": zod.string().max(createQuoteRequestBodyEmailMax),
   "address": zod.string().min(createQuoteRequestBodyAddressMin).max(createQuoteRequestBodyAddressMax),
-  "propertyAreas": zod.array(zod.enum(['driveway', 'sidewalk', 'staircase', 'back-alley-parking-pad'])).min(1).max(createQuoteRequestBodyPropertyAreasMax),
+  "propertyAreas": zod.array(zod.enum(['driveway', 'sidewalk', 'staircase', 'back-alley-parking-pad', 'ice-control', 'lawn-mowing', 'yard-cleanup', 'garden-beds', 'hedge-trimming', 'sod-and-seeding', 'landscape-project'])).min(1).max(createQuoteRequestBodyPropertyAreasMax),
   "website": zod.string().max(createQuoteRequestBodyWebsiteMax).optional()
 })
 
@@ -58,7 +58,7 @@ export const CreateQuoteRequestResponse = zod.object({
   "phone": zod.string(),
   "email": zod.string(),
   "address": zod.string(),
-  "propertyAreas": zod.array(zod.enum(['driveway', 'sidewalk', 'staircase', 'back-alley-parking-pad'])),
+  "propertyAreas": zod.array(zod.enum(['driveway', 'sidewalk', 'staircase', 'back-alley-parking-pad', 'ice-control', 'lawn-mowing', 'yard-cleanup', 'garden-beds', 'hedge-trimming', 'sod-and-seeding', 'landscape-project'])),
   "status": zod.enum(['new']),
   "createdAt": zod.coerce.date()
 })
