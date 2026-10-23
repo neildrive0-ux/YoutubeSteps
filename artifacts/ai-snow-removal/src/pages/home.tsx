@@ -27,17 +27,14 @@ function HeroBackdrop() {
           {PHOTOS.heroMobile && (
             <source
               media="(orientation: portrait)"
-              srcSet={`${PHOTOS.heroMobile.replace('.webp', '-640.webp')} 640w, ${PHOTOS.heroMobile} 941w`}
-              sizes="(min-aspect-ratio: 9/16) 100vw, 57vh"
+              srcSet={PHOTOS.heroMobile}
             />
           )}
           <img
             src={PHOTOS.hero}
-            srcSet={`${PHOTOS.hero.replace('.webp', '-960.webp')} 960w, ${PHOTOS.hero} 1536w`}
-            sizes="(max-aspect-ratio: 3/2) 150vh, 100vw"
             alt=""
             fetchPriority="high"
-            className="h-full w-full object-cover object-[25%_center] md:object-center"
+            className="h-full w-full object-cover object-center"
           />
         </picture>
       ) : (
