@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { CheckCircle2, Clock3, Phone, ShieldCheck } from 'lucide-react';
+import { Check, CheckCircle2, Clock3, Phone, ShieldCheck } from 'lucide-react';
 import { type PageMeta, SITE, type ServiceKind } from '@/site';
 import { SiteLayout } from '@/components/site-layout';
 import { QuoteForm } from '@/components/quote-section';
@@ -9,17 +9,23 @@ import { trackCallClick } from '@/lib/tracking';
 export function QuotePage({
   page,
   service,
+  eyebrow = 'Free quote · Grande Prairie & Sexsmith',
   accent,
   title,
   intro,
+  points,
+  note,
   benefits,
   fallback,
 }: {
   page: PageMeta;
   service: ServiceKind;
+  eyebrow?: string;
   accent: string;
   title: string;
   intro: ReactNode;
+  points?: string[];
+  note?: string;
   benefits: string[];
   fallback: string;
 }) {
@@ -27,13 +33,23 @@ export function QuotePage({
     <SiteLayout page={page} cta={false}>
       <section className={`relative overflow-hidden text-white ${fallback}`} aria-labelledby="page-title">
         <div className="snowfall" aria-hidden="true" />
-        <div className="relative mx-auto max-w-4xl px-4 pb-24 pt-36 text-center sm:px-6 md:pt-44">
-          <p className="eyebrow text-ice-soft">Free quote · Grande Prairie &amp; Sexsmith</p>
-          <h1 id="page-title" className="heading-xl mt-5 text-[2.6rem] sm:text-6xl md:text-7xl">
-            <span className="block text-ice">{accent}</span>
+        <div className="relative mx-auto max-w-4xl px-4 pb-20 pt-32 text-center sm:px-6 md:pb-24 md:pt-44">
+          <p className="eyebrow text-ice-soft">{eyebrow}</p>
+          <h1 id="page-title" className="heading-xl mt-4 text-[2.4rem] sm:text-6xl md:mt-5 md:text-7xl">
+            <span className="block text-ice">{accent}</span>{' '}
             <span className="block">{title}</span>
           </h1>
           <div className="mx-auto mt-5 max-w-2xl text-lg text-slate-200">{intro}</div>
+          {points && (
+            <ul className="mx-auto mt-6 flex max-w-3xl flex-wrap justify-center gap-2" aria-label="What is included">
+              {points.map((point) => (
+                <li key={point} className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-sm font-semibold text-slate-100 backdrop-blur">
+                  <Check size={14} className="text-ice" aria-hidden="true" /> {point}
+                </li>
+              ))}
+            </ul>
+          )}
+          {note && <p className="mt-5 text-sm font-bold uppercase tracking-[0.12em] text-ice-soft">{note}</p>}
         </div>
         <SnowDrift fill="#f2f6fa" />
       </section>
