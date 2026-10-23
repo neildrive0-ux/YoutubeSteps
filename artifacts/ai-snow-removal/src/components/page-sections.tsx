@@ -1,10 +1,10 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { Link } from 'wouter';
 import { ArrowRight, Check, ChevronRight, Phone, Plus } from 'lucide-react';
 import { type Faq, SITE } from '@/site';
 import { trackCallClick, trackQuoteClick } from '@/lib/tracking';
 
-type Tone = 'white' | 'snow' | 'dark';
+type Tone = 'white' | 'snow' | 'dark' | 'panel';
 
 export function PillLink({
   href,
@@ -137,6 +137,7 @@ export function ContentSection({
   tone = 'white',
   bigWord,
   center = false,
+  layered = false,
   className = '',
 }: {
   id?: string;
@@ -147,12 +148,15 @@ export function ContentSection({
   tone?: Tone;
   bigWord?: string;
   center?: boolean;
+  /** Rounded top that slides over the bottom of the section above it (Clintar-style stacked blocks). */
+  layered?: boolean;
   className?: string;
 }) {
-  const bg = tone === 'dark' ? 'bg-ink text-white' : tone === 'snow' ? 'bg-base-2 text-white' : 'bg-base text-white';
+  const bg = { dark: 'bg-ink', snow: 'bg-base-2', panel: 'bg-panel', white: 'bg-base' }[tone] + ' text-white';
+  const layers = layered ? 'z-10 -mt-10 rounded-t-[2rem] pb-24 shadow-[0_-24px_48px_rgba(0,0,0,0.35)] md:-mt-12 md:rounded-t-[3rem] md:pb-36' : '';
   const headingId = `${id ?? title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-title`;
   return (
-    <section id={id} className={`relative overflow-hidden py-14 md:py-28 ${bg} ${className}`} aria-labelledby={headingId}>
+    <section id={id} className={`relative overflow-hidden py-14 md:py-28 ${bg} ${layers} ${className}`} aria-labelledby={headingId}>
       {bigWord && (
         <p aria-hidden="true" className="heading-xl text-outline pointer-events-none absolute inset-x-0 top-6 select-none whitespace-nowrap text-center text-[22vw] md:top-4 md:text-[13rem]">
           {bigWord}
@@ -187,23 +191,43 @@ export function CheckList({ items, tone = 'light' }: { items: string[]; tone?: '
   );
 }
 
+// True once the page has fully loaded. Photos far down the page wait for this so they don't
+// compete with the hero for bandwidth on phones (lazy-loading alone still fetches them early).
+export function useAfterLoad() {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (document.readyState === 'complete') {
+      setReady(true);
+      return;
+    }
+    const onLoad = () => setReady(true);
+    window.addEventListener('load', onLoad, { once: true });
+    return () => window.removeEventListener('load', onLoad);
+  }, []);
+  return ready;
+}
+
 export function PhotoPanel({
   photo,
   fallback,
   icon,
   label,
+  defer = false,
   className = '',
 }: {
   photo?: string;
   fallback: string;
   icon?: ReactNode;
   label: string;
+  /** Wait for the page to finish loading before fetching the photo (for photos well below the fold). */
+  defer?: boolean;
   className?: string;
 }) {
+  const loaded = useAfterLoad();
   return (
     <div className={`relative overflow-hidden rounded-3xl ${photo ? 'bg-ink' : fallback} ${className}`}>
       {photo ? (
-        <img src={photo} alt={label} loading="lazy" className="h-full w-full object-cover" />
+        <img src={defer && !loaded ? undefined : photo} alt={label} loading="lazy" decoding="async" className="h-full w-full object-cover" />
       ) : (
         <div className="bg-grain absolute inset-0 flex items-center justify-center" role={label ? 'img' : undefined} aria-label={label || undefined} aria-hidden={label ? undefined : true}>
           <div className="text-white/80">{icon}</div>
@@ -213,9 +237,9 @@ export function PhotoPanel({
   );
 }
 
-export function FaqSection({ faqs, title = 'Questions People Ask', eyebrow = 'FAQ', tone = 'white' }: { faqs: Faq[]; title?: string; eyebrow?: string; tone?: Tone }) {
+export function FaqSection({ faqs, title = 'Questions People Ask', eyebrow = 'FAQ', tone = 'white', layered = false }: { faqs: Faq[]; title?: string; eyebrow?: string; tone?: Tone; layered?: boolean }) {
   return (
-    <ContentSection id="faq" eyebrow={eyebrow} title={title} tone={tone}>
+    <ContentSection id="faq" eyebrow={eyebrow} title={title} tone={tone} layered={layered}>
       <div className="max-w-4xl divide-y divide-white/10 border-y border-white/10" data-reveal>
         {faqs.map((faq) => (
           <details key={faq.q} className="group py-2">
