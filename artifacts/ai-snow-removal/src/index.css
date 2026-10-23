@@ -121,6 +121,13 @@
     -webkit-text-stroke: 1.5px rgb(74 176 245 / 0.16);
   }
 
+  .big-word {
+    line-height: 0.8;
+    -webkit-text-stroke-color: rgb(74 176 245 / 0.24);
+    -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent 78%);
+    mask-image: linear-gradient(to bottom, #000 30%, transparent 78%);
+  }
+
   .no-scrollbar {
     scrollbar-width: none;
   }
