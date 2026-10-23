@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'wouter';
 import { ArrowRight, CalendarRange, X } from 'lucide-react';
 import { SITE } from '@/site';
-import { scrollToQuote } from '@/components/site-header';
 
 export const CONTRACT_PDF = '/snow-removal-service-agreement.pdf';
 
 export function SignUpModal({ onClose }: { onClose: () => void }) {
   const [contractOpen, setContractOpen] = useState(false);
+  const [, setLocation] = useLocation();
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -63,27 +64,27 @@ export function SignUpModal({ onClose }: { onClose: () => void }) {
         </button>
 
         <div className="p-8 sm:p-12">
-          <p className="text-sky-700 font-bold text-xs tracking-widest uppercase mb-4">Winter service</p>
-          <h2 id="modal-title" className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900 mb-4 leading-[1.1]">
+          <p className="text-ice-deep font-bold text-xs tracking-widest uppercase mb-4">Winter service</p>
+          <h2 id="modal-title" className="heading-xl text-4xl sm:text-5xl text-slate-900 mb-4 leading-[1.1]">
             Let's get your driveway on the route.
           </h2>
           <p id="modal-description" className="text-slate-600 mb-8 leading-relaxed max-w-lg">
             Read the seasonal snow removal agreement below, then send us your property details. We'll confirm your price and availability and follow up directly. No booking or payment is taken here.
           </p>
 
-          <button className="flex items-center justify-between w-full p-4 sm:p-5 bg-sky-50 hover:bg-sky-100 border border-sky-100 hover:border-sky-200 rounded-xl text-sky-800 font-semibold text-sm transition-all duration-200 mb-6 group" type="button" onClick={() => setContractOpen((open) => !open)} aria-expanded={contractOpen} aria-controls="contract-preview" data-testid="button-toggle-contract">
+          <button className="flex items-center justify-between w-full p-4 sm:p-5 bg-ice/10 hover:bg-ice/20 border border-ice/30 hover:border-ice/50 rounded-xl text-ink font-semibold text-sm transition-all duration-200 mb-6 group" type="button" onClick={() => setContractOpen((open) => !open)} aria-expanded={contractOpen} aria-controls="contract-preview" data-testid="button-toggle-contract">
             <span className="flex items-center gap-3">
-              <CalendarRange size={20} className="text-sky-700" />
+              <CalendarRange size={20} className="text-ice-deep" />
               {contractOpen ? 'Hide the contract' : 'View the contract'}
             </span>
-            <ArrowRight size={18} className={`text-sky-700 transition-transform duration-300 ${contractOpen ? 'rotate-90' : 'group-hover:translate-x-1'}`} />
+            <ArrowRight size={18} className={`text-ice-deep transition-transform duration-300 ${contractOpen ? 'rotate-90' : 'group-hover:translate-x-1'}`} />
           </button>
 
           {contractOpen && (
             <div id="contract-preview" className="mb-8 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 animate-fade-in-up" data-testid="contract-preview">
               <iframe src={`${CONTRACT_PDF}#view=FitH`} title={`${SITE.name} seasonal snow removal agreement`} className="w-full h-[350px] sm:h-[450px] border-0 bg-white" />
               <div className="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
-                <a className="inline-flex items-center gap-2 text-sky-700 hover:text-sky-900 font-semibold text-sm transition-colors" href={CONTRACT_PDF} target="_blank" rel="noreferrer" data-testid="link-download-contract">
+                <a className="inline-flex items-center gap-2 text-ice-deep hover:text-ink font-semibold text-sm transition-colors" href={CONTRACT_PDF} target="_blank" rel="noreferrer" data-testid="link-download-contract">
                   Open in a new tab <ArrowRight size={14} />
                 </a>
               </div>
@@ -91,10 +92,10 @@ export function SignUpModal({ onClose }: { onClose: () => void }) {
           )}
 
           <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-slate-100 mt-2">
-            <button className="flex-1 inline-flex items-center justify-center gap-2 bg-[#071118] hover:bg-slate-800 text-white font-bold px-6 py-4 rounded-md transition-colors" type="button" onClick={() => { onClose(); scrollToQuote(); }} data-testid="button-modal-quote">
+            <button className="flex-1 inline-flex items-center justify-center gap-2 bg-ink hover:bg-slate-800 text-white font-bold px-6 py-4 rounded-full transition-colors" type="button" onClick={() => { onClose(); setLocation('/snow-removal-quote'); }} data-testid="button-modal-quote">
               Request a quote <ArrowRight size={16} />
             </button>
-            <button className="flex-1 inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold px-6 py-4 rounded-md transition-colors" type="button" onClick={onClose} data-testid="button-modal-close">
+            <button className="flex-1 inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold px-6 py-4 rounded-full transition-colors" type="button" onClick={onClose} data-testid="button-modal-close">
               Not right now
             </button>
           </div>
