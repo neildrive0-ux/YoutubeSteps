@@ -17,6 +17,13 @@ export const QuoteRequestInputPropertyAreasItem = {
   sidewalk: 'sidewalk',
   staircase: 'staircase',
   'back-alley-parking-pad': 'back-alley-parking-pad',
+  'ice-control': 'ice-control',
+  'lawn-mowing': 'lawn-mowing',
+  'yard-cleanup': 'yard-cleanup',
+  'garden-beds': 'garden-beds',
+  'hedge-trimming': 'hedge-trimming',
+  'sod-and-seeding': 'sod-and-seeding',
+  'landscape-project': 'landscape-project',
 } as const;
 
 export interface QuoteRequestInput {
@@ -44,7 +51,7 @@ export interface QuoteRequestInput {
   address: string;
   /**
      * @minItems 1
-     * @maxItems 4
+     * @maxItems 11
      */
   propertyAreas: QuoteRequestInputPropertyAreasItem[];
   /** @maxLength 200 */
@@ -59,6 +66,13 @@ export const QuoteRequestPropertyAreasItem = {
   sidewalk: 'sidewalk',
   staircase: 'staircase',
   'back-alley-parking-pad': 'back-alley-parking-pad',
+  'ice-control': 'ice-control',
+  'lawn-mowing': 'lawn-mowing',
+  'yard-cleanup': 'yard-cleanup',
+  'garden-beds': 'garden-beds',
+  'hedge-trimming': 'hedge-trimming',
+  'sod-and-seeding': 'sod-and-seeding',
+  'landscape-project': 'landscape-project',
 } as const;
 
 export type QuoteRequestStatus = typeof QuoteRequestStatus[keyof typeof QuoteRequestStatus];
