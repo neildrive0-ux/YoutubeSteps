@@ -45,7 +45,8 @@ export function SiteHeader() {
   return (
     <header
       id="top"
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled ? 'bg-ink/95 backdrop-blur-md border-b border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.35)]' : 'bg-gradient-to-b from-ink/70 to-transparent'}`}
+      // Phones and tablets get a slim solid bar; large screens keep the floating logo over the hero until you scroll.
+      className={`fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-ink/95 backdrop-blur-md transition-all duration-500 ${scrolled ? 'lg:shadow-[0_10px_30px_rgba(0,0,0,0.35)]' : 'lg:border-transparent lg:bg-transparent lg:bg-gradient-to-b lg:from-ink/70 lg:to-transparent lg:backdrop-blur-none'}`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/" aria-label={`${SITE.name} home`} className="relative z-10 shrink-0" data-testid="link-brand">
@@ -55,7 +56,7 @@ export function SiteHeader() {
             height={192}
             alt={`${SITE.name} logo, ${SITE.phoneDisplay}`}
             fetchPriority="high"
-            className={`drop-shadow-[0_8px_24px_rgba(0,0,0,0.55)] transition-all duration-500 ${scrolled ? 'my-2 h-16 w-16 md:h-[72px] md:w-[72px]' : 'mt-3 mb-[-28px] h-[84px] w-[84px] md:mt-4 md:mb-[-40px] md:h-[112px] md:w-[112px]'}`}
+            className={`my-1.5 h-11 w-11 drop-shadow-[0_8px_24px_rgba(0,0,0,0.55)] transition-all duration-500 ${scrolled ? 'lg:my-2 lg:h-[72px] lg:w-[72px]' : 'lg:mt-4 lg:mb-[-40px] lg:h-[112px] lg:w-[112px]'}`}
             data-testid="img-brand-logo"
           />
         </Link>
@@ -103,7 +104,7 @@ export function SiteHeader() {
             href={SITE.phoneHref}
             onClick={trackCallClick}
             aria-label={`Call ${SITE.phoneDisplay}`}
-            className="inline-flex h-11 items-center gap-2 rounded-full bg-ice px-4 text-sm font-extrabold text-ink"
+            className="inline-flex h-10 items-center gap-2 rounded-full bg-ice px-4 text-sm font-extrabold text-ink"
             data-testid="link-header-phone-mobile"
           >
             <Phone size={16} /> <span className="hidden sm:inline">{SITE.phoneDisplay}</span><span className="sm:hidden">Call</span>
@@ -114,7 +115,7 @@ export function SiteHeader() {
             aria-label="Open menu"
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-night/80 text-white backdrop-blur"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-night/80 text-white"
             data-testid="button-mobile-menu"
           >
             <Menu size={22} />
