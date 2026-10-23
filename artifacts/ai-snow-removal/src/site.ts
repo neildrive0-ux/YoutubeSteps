@@ -12,7 +12,7 @@ export const SITE = {
   email: 'ailandscapinggp@gmail.com',
   city: 'Grande Prairie',
   region: 'AB',
-  areas: ['Grande Prairie', 'Sexsmith', 'County of Grande Prairie No. 1'],
+  areas: ['Grande Prairie', 'Sexsmith', 'Clairmont', 'County of Grande Prairie No. 1'],
   priceFrom: 150,
   priceLargeFrom: 250,
   triggerCm: '1.5',
@@ -64,8 +64,8 @@ export const HOME_FAQS: Faq[] = [
     a: `Our service agreement sets the trigger at about ${SITE.triggerCm} cm of snowfall, or as required. You don't have to call us after each storm.`,
   },
   {
-    q: 'Do you clear snow in Sexsmith and the County?',
-    a: 'Yes. We clear driveways and walkways in Grande Prairie, Sexsmith and nearby properties in the County of Grande Prairie. Send your address and we will confirm it is on our route.',
+    q: 'Do you clear snow in Sexsmith, Clairmont and the County?',
+    a: 'Yes. We clear driveways and walkways in Grande Prairie, Sexsmith, Clairmont and nearby properties in the County of Grande Prairie. Send your address and we will confirm it is on our route.',
   },
   {
     q: 'What does a seasonal snow removal contract include?',
@@ -198,6 +198,21 @@ export const LANDSCAPE_ENH_FAQS: Faq[] = [
   },
 ];
 
+export const SNOW_QUOTE_FAQS: Faq[] = [
+  {
+    q: 'How much is seasonal snow removal?',
+    a: `Plans start from $${SITE.priceFrom} a month for a standard driveway and from $${SITE.priceLargeFrom} a month for larger driveways and lots. Your exact price is set in writing after a free quote, with no hidden fees.`,
+  },
+  {
+    q: 'How long are the plans and how do I pay?',
+    a: 'Choose a 4 or 5 month winter plan. Pay the season upfront or pay monthly.',
+  },
+  {
+    q: 'When do you come out?',
+    a: `After every snowfall that reaches about ${SITE.triggerCm} cm, or as required. You never have to call us after a storm.`,
+  },
+];
+
 export const QUOTE_FAQS: Faq[] = [
   {
     q: 'Is the quote free?',
@@ -209,7 +224,7 @@ export const QUOTE_FAQS: Faq[] = [
   },
   {
     q: 'What areas do you serve?',
-    a: 'Grande Prairie, Sexsmith and nearby homes in the County of Grande Prairie.',
+    a: 'Grande Prairie, Sexsmith, Clairmont and nearby homes in the County of Grande Prairie.',
   },
 ];
 
@@ -224,10 +239,10 @@ export const PAGES: Record<string, PageMeta> = {
   },
   '/snow-removal-quote': {
     path: '/snow-removal-quote',
-    title: `Get a Snow Removal Quote in Grande Prairie | ${BRAND}`,
-    description: `Request a free snow removal quote for your driveway, walkway or sidewalk in Grande Prairie or Sexsmith. Seasonal plans from $${SITE.priceFrom}/month. We call you back with a price.`,
+    title: `Snow Removal Grande Prairie | Plans From $${SITE.priceFrom}/Month | ${BRAND}`,
+    description: `Seasonal snow removal in Grande Prairie, Sexsmith and the County. Driveway, walkways and steps cleared after every snowfall. Plans from $${SITE.priceFrom}/month, larger driveways from $${SITE.priceLargeFrom}. Free quote.`,
     breadcrumb: 'Snow removal quote',
-    faqs: QUOTE_FAQS,
+    faqs: [...SNOW_QUOTE_FAQS, ...QUOTE_FAQS],
   },
   '/landscaping-quote': {
     path: '/landscaping-quote',
