@@ -18,14 +18,35 @@ const MAX_REQUESTS_PER_WINDOW = 5;
 const RATE_LIMIT_RETENTION_MS = 24 * 60 * 60 * 1000;
 const RECIPIENT_EMAIL = "ailandscapinggp@gmail.com";
 const DEFAULT_FROM_EMAIL =
-  "Ai Landscaping & SnowRemoval <onboarding@resend.dev>";
+  "Ai Landscaping & Snow Removal <onboarding@resend.dev>";
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const propertyAreaLabels: Record<string, string> = {
   driveway: "Driveway",
   sidewalk: "Sidewalk",
-  staircase: "Staircase",
+  staircase: "Steps / Staircase",
   "back-alley-parking-pad": "Back-Alley Parking Pad",
+  "ice-control": "Salting & Ice Control",
+  "lawn-mowing": "Lawn Mowing & Maintenance",
+  "yard-cleanup": "Spring / Fall Yard Cleanup",
+  "garden-beds": "Garden Beds & Mulch",
+  "hedge-trimming": "Hedge & Shrub Trimming",
+  "sod-and-seeding": "Sod & Seeding",
+  "landscape-project": "Landscape Project / Enhancement",
 };
+const landscapingAreas = new Set([
+  "lawn-mowing",
+  "yard-cleanup",
+  "garden-beds",
+  "hedge-trimming",
+  "sod-and-seeding",
+  "landscape-project",
+]);
+
+function serviceType(propertyAreas: string[]): string {
+  return propertyAreas.some((area) => landscapingAreas.has(area))
+    ? "Landscaping"
+    : "Snow & Ice";
+}
 const configuredRateLimitSecret = process.env.SESSION_SECRET;
 
 if (!configuredRateLimitSecret) {
@@ -86,25 +107,27 @@ async function sendQuoteNotification(
   req: Request,
 ): Promise<void> {
   const from = process.env.QUOTE_FROM_EMAIL?.trim() || DEFAULT_FROM_EMAIL;
-  const subject = `New quote request from ${quote.name}`;
+  const subject = `New ${serviceType(quote.propertyAreas)} quote request from ${quote.name}`;
   const text = [
-    "New quote request from the Ai Landscaping & SnowRemoval website",
+    "New quote request from the Ai Landscaping & Snow Removal website",
     "",
+    `Service: ${serviceType(quote.propertyAreas)}`,
     `Name: ${quote.name}`,
     `Phone: ${quote.phone}`,
     `Email: ${quote.email}`,
     `Property address: ${quote.address}`,
-    `Property areas: ${formatPropertyAreas(quote.propertyAreas)}`,
+    `Requested: ${formatPropertyAreas(quote.propertyAreas)}`,
   ].join("\n");
   const html = `
     <h2>New quote request</h2>
-    <p>A new request was submitted through the Ai Landscaping &amp; SnowRemoval website.</p>
+    <p>A new request was submitted through the Ai Landscaping &amp; Snow Removal website.</p>
     <table cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
+      <tr><td><strong>Service</strong></td><td>${escapeHtml(serviceType(quote.propertyAreas))}</td></tr>
       <tr><td><strong>Name</strong></td><td>${escapeHtml(quote.name)}</td></tr>
       <tr><td><strong>Phone</strong></td><td>${escapeHtml(quote.phone)}</td></tr>
       <tr><td><strong>Email</strong></td><td>${escapeHtml(quote.email)}</td></tr>
       <tr><td><strong>Property address</strong></td><td>${escapeHtml(quote.address)}</td></tr>
-      <tr><td><strong>Areas to clear</strong></td><td>${escapeHtml(formatPropertyAreas(quote.propertyAreas))}</td></tr>
+      <tr><td><strong>Requested</strong></td><td>${escapeHtml(formatPropertyAreas(quote.propertyAreas))}</td></tr>
     </table>
   `;
 
@@ -136,28 +159,28 @@ async function sendClientConfirmation(
   const text = [
     `Hi ${quote.name},`,
     "",
-    "Thanks for contacting Ai Landscaping & SnowRemoval.",
+    "Thanks for contacting Ai Landscaping & Snow Removal.",
     "We received your quote request and our team will review the details and follow up with you directly.",
     "",
     `Property address: ${quote.address}`,
-    `Areas to clear: ${areas}`,
+    `Requested: ${areas}`,
     "",
     "This email confirms receipt of your request only. No service has been scheduled or booked.",
     "",
-    "Ai Landscaping & SnowRemoval",
+    "Ai Landscaping & Snow Removal",
     "780-995-7459",
     "ailandscapinggp@gmail.com",
   ].join("\n");
   const html = `
     <h2>We received your quote request</h2>
     <p>Hi ${escapeHtml(quote.name)},</p>
-    <p>Thanks for contacting Ai Landscaping &amp; SnowRemoval. Our team will review your details and follow up with you directly.</p>
+    <p>Thanks for contacting Ai Landscaping &amp; Snow Removal. Our team will review your details and follow up with you directly.</p>
     <table cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
       <tr><td><strong>Property address</strong></td><td>${escapeHtml(quote.address)}</td></tr>
-      <tr><td><strong>Areas to clear</strong></td><td>${escapeHtml(areas)}</td></tr>
+      <tr><td><strong>Requested</strong></td><td>${escapeHtml(areas)}</td></tr>
     </table>
     <p>This email confirms receipt of your request only. No service has been scheduled or booked.</p>
-    <p>Ai Landscaping &amp; SnowRemoval<br />780-995-7459<br />ailandscapinggp@gmail.com</p>
+    <p>Ai Landscaping &amp; Snow Removal<br />780-995-7459<br />ailandscapinggp@gmail.com</p>
   `;
 
   await sendEmail({
