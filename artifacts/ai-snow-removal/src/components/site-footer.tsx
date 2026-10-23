@@ -40,7 +40,7 @@ export function Footer() {
               <img src={LOGO_SRC} width={192} height={192} loading="lazy" alt={`${SITE.name} logo`} className="h-28 w-28" data-testid="img-footer-brand-logo" />
             </Link>
             <p className="mt-6 max-w-sm leading-relaxed text-slate-300">
-              Snow &amp; ice management and landscaping for homes in Grande Prairie, Sexsmith and the County of Grande Prairie, Alberta. Fully insured in Alberta.
+              Snow &amp; ice management and landscaping for homes in Grande Prairie, Sexsmith, Clairmont and the County of Grande Prairie, Alberta. Fully insured in Alberta.
             </p>
             <Link href="/snow-removal-quote" onClick={() => trackQuoteClick('footer')} className="mt-6 inline-flex items-center gap-2 rounded-full bg-ice px-6 py-3.5 text-sm font-extrabold uppercase tracking-[0.06em] text-ink hover:bg-ice-soft">
               Get a Quote
@@ -75,7 +75,7 @@ export function Footer() {
               </li>
               <li className="inline-flex items-start gap-3">
                 <MapPin size={18} className="mt-1 shrink-0 text-ice" aria-hidden="true" />
-                <span>Grande Prairie, Sexsmith &amp; County of Grande Prairie No. 1, Alberta</span>
+                <span>Grande Prairie, Sexsmith, Clairmont &amp; County of Grande Prairie No. 1, Alberta</span>
               </li>
             </ul>
           </div>
