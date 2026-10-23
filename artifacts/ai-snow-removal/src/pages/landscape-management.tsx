@@ -9,8 +9,8 @@ export default function LandscapeManagementPage() {
       page={PAGES['/landscape-management']}
       hero={{
         eyebrow: 'Keeping green · Grande Prairie & Sexsmith',
-        accent: 'Landscape',
-        title: 'Management',
+        accent: 'Landscape Management',
+        title: 'Grande Prairie & Sexsmith',
         intro: <p>Lawn mowing, trimming, cleanups and hedge care so your yard looks good all summer without you giving up your weekends.</p>,
         points: ['Lawn care', 'Spring & fall cleanups', 'Hedge & shrub trimming'],
         fallback: 'photo-fallback-green',
