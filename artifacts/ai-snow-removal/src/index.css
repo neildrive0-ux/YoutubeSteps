@@ -18,6 +18,9 @@
   --color-ice-soft: #8fd0ff;
   --color-ice-deep: #0a6db5;
   --color-snow: #f2f6fa;
+  --color-base: #071118;
+  --color-base-2: #0b1822;
+  --color-raise: #0f1f2b;
 
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
