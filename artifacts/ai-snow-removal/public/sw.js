@@ -1,5 +1,5 @@
-const CACHE_NAME = 'ai-snow-removal-shell-v1';
-const APP_SHELL = ['/', '/site.webmanifest', '/app-icon-192.png', '/app-icon-512.png'];
+const CACHE_NAME = 'ai-snow-removal-shell-v2';
+const APP_SHELL = ['/', '/site.webmanifest', '/app-icon-192.png', '/app-icon-512.png', '/logo-192.webp'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
@@ -16,14 +16,23 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
+  const request = event.request;
+  if (request.method !== 'GET') return;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return;
   event.respondWith(
-    fetch(event.request)
+    fetch(request)
       .then((response) => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+        }
         return response;
       })
-      .catch(() => caches.match(event.request).then((response) => response || caches.match('/'))),
+      .catch(() =>
+        caches
+          .match(request)
+          .then((cached) => cached || (request.mode === 'navigate' ? caches.match('/') : Response.error())),
+      ),
   );
 });
