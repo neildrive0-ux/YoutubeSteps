@@ -32,7 +32,7 @@ export interface QuoteRequestInput {
   address: string;
   /**
      * @minItems 1
-     * @maxItems 4
+     * @maxItems 11
      */
   propertyAreas: QuoteRequestInputPropertyAreasItem[];
   /** @maxLength 200 */
