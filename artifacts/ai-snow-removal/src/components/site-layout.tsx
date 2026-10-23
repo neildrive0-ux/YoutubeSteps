@@ -46,15 +46,25 @@ function useScrollReveal() {
   }, [location]);
 }
 
+const QUOTE_PATHS = ['/snow-removal-quote', '/landscaping-quote'];
+
 function MobileCtaBar() {
+  const [location] = useLocation();
+  const onQuotePage = QUOTE_PATHS.includes(location);
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-white/10 bg-ink/95 p-2.5 backdrop-blur-md lg:hidden" data-testid="mobile-cta-bar">
       <a href={SITE.phoneHref} onClick={trackCallClick} className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 py-3.5 text-sm font-extrabold uppercase tracking-[0.06em] text-white">
         <Phone size={17} aria-hidden="true" /> Call Now
       </a>
-      <Link href="/snow-removal-quote" onClick={() => trackQuoteClick('mobile-bar')} className="inline-flex items-center justify-center gap-2 rounded-full bg-ice py-3.5 text-sm font-extrabold uppercase tracking-[0.06em] text-ink">
-        <FileText size={17} aria-hidden="true" /> Get a Quote
-      </Link>
+      {onQuotePage ? (
+        <a href="#quote-form" className="inline-flex items-center justify-center gap-2 rounded-full bg-ice py-3.5 text-sm font-extrabold uppercase tracking-[0.06em] text-ink">
+          <FileText size={17} aria-hidden="true" /> Fill the Form
+        </a>
+      ) : (
+        <Link href="/snow-removal-quote" onClick={() => trackQuoteClick('mobile-bar')} className="inline-flex items-center justify-center gap-2 rounded-full bg-ice py-3.5 text-sm font-extrabold uppercase tracking-[0.06em] text-ink">
+          <FileText size={17} aria-hidden="true" /> Get a Quote
+        </Link>
+      )}
     </div>
   );
 }
