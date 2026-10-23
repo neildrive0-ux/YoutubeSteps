@@ -20,7 +20,7 @@ export default function SnowRemovalPricesPage() {
         eyebrow="Snow removal prices · 2026–27 season"
         accent="Snow Removal Prices"
         title="in Grande Prairie"
-        intro={<p>Residential seasonal snow removal starts from ${SITE.priceFrom} a month. Larger driveways start from ${SITE.priceLargeFrom} a month. Here is what's included and what changes your price.</p>}
+        intro={<p>Residential seasonal snow removal starts from ${SITE.priceFrom} a month, and your exact price depends on the size of your driveway. Here is what's included and what changes your price.</p>}
         points={['Free quotes', 'One price all season', 'Pay upfront or monthly', 'No hidden fees']}
       />
       {page.breadcrumb && <Breadcrumbs label={page.breadcrumb} />}
@@ -29,7 +29,7 @@ export default function SnowRemovalPricesPage() {
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl">
           {[
             { name: 'Standard driveway', price: `From $${SITE.priceFrom}/month`, items: ['Driveway plowed all season', 'Add walkway, steps or sidewalk', '4 or 5 month plan'] },
-            { name: 'Larger driveway or lot', price: `From $${SITE.priceLargeFrom}/month`, items: ['Long, wide or double driveways', 'Parking areas and back-alley pads', '4 or 5 month plan'] },
+            { name: 'Larger driveway or lot', price: 'Priced by size', items: ['Long, wide or double driveways', 'Parking areas and back-alley pads', '4 or 5 month plan'] },
           ].map((tier) => (
             <article key={tier.name} className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
               <h3 className="heading-xl text-3xl text-slate-900">{tier.name}</h3>
