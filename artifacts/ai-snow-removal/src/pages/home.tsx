@@ -22,13 +22,13 @@ function Hero() {
       {PHOTOS.hero && <img src={PHOTOS.hero} alt="" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover opacity-50" />}
       <div className="snowfall" aria-hidden="true" />
       <div className="relative mx-auto w-full max-w-6xl px-4 pb-32 pt-40 text-center sm:px-6 md:pt-44">
-        <p className="eyebrow text-ice-soft">Grande Prairie · Sexsmith · County of GP</p>
+        <p className="eyebrow text-ice-soft">Grande Prairie · Sexsmith · Clairmont · County of GP</p>
         <h1 id="hero-title" className="heading-xl mt-6 text-[3.1rem] sm:text-7xl md:text-8xl">
-          <span className="block text-ice">Snow Removal</span>
+          <span className="block text-ice">Snow Removal</span>{' '}
           <span className="block">Grande Prairie &amp; Sexsmith</span>
         </h1>
         <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-slate-200 md:text-xl">
-          Driveways, walkways and sidewalks cleared all winter on seasonal plans from ${SITE.priceFrom}/month, and landscaping when the snow melts.
+          Driveways, walkways and steps cleared after every snowfall on seasonal plans from ${SITE.priceFrom}/month. Larger driveways from ${SITE.priceLargeFrom}/month. Pay monthly or upfront, no hidden fees.
         </p>
         <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
           <PillLink href="/snow-removal-quote" track="hero">Get a Snow Quote</PillLink>
@@ -37,6 +37,7 @@ function Hero() {
         <p className="mt-8 inline-flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-semibold text-slate-300">
           <span className="inline-flex items-center gap-2"><ShieldCheck size={16} className="text-ice" aria-hidden="true" /> Fully insured in Alberta</span>
           <span className="inline-flex items-center gap-2"><Snowflake size={16} className="text-ice" aria-hidden="true" /> Service from ~{SITE.triggerCm} cm of snow</span>
+          <span className="inline-flex items-center gap-2"><CalendarRange size={16} className="text-ice" aria-hidden="true" /> Limited route spots: book before the first storm</span>
         </p>
       </div>
       <SnowDrift fill="#05080c" />
@@ -48,7 +49,7 @@ const stats = [
   { value: `${SITE.triggerCm} cm`, label: 'Snowfall that triggers service' },
   { value: `$${SITE.priceFrom}`, label: 'Per month, seasonal plans from' },
   { value: '4 or 5', label: 'Month winter plans' },
-  { value: '1 call', label: 'Snow in winter, landscaping in summer' },
+  { value: '$0', label: 'Hidden fees. Pay monthly or upfront' },
 ];
 
 function StatsStrip() {
@@ -355,13 +356,13 @@ function Plans() {
 
 function ServiceArea() {
   return (
-    <ContentSection id="service-area" tone="snow" eyebrow="Where we work" title="Grande Prairie, Sexsmith & the County">
+    <ContentSection id="service-area" tone="snow" eyebrow="Where we work" title="Grande Prairie, Sexsmith, Clairmont & the County">
       <div className="grid items-start gap-10 lg:grid-cols-2">
         <p className="text-lg leading-relaxed text-slate-700" data-reveal>
-          We clear residential driveways, walkways and sidewalks and take care of yards across the City of Grande Prairie, the Town of Sexsmith and nearby homes in the County of Grande Prairie. Not sure if you are on our route? Send your address on the quote form and we will confirm.
+          We clear residential driveways, walkways and sidewalks and take care of yards across the City of Grande Prairie, the Town of Sexsmith, the Hamlet of Clairmont and nearby homes in the County of Grande Prairie. Not sure if you are on our route? Send your address on the quote form and we will confirm.
         </p>
-        <ul className="grid gap-3 sm:grid-cols-3" data-reveal>
-          {['Grande Prairie', 'Sexsmith', 'County of GP'].map((area) => (
+        <ul className="grid grid-cols-2 gap-3" data-reveal>
+          {['Grande Prairie', 'Sexsmith', 'Clairmont', 'County of GP'].map((area) => (
             <li key={area} className="rounded-3xl border border-slate-200 bg-white p-6">
               <MapPin size={22} className="text-ice-deep" aria-hidden="true" />
               <h3 className="heading-xl mt-4 text-2xl text-ink">{area}</h3>
