@@ -295,94 +295,6 @@ function Services() {
   );
 }
 
-const seasons = [
-  {
-    id: 'snow',
-    label: 'Snow & Ice',
-    heading: 'Winter: snow & ice management',
-    items: [
-      'Driveway and parking area plowing',
-      'Walkways, front steps and sidewalks',
-      'Back-alley parking pads',
-      'Salting and ice control where it is needed',
-      `Service from about ${SITE.triggerCm} cm of snowfall`,
-    ],
-    href: '/snow-removal-quote',
-    cta: 'Get a snow quote',
-    photo: PHOTOS.snow,
-    fallback: 'photo-fallback-snow',
-    icon: Truck,
-  },
-  {
-    id: 'turf',
-    label: 'Turf & Maintenance',
-    heading: 'Summer: landscape management',
-    items: ['Lawn mowing and trimming', 'Spring and fall yard cleanups', 'Hedge and shrub trimming', 'Tidy garden beds all season'],
-    href: '/landscaping-quote',
-    cta: 'Get a landscaping quote',
-    photo: PHOTOS.landscapeManagement,
-    fallback: 'photo-fallback-green',
-    icon: Trees,
-  },
-  {
-    id: 'enhancements',
-    label: 'Enhancements',
-    heading: 'Projects: landscape enhancements',
-    items: ['New garden beds and mulch', 'Sod and seeding', 'Planting and yard refreshes', 'Small landscape projects'],
-    href: '/landscaping-quote',
-    cta: 'Plan a project',
-    photo: PHOTOS.landscapeEnhancements,
-    fallback: 'photo-fallback-bloom',
-    icon: Flower2,
-  },
-];
-
-function AllSeasonCare() {
-  const [active, setActive] = useState(seasons[0].id);
-  const carousel = useSnapCarousel(seasons.length, (i) => setActive(seasons[i].id));
-  return (
-    <ContentSection id="all-season-care" layered eyebrow="One company, all year" title="All-season care">
-      <div role="tablist" aria-label="Seasons" className="mb-8 grid grid-cols-3 border-b border-white/10 md:flex md:gap-2" data-reveal>
-        {seasons.map((season, index) => (
-          <button
-            key={season.id}
-            type="button"
-            role="tab"
-            id={`tab-${season.id}`}
-            aria-selected={active === season.id}
-            aria-controls={`panel-${season.id}`}
-            onClick={() => {
-              setActive(season.id);
-              carousel.go(index);
-            }}
-            className={`-mb-px border-b-2 px-1 py-3 text-[0.7rem] leading-tight md:whitespace-nowrap md:px-4 md:text-sm font-extrabold uppercase tracking-[0.05em] md:tracking-[0.1em] transition-colors ${active === season.id ? 'border-ice text-white' : 'border-transparent text-slate-400 hover:text-white'}`}
-          >
-            {season.label}
-          </button>
-        ))}
-      </div>
-      {/* Phones: every season is a slide you can swipe. Larger screens: only the selected tab's panel shows. */}
-      <div ref={carousel.ref} onScroll={carousel.onScroll} className={`${swipeRow} md:mx-0 md:block md:overflow-visible md:px-0`}>
-      {seasons.map(({ id, heading, items, href, cta, photo, fallback, icon: Icon }) => (
-        <div key={id} role="tabpanel" id={`panel-${id}`} aria-labelledby={`tab-${id}`} className={`w-[88%] shrink-0 snap-center items-center gap-10 md:w-auto lg:grid-cols-[1fr_1.3fr] ${active === id ? 'md:grid' : 'md:hidden'}`}>
-          <PhotoPanel photo={photo} fallback={fallback} label={heading} icon={<Icon size={72} strokeWidth={1} />} defer className="mb-6 min-h-[220px] md:mb-0 md:min-h-[320px] lg:order-last lg:min-h-[420px]" />
-          <div>
-            <h3 className="heading-xl text-3xl text-white md:text-4xl">{heading}</h3>
-            <div className="mt-6">
-              <CheckList items={items} />
-            </div>
-            <div className="mt-8">
-              <PillLink href={href} variant="dark" track={`season-${id}`}>{cta}</PillLink>
-            </div>
-          </div>
-        </div>
-      ))}
-      </div>
-      <CarouselControls index={carousel.index} count={seasons.length} go={carousel.go} label="season" />
-    </ContentSection>
-  );
-}
-
 const steps = [
   {
     title: 'Request a quote',
@@ -401,7 +313,7 @@ const steps = [
 function Process() {
   const [open, setOpen] = useState(0);
   return (
-    <ContentSection id="how-it-works" tone="panel" layered bigWord="Our Process" eyebrow="Here's how to get started" title="Three steps to a clear driveway">
+    <ContentSection id="how-it-works" layered bigWord="Our Process" eyebrow="Here's how to get started" title="Three steps to a clear driveway">
       <div className="grid items-center gap-10 lg:grid-cols-2">
         <ol className="divide-y divide-white/10 border-y border-white/10" data-reveal>
           {steps.map((step, index) => (
@@ -439,7 +351,7 @@ function Process() {
 function ContractCard() {
   const openSignUp = useSignUp();
   return (
-    <div className="mx-auto mt-12 grid max-w-5xl items-center gap-8 rounded-[2rem] border border-ice/30 bg-raise p-7 md:grid-cols-[1fr_auto] md:p-10" data-reveal>
+    <div className="mx-auto mt-12 grid max-w-5xl items-center gap-8 rounded-[2rem] border border-ice/30 bg-ink/40 p-7 md:grid-cols-[1fr_auto] md:p-10" data-reveal>
       <div>
         <p className="inline-block rounded-md border border-ice/40 bg-ice/10 px-3 py-1.5 text-xs font-extrabold uppercase tracking-[0.14em] text-ice">Seasonal service agreement</p>
         <h3 className="heading-xl mt-5 text-3xl text-white md:text-4xl">Snow handled before it becomes your problem.</h3>
@@ -460,13 +372,13 @@ function ContractCard() {
 
 function Plans() {
   return (
-    <ContentSection id="plans" layered eyebrow="Seasonal snow plans" title="Simple pricing. No winter surprises." center>
+    <ContentSection id="plans" tone="panel" layered eyebrow="Seasonal snow plans" title="Simple pricing. No winter surprises." center>
       <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">
         {[
           { name: 'Standard driveway', price: SITE.priceFrom, items: ['Driveway plowed all season', 'Add walkway, steps or sidewalk', '4 or 5 month plan'] },
           { name: 'Larger driveway or lot', price: null, items: ['Long, wide or double driveways', 'Parking areas and back-alley pads', '4 or 5 month plan'] },
         ].map((plan, index) => (
-          <article key={plan.name} className={`rounded-3xl p-6 text-left md:p-8 ${index === 0 ? 'border border-ice/40 bg-ice/10 text-white' : 'border border-white/10 bg-raise'}`} data-reveal>
+          <article key={plan.name} className={`rounded-3xl p-6 text-left md:p-8 ${index === 0 ? 'border border-ice/40 bg-ice/10 text-white' : 'border border-white/10 bg-ink/40'}`} data-reveal>
             <p className="eyebrow text-ice">{plan.name}</p>
             {plan.price ? (
               <p className="heading-xl mt-3 text-5xl md:text-6xl">
@@ -494,7 +406,7 @@ function Plans() {
 
 function ServiceArea() {
   return (
-    <ContentSection id="service-area" tone="panel" layered eyebrow="Where we work" title="Grande Prairie, Sexsmith, Clairmont & the County">
+    <ContentSection id="service-area" layered eyebrow="Where we work" title="Grande Prairie, Sexsmith, Clairmont & the County">
       <div className="grid items-start gap-10 lg:grid-cols-2">
         <p className="text-base leading-relaxed text-slate-300 md:text-lg" data-reveal>
           We clear residential driveways, walkways and sidewalks and take care of yards across the City of Grande Prairie, the Town of Sexsmith, the Hamlet of Clairmont and nearby homes in the County of Grande Prairie. Not sure if you are on our route? Send your address on the quote form and we will confirm.
@@ -523,11 +435,10 @@ export default function HomePage() {
       </div>
       <WinterPlanBand />
       <Services />
-      <AllSeasonCare />
       <Process />
       <Plans />
       <ServiceArea />
-      <FaqSection faqs={page.faqs ?? []} title="Snow removal & landscaping questions" layered />
+      <FaqSection faqs={page.faqs ?? []} title="Snow removal & landscaping questions" tone="panel" layered />
     </SiteLayout>
   );
 }
