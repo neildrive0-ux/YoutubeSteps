@@ -152,19 +152,19 @@ export function ContentSection({
   const bg = tone === 'dark' ? 'bg-ink text-white' : tone === 'snow' ? 'bg-base-2 text-white' : 'bg-base text-white';
   const headingId = `${id ?? title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-title`;
   return (
-    <section id={id} className={`relative overflow-hidden py-20 md:py-28 ${bg} ${className}`} aria-labelledby={headingId}>
+    <section id={id} className={`relative overflow-hidden py-14 md:py-28 ${bg} ${className}`} aria-labelledby={headingId}>
       {bigWord && (
         <p aria-hidden="true" className="heading-xl text-outline pointer-events-none absolute inset-x-0 top-6 select-none whitespace-nowrap text-center text-[22vw] md:top-4 md:text-[13rem]">
           {bigWord}
         </p>
       )}
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
-        <div className={`mb-12 max-w-3xl ${center ? 'mx-auto text-center' : ''}`} data-reveal>
+        <div className={`mb-8 max-w-3xl md:mb-12 ${center ? 'mx-auto text-center' : ''}`} data-reveal>
           {eyebrow && <p className="eyebrow text-ice">{eyebrow}</p>}
-          <h2 id={headingId} className="heading-xl mt-3 text-4xl text-white md:text-6xl">
+          <h2 id={headingId} className="heading-xl mt-3 text-[2.1rem] text-white md:text-6xl">
             {title}
           </h2>
-          {intro && <div className="mt-5 text-lg leading-relaxed text-slate-300">{intro}</div>}
+          {intro && <div className="mt-4 text-base leading-relaxed text-slate-300 md:mt-5 md:text-lg">{intro}</div>}
         </div>
         {children}
       </div>
