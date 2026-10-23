@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'wouter';
 import {
+  ArrowLeft,
   ArrowRight,
   CalendarRange,
   Flower2,
@@ -13,7 +14,7 @@ import {
 } from 'lucide-react';
 import { PAGES, PHOTOS, SITE } from '@/site';
 import { SiteLayout, useSignUp } from '@/components/site-layout';
-import { CallLink, CheckList, ContentSection, FaqSection, PhotoPanel, PillLink } from '@/components/page-sections';
+import { CallLink, CheckList, ContentSection, FaqSection, PhotoPanel, PillLink, useAfterLoad } from '@/components/page-sections';
 import { trackCallClick, trackQuoteClick } from '@/lib/tracking';
 
 // The hero photo stays fixed while the hero and the stats band scroll over it (clipped to this block),
@@ -134,9 +135,59 @@ const reasons = [
   },
 ];
 
-// Phones get a plain text link; larger screens get the full pill button.
 const reasonLink =
-  'mt-3 inline-flex items-center gap-2 text-sm font-extrabold uppercase tracking-[0.06em] text-ice md:mt-7 md:rounded-full md:bg-ice md:px-6 md:py-3 md:text-ink md:hover:bg-ice-soft';
+  'mt-4 inline-flex items-center gap-2 rounded-full bg-ice px-5 py-2.5 text-xs font-extrabold uppercase tracking-[0.06em] text-ink transition-colors hover:bg-ice-soft md:mt-7 md:px-6 md:py-3 md:text-sm';
+
+// Swipeable row on phones (scroll-snap), with arrows and a progress bar like Clintar's.
+// The active slide is whichever one is closest to the middle of the row.
+function useSnapCarousel(count: number, onChange?: (index: number) => void) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [index, setIndex] = useState(0);
+  const onScroll = () => {
+    const row = ref.current;
+    if (!row) return;
+    const middle = row.scrollLeft + row.clientWidth / 2;
+    let nearest = 0;
+    let best = Infinity;
+    Array.from(row.children).forEach((child, i) => {
+      const slide = child as HTMLElement;
+      const distance = Math.abs(slide.offsetLeft + slide.offsetWidth / 2 - middle);
+      if (distance < best) {
+        best = distance;
+        nearest = i;
+      }
+    });
+    if (nearest !== index) {
+      setIndex(nearest);
+      onChange?.(nearest);
+    }
+  };
+  const go = (target: number) => {
+    const row = ref.current;
+    const slide = row?.children[Math.max(0, Math.min(count - 1, target))] as HTMLElement | undefined;
+    if (!row || !slide) return;
+    row.scrollTo({ left: slide.offsetLeft - (row.clientWidth - slide.offsetWidth) / 2, behavior: 'smooth' });
+  };
+  return { ref, index, onScroll, go };
+}
+
+function CarouselControls({ index, count, go, label }: { index: number; count: number; go: (index: number) => void; label: string }) {
+  return (
+    <div className="mt-6 flex items-center gap-3 md:hidden">
+      <div className="h-1 flex-1 overflow-hidden rounded-full bg-white/10" aria-hidden="true">
+        <div className="h-full rounded-full bg-ice transition-all duration-300" style={{ width: `${((index + 1) / count) * 100}%` }} />
+      </div>
+      <button type="button" onClick={() => go(index - 1)} disabled={index === 0} aria-label={`Previous ${label}`} className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-opacity disabled:opacity-30">
+        <ArrowLeft size={18} aria-hidden="true" />
+      </button>
+      <button type="button" onClick={() => go(index + 1)} disabled={index === count - 1} aria-label={`Next ${label}`} className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-ice text-ink transition-opacity disabled:opacity-30">
+        <ArrowRight size={18} aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
+const swipeRow = 'no-scrollbar relative -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4';
 
 function WinterPlanBand() {
   return (
@@ -153,25 +204,23 @@ function WinterPlanBand() {
         </p>
       }
     >
-      <div className="grid gap-3 md:grid-cols-3 md:gap-5">
+      <div className="grid gap-4 md:grid-cols-3 md:gap-5">
         {reasons.map(({ icon: Icon, title, text, href, cta }) => (
-          <article key={title} className="flex items-start gap-4 rounded-3xl border border-ice/40 bg-night/60 p-5 text-left md:flex-col md:items-center md:p-8 md:text-center" data-reveal>
-            <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-ice/10 text-ice md:h-16 md:w-16">
-              <Icon size={26} strokeWidth={1.75} aria-hidden="true" />
+          <article key={title} className="flex flex-col items-center rounded-[2rem] border border-ice/50 bg-night/60 px-6 py-7 text-center md:p-8" data-reveal>
+            <span className="hidden h-16 w-16 items-center justify-center rounded-full bg-ice/10 text-ice md:inline-flex">
+              <Icon size={30} strokeWidth={1.75} aria-hidden="true" />
             </span>
-            <div className="md:flex md:flex-col md:items-center">
-              <h3 className="heading-xl text-2xl text-white md:mt-6 md:text-3xl">{title}</h3>
-              <p className="mt-1 text-sm leading-relaxed text-slate-300 md:mt-3 md:text-base">{text}</p>
-              {href.startsWith('tel:') ? (
-                <a href={href} onClick={trackCallClick} className={reasonLink}>
-                  {cta} <ArrowRight size={16} aria-hidden="true" />
-                </a>
-              ) : (
-                <Link href={href} className={reasonLink}>
-                  {cta} <ArrowRight size={16} aria-hidden="true" />
-                </Link>
-              )}
-            </div>
+            <h3 className="heading-xl text-2xl text-white md:mt-6 md:text-3xl">{title}</h3>
+            <p className="mt-3 hidden leading-relaxed text-slate-300 md:block">{text}</p>
+            {href.startsWith('tel:') ? (
+              <a href={href} onClick={trackCallClick} className={reasonLink}>
+                {cta} <ArrowRight size={16} aria-hidden="true" />
+              </a>
+            ) : (
+              <Link href={href} className={reasonLink}>
+                {cta} <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            )}
           </article>
         ))}
       </div>
@@ -210,20 +259,20 @@ const services = [
 ];
 
 function Services() {
-  const [showAll, setShowAll] = useState(false);
+  const carousel = useSnapCarousel(services.length);
+  const loaded = useAfterLoad();
   return (
-    <ContentSection id="services" tone="snow" eyebrow="Everything outside your door" title="Our Services">
-      <div className="grid gap-5 md:grid-cols-3">
-        {services.map(({ eyebrow, title, href, cta, photo, fallback, icon: Icon }, index) => (
+    <ContentSection id="services" tone="panel" layered eyebrow="Everything outside your door" title="Our Services">
+      <div ref={carousel.ref} onScroll={carousel.onScroll} className={`${swipeRow} py-2 md:mx-0 md:grid md:grid-cols-3 md:gap-5 md:overflow-visible md:px-0`}>
+        {services.map(({ eyebrow, title, href, cta, photo, fallback, icon: Icon }) => (
           <Link
             key={href}
             href={href}
-            className={`group relative min-h-[340px] flex-col justify-end overflow-hidden rounded-[2.5rem] text-white shadow-xl ring-1 ring-white/10 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_30px_60px_-20px_rgba(74,176,245,0.55)] hover:ring-ice/60 active:scale-[0.98] md:min-h-[420px] md:flex ${index === 0 || showAll ? 'flex' : 'hidden'}`}
-            data-reveal
+            className="group relative flex min-h-[360px] w-[85%] shrink-0 snap-center flex-col justify-end overflow-hidden rounded-[2.5rem] text-white shadow-xl ring-1 ring-white/10 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-[0_30px_60px_-20px_rgba(74,176,245,0.55)] hover:ring-ice/60 active:scale-[0.98] md:min-h-[420px] md:w-auto"
           >
             <div className={`absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-110 ${photo ? 'bg-ink' : fallback}`}>
               {photo ? (
-                <img src={photo} alt="" loading="lazy" className="h-full w-full object-cover" />
+                <img src={loaded ? photo : undefined} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
               ) : (
                 <div className="bg-grain flex h-full items-start justify-end p-8">
                   <Icon size={120} strokeWidth={1} className="text-white/15" aria-hidden="true" />
@@ -241,17 +290,7 @@ function Services() {
           </Link>
         ))}
       </div>
-      {!showAll && (
-        <div className="mt-6 text-center md:hidden">
-          <button
-            type="button"
-            onClick={() => setShowAll(true)}
-            className="inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-4 text-sm font-extrabold uppercase tracking-[0.08em] text-white transition-colors hover:border-ice hover:text-ice"
-          >
-            View all services <ArrowRight size={16} aria-hidden="true" />
-          </button>
-        </div>
-      )}
+      <CarouselControls index={carousel.index} count={services.length} go={carousel.go} label="service" />
     </ContentSection>
   );
 }
@@ -300,10 +339,11 @@ const seasons = [
 
 function AllSeasonCare() {
   const [active, setActive] = useState(seasons[0].id);
+  const carousel = useSnapCarousel(seasons.length, (i) => setActive(seasons[i].id));
   return (
-    <ContentSection id="all-season-care" eyebrow="One company, all year" title="All-season care">
+    <ContentSection id="all-season-care" layered eyebrow="One company, all year" title="All-season care">
       <div role="tablist" aria-label="Seasons" className="mb-8 grid grid-cols-3 border-b border-white/10 md:flex md:gap-2" data-reveal>
-        {seasons.map((season) => (
+        {seasons.map((season, index) => (
           <button
             key={season.id}
             type="button"
@@ -311,15 +351,21 @@ function AllSeasonCare() {
             id={`tab-${season.id}`}
             aria-selected={active === season.id}
             aria-controls={`panel-${season.id}`}
-            onClick={() => setActive(season.id)}
+            onClick={() => {
+              setActive(season.id);
+              carousel.go(index);
+            }}
             className={`-mb-px border-b-2 px-1 py-3 text-[0.7rem] leading-tight md:whitespace-nowrap md:px-4 md:text-sm font-extrabold uppercase tracking-[0.05em] md:tracking-[0.1em] transition-colors ${active === season.id ? 'border-ice text-white' : 'border-transparent text-slate-400 hover:text-white'}`}
           >
             {season.label}
           </button>
         ))}
       </div>
+      {/* Phones: every season is a slide you can swipe. Larger screens: only the selected tab's panel shows. */}
+      <div ref={carousel.ref} onScroll={carousel.onScroll} className={`${swipeRow} md:mx-0 md:block md:overflow-visible md:px-0`}>
       {seasons.map(({ id, heading, items, href, cta, photo, fallback, icon: Icon }) => (
-        <div key={id} role="tabpanel" id={`panel-${id}`} aria-labelledby={`tab-${id}`} hidden={active !== id} className="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div key={id} role="tabpanel" id={`panel-${id}`} aria-labelledby={`tab-${id}`} className={`w-[88%] shrink-0 snap-center items-center gap-10 md:w-auto lg:grid-cols-[1fr_1.3fr] ${active === id ? 'md:grid' : 'md:hidden'}`}>
+          <PhotoPanel photo={photo} fallback={fallback} label={heading} icon={<Icon size={72} strokeWidth={1} />} defer className="mb-6 min-h-[220px] md:mb-0 md:min-h-[320px] lg:order-last lg:min-h-[420px]" />
           <div>
             <h3 className="heading-xl text-3xl text-white md:text-4xl">{heading}</h3>
             <div className="mt-6">
@@ -329,9 +375,10 @@ function AllSeasonCare() {
               <PillLink href={href} variant="dark" track={`season-${id}`}>{cta}</PillLink>
             </div>
           </div>
-          <PhotoPanel photo={photo} fallback={fallback} label={heading} icon={<Icon size={72} strokeWidth={1} />} className="hidden min-h-[320px] md:block lg:min-h-[420px]" />
         </div>
       ))}
+      </div>
+      <CarouselControls index={carousel.index} count={seasons.length} go={carousel.go} label="season" />
     </ContentSection>
   );
 }
@@ -354,7 +401,7 @@ const steps = [
 function Process() {
   const [open, setOpen] = useState(0);
   return (
-    <ContentSection id="how-it-works" tone="snow" bigWord="Our Process" eyebrow="Here's how to get started" title="Three steps to a clear driveway">
+    <ContentSection id="how-it-works" tone="panel" layered bigWord="Our Process" eyebrow="Here's how to get started" title="Three steps to a clear driveway">
       <div className="grid items-center gap-10 lg:grid-cols-2">
         <ol className="divide-y divide-white/10 border-y border-white/10" data-reveal>
           {steps.map((step, index) => (
@@ -382,7 +429,7 @@ function Process() {
             </li>
           ))}
         </ol>
-        <PhotoPanel photo={PHOTOS.process} fallback="hero-fallback" label="Snow removal crew in Grande Prairie" icon={<Truck size={96} strokeWidth={1} />} className="min-h-[240px] md:min-h-[380px]" />
+        <PhotoPanel photo={PHOTOS.process} fallback="hero-fallback" label="Snow removal crew in Grande Prairie" icon={<Truck size={96} strokeWidth={1} />} defer className="order-first min-h-[220px] md:min-h-[380px] lg:order-none" />
       </div>
     </ContentSection>
   );
@@ -413,7 +460,7 @@ function ContractCard() {
 
 function Plans() {
   return (
-    <ContentSection id="plans" eyebrow="Seasonal snow plans" title="Simple pricing. No winter surprises." center>
+    <ContentSection id="plans" layered eyebrow="Seasonal snow plans" title="Simple pricing. No winter surprises." center>
       <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">
         {[
           { name: 'Standard driveway', price: SITE.priceFrom, items: ['Driveway plowed all season', 'Add walkway, steps or sidewalk', '4 or 5 month plan'] },
@@ -447,14 +494,14 @@ function Plans() {
 
 function ServiceArea() {
   return (
-    <ContentSection id="service-area" tone="snow" eyebrow="Where we work" title="Grande Prairie, Sexsmith, Clairmont & the County">
+    <ContentSection id="service-area" tone="panel" layered eyebrow="Where we work" title="Grande Prairie, Sexsmith, Clairmont & the County">
       <div className="grid items-start gap-10 lg:grid-cols-2">
         <p className="text-base leading-relaxed text-slate-300 md:text-lg" data-reveal>
           We clear residential driveways, walkways and sidewalks and take care of yards across the City of Grande Prairie, the Town of Sexsmith, the Hamlet of Clairmont and nearby homes in the County of Grande Prairie. Not sure if you are on our route? Send your address on the quote form and we will confirm.
         </p>
         <ul className="grid grid-cols-2 gap-3" data-reveal>
           {['Grande Prairie', 'Sexsmith', 'Clairmont', 'County of GP'].map((area) => (
-            <li key={area} className="flex items-center gap-2 rounded-2xl border border-white/10 bg-raise p-4 md:block md:rounded-3xl md:p-6">
+            <li key={area} className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 p-4 md:block md:rounded-3xl md:p-6">
               <MapPin size={20} className="shrink-0 text-ice" aria-hidden="true" />
               <h3 className="heading-xl text-xl text-white md:mt-4 md:text-2xl">{area}</h3>
             </li>
@@ -480,7 +527,7 @@ export default function HomePage() {
       <Process />
       <Plans />
       <ServiceArea />
-      <FaqSection faqs={page.faqs ?? []} title="Snow removal & landscaping questions" />
+      <FaqSection faqs={page.faqs ?? []} title="Snow removal & landscaping questions" layered />
     </SiteLayout>
   );
 }
