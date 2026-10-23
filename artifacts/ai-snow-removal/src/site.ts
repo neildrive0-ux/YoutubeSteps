@@ -31,8 +31,8 @@ export const TRACKING = {
 
 // Photos live in /public/images. Swap a path here to change a photo; an empty string shows a designed fallback.
 export const PHOTOS = {
-  hero: '/images/hero-snow-plowing.webp',
-  heroMobile: '/images/hero-snow-plowing-mobile.webp',
+  hero: '/images/hero-tractor-night.webp',
+  heroMobile: '/images/hero-tractor-night-mobile.webp',
   snow: '/images/snow-shovel-walkway.webp',
   landscapeManagement: '/images/landscape-management.webp',
   landscapeEnhancements: '/images/landscape-enhancements.webp',
