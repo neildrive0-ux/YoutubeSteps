@@ -4,7 +4,7 @@ import { ArrowRight, Menu, Phone, X } from 'lucide-react';
 import { SITE } from '@/site';
 import { trackCallClick, trackQuoteClick } from '@/lib/tracking';
 
-export const LOGO_SRC = '/logo-192.webp';
+export const LOGO_SRC = '/logo-hq.webp';
 
 // True while the page's own hero buttons ([data-hero-cta]) are on screen. The header Call button and the
 // phone bottom bar both stay hidden until then, so there is never a second set of call buttons in the hero.
@@ -67,7 +67,7 @@ export function SiteHeader() {
     <header
       id="top"
       // At the top of the page: no bar, just a large logo over the hero. Once you scroll: a solid bar with a small logo.
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-500 ${scrolled ? 'border-white/10 bg-ink/95 backdrop-blur-md lg:shadow-[0_10px_30px_rgba(0,0,0,0.35)]' : 'border-transparent bg-gradient-to-b from-ink/50 to-transparent lg:from-ink/70'}`}
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-500 ${scrolled ? 'border-white/10 bg-ink/95 backdrop-blur-md lg:shadow-[0_10px_30px_rgba(0,0,0,0.35)]' : 'border-transparent bg-transparent lg:bg-gradient-to-b lg:from-ink/70 lg:to-transparent'}`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link href="/" aria-label={`${SITE.name} home`} className="relative z-10 shrink-0" data-testid="link-brand">
