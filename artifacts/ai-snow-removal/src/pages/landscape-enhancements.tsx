@@ -9,8 +9,8 @@ export default function LandscapeEnhancementsPage() {
       page={PAGES['/landscape-enhancements']}
       hero={{
         eyebrow: 'Refresh your yard · Grande Prairie & Sexsmith',
-        accent: 'Landscape',
-        title: 'Enhancements',
+        accent: 'Landscape Enhancements',
+        title: 'Grande Prairie & Sexsmith',
         intro: <p>New garden beds, sod, planting and yard upgrades that make your property look finished.</p>,
         points: ['Garden beds & mulch', 'Sod & seeding', 'Planting & projects'],
         fallback: 'photo-fallback-bloom',
