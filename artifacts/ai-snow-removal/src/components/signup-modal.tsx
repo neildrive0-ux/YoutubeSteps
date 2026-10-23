@@ -6,7 +6,8 @@ import { SITE } from '@/site';
 export const CONTRACT_PDF = '/snow-removal-service-agreement.pdf';
 
 export function SignUpModal({ onClose }: { onClose: () => void }) {
-  const [contractOpen, setContractOpen] = useState(false);
+  // The contract starts open on larger screens; phones get the toggle and an open-in-new-tab link instead of a cramped PDF frame.
+  const [contractOpen, setContractOpen] = useState(() => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches);
   const [, setLocation] = useLocation();
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
