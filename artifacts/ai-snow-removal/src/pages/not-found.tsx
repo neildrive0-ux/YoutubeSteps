@@ -1,30 +1,27 @@
-import { Link } from 'wouter';
-import { ArrowRight, Phone } from 'lucide-react';
-import { NOT_FOUND, SITE } from '@/site';
+import { NOT_FOUND } from '@/site';
 import { SiteLayout } from '@/components/site-layout';
-import { trackCallClick } from '@/lib/tracking';
+import { CallLink, PillLink, SnowDrift } from '@/components/page-sections';
 
 export default function NotFound() {
   return (
-    <SiteLayout page={NOT_FOUND} showQuote={false}>
-      <section className="bg-[#071118] text-white pt-40 pb-24 lg:pt-48 lg:pb-32" aria-labelledby="page-title">
-        <div className="container mx-auto px-6 max-w-3xl">
-          <p className="text-sky-300 font-bold text-xs tracking-widest uppercase mb-6">Error 404</p>
-          <h1 id="page-title" className="font-display text-4xl lg:text-6xl font-semibold tracking-tight mb-6">
-            This page doesn't exist.
+    <SiteLayout page={NOT_FOUND} cta={false}>
+      <section className="hero-fallback relative overflow-hidden text-white" aria-labelledby="page-title">
+        <div className="snowfall" aria-hidden="true" />
+        <div className="relative mx-auto max-w-3xl px-4 pb-32 pt-40 text-center sm:px-6 md:pt-48">
+          <p className="eyebrow text-ice-soft">Error 404</p>
+          <h1 id="page-title" className="heading-xl mt-5 text-5xl md:text-7xl">
+            <span className="block text-ice">Lost in the snow?</span>
+            <span className="block">This page doesn't exist.</span>
           </h1>
-          <p className="text-slate-200 text-lg leading-relaxed mb-10">
-            The link may be old or mistyped. You can find our snow removal services for Grande Prairie and Sexsmith on the home page, or call us.
+          <p className="mx-auto mt-6 max-w-xl text-lg text-slate-200">
+            The link may be old or mistyped. Head to the home page for snow removal and landscaping in Grande Prairie and Sexsmith, or call us.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/" className="inline-flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 text-[#071118] font-bold px-8 py-4 rounded-md">
-              Go to the home page <ArrowRight size={18} />
-            </Link>
-            <a href={SITE.phoneHref} onClick={trackCallClick} className="inline-flex items-center justify-center gap-2 border border-slate-500 hover:bg-slate-800 text-white font-semibold px-8 py-4 rounded-md">
-              <Phone size={18} /> Call {SITE.phoneDisplay}
-            </a>
+          <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+            <PillLink href="/">Go to the home page</PillLink>
+            <CallLink />
           </div>
         </div>
+        <SnowDrift />
       </section>
     </SiteLayout>
   );
