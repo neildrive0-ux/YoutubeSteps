@@ -6,10 +6,11 @@ export default function LandscapingQuotePage() {
     <QuotePage
       page={PAGES['/landscaping-quote']}
       service="landscaping"
-      accent="Landscaping"
-      title="Quote Request"
+      accent="Landscaping Quote"
+      title="Grande Prairie & Sexsmith"
       fallback="photo-fallback-green"
       intro={<p>Lawn care, cleanups, garden beds or a bigger project. Tell us what you need and we'll call you back with a price.</p>}
+      points={['Lawn mowing & cleanups', 'Hedge & shrub trimming', 'Garden beds, sod & seeding', 'Free quote']}
       benefits={[
         'Lawn mowing, trimming and seasonal cleanups',
         'Hedge and shrub trimming',
