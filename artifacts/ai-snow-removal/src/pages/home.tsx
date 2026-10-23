@@ -28,7 +28,7 @@ function Hero() {
           <span className="block">Grande Prairie &amp; Sexsmith</span>
         </h1>
         <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-slate-200 md:text-xl">
-          Driveways, walkways and steps cleared after every snowfall on seasonal plans from ${SITE.priceFrom}/month. Larger driveways from ${SITE.priceLargeFrom}/month. Pay monthly or upfront, no hidden fees.
+          Driveways, walkways and steps cleared after every snowfall on seasonal plans from ${SITE.priceFrom}/month, priced by the size of your driveway. Pay monthly or upfront, no hidden fees.
         </p>
         <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
           <PillLink href="/snow-removal-quote" track="hero">Get a Snow Quote</PillLink>
@@ -331,14 +331,18 @@ function Plans() {
       <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">
         {[
           { name: 'Standard driveway', price: SITE.priceFrom, items: ['Driveway plowed all season', 'Add walkway, steps or sidewalk', '4 or 5 month plan'] },
-          { name: 'Larger driveway or lot', price: SITE.priceLargeFrom, items: ['Long, wide or double driveways', 'Parking areas and back-alley pads', '4 or 5 month plan'] },
+          { name: 'Larger driveway or lot', price: null, items: ['Long, wide or double driveways', 'Parking areas and back-alley pads', '4 or 5 month plan'] },
         ].map((plan, index) => (
           <article key={plan.name} className={`rounded-3xl p-8 text-left ${index === 0 ? 'bg-ink text-white' : 'border border-slate-200 bg-white'}`} data-reveal>
             <p className={`eyebrow ${index === 0 ? 'text-ice' : 'text-ice-deep'}`}>{plan.name}</p>
-            <p className="heading-xl mt-3 text-6xl">
-              <span className="align-top text-2xl">from </span>${plan.price}
-              <span className={`text-2xl ${index === 0 ? 'text-slate-400' : 'text-slate-500'}`}>/mo</span>
-            </p>
+            {plan.price ? (
+              <p className="heading-xl mt-3 text-6xl">
+                <span className="align-top text-2xl">from </span>${plan.price}
+                <span className={`text-2xl ${index === 0 ? 'text-slate-400' : 'text-slate-500'}`}>/mo</span>
+              </p>
+            ) : (
+              <p className="heading-xl mt-3 text-5xl">Priced by size</p>
+            )}
             <div className="mt-6">
               <CheckList items={plan.items} tone={index === 0 ? 'dark' : 'light'} />
             </div>
