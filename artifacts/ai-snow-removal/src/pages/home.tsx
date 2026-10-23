@@ -12,7 +12,7 @@ import {
   Truck,
 } from 'lucide-react';
 import { PAGES, PHOTOS, SITE } from '@/site';
-import { SiteLayout } from '@/components/site-layout';
+import { SiteLayout, useSignUp } from '@/components/site-layout';
 import { CallLink, CheckList, ContentSection, FaqSection, PhotoPanel, PillLink } from '@/components/page-sections';
 import { trackCallClick } from '@/lib/tracking';
 
@@ -374,6 +374,29 @@ function Process() {
   );
 }
 
+// Opens the sign-up popup, which shows the seasonal service agreement (PDF) before the visitor asks for a quote.
+function ContractCard() {
+  const openSignUp = useSignUp();
+  return (
+    <div className="mx-auto mt-12 grid max-w-5xl items-center gap-8 rounded-[2rem] border border-ice/30 bg-raise p-7 md:grid-cols-[1fr_auto] md:p-10" data-reveal>
+      <div>
+        <p className="inline-block rounded-md border border-ice/40 bg-ice/10 px-3 py-1.5 text-xs font-extrabold uppercase tracking-[0.14em] text-ice">Seasonal service agreement</p>
+        <h3 className="heading-xl mt-5 text-3xl text-white md:text-4xl">Snow handled before it becomes your problem.</h3>
+        <div className="mt-5">
+          <CheckList items={['Service planned around snowfall', '4 or 5 month plans, paid upfront or monthly', 'Clear terms, direct communication']} />
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={openSignUp}
+        className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-ink px-7 py-4 text-sm font-extrabold uppercase tracking-[0.06em] text-white transition-all duration-300 hover:-translate-y-0.5 hover:border-ice hover:text-ice"
+      >
+        View contract / Sign up <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
 function Plans() {
   return (
     <ContentSection id="plans" eyebrow="Seasonal snow plans" title="Simple pricing. No winter surprises." center>
@@ -403,6 +426,7 @@ function Plans() {
         <PillLink href="/seasonal-snow-removal-contracts" variant="outline-dark">How contracts work</PillLink>
       </div>
       <p className="mt-6 text-center text-sm text-slate-400">Starting prices before tax. Your exact price is set in your written agreement after a free quote.</p>
+      <ContractCard />
     </ContentSection>
   );
 }
