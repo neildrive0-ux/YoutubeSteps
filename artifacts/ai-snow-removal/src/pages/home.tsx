@@ -1,346 +1,391 @@
+import { useState } from 'react';
 import { Link } from 'wouter';
 import {
   ArrowRight,
-  BadgeCheck,
-  Building2,
   CalendarRange,
-  Check,
-  Clock3,
-  FileText,
-  Footprints,
-  Home as HomeIcon,
+  Flower2,
   MapPin,
   Phone,
   ShieldCheck,
   Snowflake,
+  Trees,
   Truck,
 } from 'lucide-react';
-import { PAGES, SITE } from '@/site';
-import { SiteLayout, useSignUp } from '@/components/site-layout';
-import { scrollToQuote } from '@/components/site-header';
-import { FaqSection, RelatedPages } from '@/components/page-sections';
+import { PAGES, PHOTOS, SITE } from '@/site';
+import { SiteLayout } from '@/components/site-layout';
+import { CallLink, CheckList, ContentSection, FaqSection, PhotoPanel, PillLink, SnowDrift } from '@/components/page-sections';
 import { trackCallClick } from '@/lib/tracking';
+
+function Hero() {
+  return (
+    <section className={`relative flex min-h-[92svh] items-center overflow-hidden text-white ${PHOTOS.hero ? 'bg-ink' : 'hero-fallback'}`} aria-labelledby="hero-title">
+      {PHOTOS.hero && <img src={PHOTOS.hero} alt="" fetchPriority="high" className="absolute inset-0 h-full w-full object-cover opacity-50" />}
+      <div className="snowfall" aria-hidden="true" />
+      <div className="relative mx-auto w-full max-w-6xl px-4 pb-32 pt-40 text-center sm:px-6 md:pt-44">
+        <p className="eyebrow text-ice-soft">Grande Prairie · Sexsmith · County of GP</p>
+        <h1 id="hero-title" className="heading-xl mt-6 text-[3.1rem] sm:text-7xl md:text-8xl">
+          <span className="block text-ice">Snow Removal</span>
+          <span className="block">Grande Prairie &amp; Sexsmith</span>
+        </h1>
+        <p className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-slate-200 md:text-xl">
+          Driveways, walkways and sidewalks cleared all winter on seasonal plans from ${SITE.priceFrom}/month, and landscaping when the snow melts.
+        </p>
+        <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+          <PillLink href="/snow-removal-quote" track="hero">Get a Snow Quote</PillLink>
+          <CallLink />
+        </div>
+        <p className="mt-8 inline-flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-semibold text-slate-300">
+          <span className="inline-flex items-center gap-2"><ShieldCheck size={16} className="text-ice" aria-hidden="true" /> Fully insured in Alberta</span>
+          <span className="inline-flex items-center gap-2"><Snowflake size={16} className="text-ice" aria-hidden="true" /> Service from ~{SITE.triggerCm} cm of snow</span>
+        </p>
+      </div>
+      <SnowDrift fill="#05080c" />
+    </section>
+  );
+}
+
+const stats = [
+  { value: `${SITE.triggerCm} cm`, label: 'Snowfall that triggers service' },
+  { value: `$${SITE.priceFrom}`, label: 'Per month, seasonal plans from' },
+  { value: '4 or 5', label: 'Month winter plans' },
+  { value: '1 call', label: 'Snow in winter, landscaping in summer' },
+];
+
+function StatsStrip() {
+  return (
+    <section className="bg-ink text-white" aria-label="At a glance">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-4 pb-16 pt-4 sm:px-6 lg:grid-cols-4">
+        {stats.map((stat) => (
+          <div key={stat.label} className="px-2 py-6 text-center" data-reveal>
+            <p className="heading-xl text-5xl text-ice md:text-6xl">{stat.value}</p>
+            <p className="mt-2 text-sm font-semibold uppercase tracking-[0.12em] text-slate-400">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+const reasons = [
+  {
+    icon: Snowflake,
+    title: 'We come out early',
+    text: `Service starts at about ${SITE.triggerCm} cm of snow, so light snowfalls get cleared before they pack down into ice.`,
+    href: '/seasonal-snow-removal-contracts',
+    cta: 'How plans work',
+  },
+  {
+    icon: CalendarRange,
+    title: 'One price all winter',
+    text: `Seasonal plans from $${SITE.priceFrom}/month. A heavy winter does not mean a bigger bill. Pay upfront or monthly.`,
+    href: '/snow-removal-prices',
+    cta: 'See prices',
+  },
+  {
+    icon: Phone,
+    title: 'Straight answers',
+    text: 'Call and talk to the people who actually clear your driveway. No call centres and no runaround.',
+    href: SITE.phoneHref,
+    cta: `Call ${SITE.phoneDisplay}`,
+  },
+];
+
+function WinterPlanBand() {
+  return (
+    <ContentSection
+      tone="dark"
+      bigWord="Winter Ready"
+      center
+      eyebrow="Your snow pros"
+      title="Your driveway needs a snow plan, not a shovel."
+      intro={
+        <p>
+          Shovelling at 6 a.m. before work gets old fast. With a seasonal plan your property is on our route from the first snowfall to the spring thaw. You don't call, you don't wait, you just back out of the driveway.
+        </p>
+      }
+    >
+      <div className="grid gap-5 md:grid-cols-3">
+        {reasons.map(({ icon: Icon, title, text, href, cta }) => (
+          <article key={title} className="flex flex-col items-center rounded-3xl border border-ice/40 bg-night/60 p-8 text-center" data-reveal>
+            <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-ice/10 text-ice">
+              <Icon size={30} strokeWidth={1.75} aria-hidden="true" />
+            </span>
+            <h3 className="heading-xl mt-6 text-3xl text-white">{title}</h3>
+            <p className="mt-3 leading-relaxed text-slate-300">{text}</p>
+            {href.startsWith('tel:') ? (
+              <a href={href} onClick={trackCallClick} className="mt-7 inline-flex items-center gap-2 rounded-full bg-ice px-6 py-3 text-sm font-extrabold uppercase tracking-[0.06em] text-ink hover:bg-ice-soft">
+                {cta} <ArrowRight size={16} aria-hidden="true" />
+              </a>
+            ) : (
+              <Link href={href} className="mt-7 inline-flex items-center gap-2 rounded-full bg-ice px-6 py-3 text-sm font-extrabold uppercase tracking-[0.06em] text-ink hover:bg-ice-soft">
+                {cta} <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            )}
+          </article>
+        ))}
+      </div>
+    </ContentSection>
+  );
+}
 
 const services = [
   {
-    title: 'Driveway Snow Removal',
-    description: 'Your driveway plowed after every qualifying snowfall, so you can get the car out and get to work.',
-    icon: HomeIcon,
-    href: '/driveway-snow-removal',
+    eyebrow: 'Safety focused',
+    title: 'Snow & Ice Management',
+    href: '/snow-and-ice-management',
+    cta: 'Safe winters',
+    photo: PHOTOS.snow,
+    fallback: 'photo-fallback-snow',
+    icon: Snowflake,
   },
   {
-    title: 'Walkways, Steps & Sidewalks',
-    description: 'Front walks, steps and the public sidewalk cleared so family, guests and delivery drivers can get to the door safely.',
-    icon: Footprints,
-    href: '/driveway-snow-removal',
+    eyebrow: 'Keeping green',
+    title: 'Landscape Management',
+    href: '/landscape-management',
+    cta: 'Lawn & yard care',
+    photo: PHOTOS.landscapeManagement,
+    fallback: 'photo-fallback-green',
+    icon: Trees,
   },
   {
-    title: 'Back-Alley Parking Pads',
-    description: 'Rear parking pads off the back alley added to your plan, so you are not digging out behind the house.',
-    icon: Truck,
-    href: '/driveway-snow-removal',
-  },
-  {
-    title: 'Commercial Snow Removal',
-    description: 'Lots, entrances and business properties kept open, with snow hauling and ice management when you need it.',
-    icon: Building2,
-    href: '#quote',
+    eyebrow: 'Refresh your yard',
+    title: 'Landscape Enhancements',
+    href: '/landscape-enhancements',
+    cta: 'A fresh start',
+    photo: PHOTOS.landscapeEnhancements,
+    fallback: 'photo-fallback-bloom',
+    icon: Flower2,
   },
 ];
-
-const steps = [
-  { number: '01', title: 'Request a Free Quote', description: 'Tell us your address and the areas you want cleared. We call you back with a price.' },
-  { number: '02', title: 'Choose a 4 or 5 Month Plan', description: 'Read the agreement, pick your season length and pay upfront or monthly.' },
-  { number: '03', title: 'We Clear It All Winter', description: `Service starts at about ${SITE.triggerCm} cm of snow, so you never have to call after a storm.` },
-];
-
-const reasons = [
-  { title: `Service from about ${SITE.triggerCm} cm of snow`, description: 'Our agreement triggers service at light snowfalls too, not only big storms.', icon: Snowflake },
-  { title: 'One price for the whole season', description: 'A heavy winter does not mean a bigger bill. Pay upfront or monthly.', icon: CalendarRange },
-  { title: 'Fully insured in Alberta', description: 'Responsible work, documented properly in a written agreement.', icon: ShieldCheck },
-  { title: 'Read the contract before you sign', description: 'The full seasonal agreement is online. No surprises later.', icon: FileText },
-  { title: 'Local Grande Prairie crew', description: 'We live and work here, and we know the streets, the alleys and the weather.', icon: MapPin },
-  { title: 'Real people on the phone', description: `Call ${SITE.phoneDisplay} and talk to the people who clear your driveway.`, icon: Phone },
-];
-
-function Hero() {
-  const openSignUp = useSignUp();
-  return (
-    <section className="relative bg-[#071118] text-white pt-40 pb-24 lg:pt-48 lg:pb-32 overflow-hidden" aria-labelledby="hero-title">
-      <div className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[800px] h-[800px] bg-sky-500/10 rounded-full blur-[120px] pointer-events-none" aria-hidden="true" />
-      <div className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" aria-hidden="true" />
-
-      <div className="container mx-auto px-6 max-w-7xl relative z-10">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          <div className="lg:col-span-7">
-            <p className="inline-flex items-center gap-3 text-sky-300 font-bold text-xs tracking-widest uppercase mb-8">
-              <span className="w-8 h-px bg-sky-300" aria-hidden="true" />
-              Residential snow removal · Grande Prairie, AB
-            </p>
-            <h1 id="hero-title" className="font-display text-4xl sm:text-5xl lg:text-7xl font-semibold leading-[1.05] tracking-tight mb-8">
-              Snow Removal in Grande Prairie &amp; Sexsmith: <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-sky-500">Driveways Cleared All Winter</span>
-            </h1>
-            <p className="text-slate-200 text-lg lg:text-xl max-w-xl mb-10 leading-relaxed">
-              Seasonal snow removal contracts for driveways, walkways, steps and sidewalks. Plans from ${SITE.priceFrom}/month, and service starts at about {SITE.triggerCm} cm of snow.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button type="button" onClick={scrollToQuote} className="inline-flex items-center justify-center gap-2 bg-sky-500 hover:bg-sky-400 text-[#071118] font-bold px-8 py-4 rounded-md transition-all duration-200" data-testid="button-hero-quote">
-                Get a Free Quote <ArrowRight size={18} />
-              </button>
-              <button type="button" onClick={openSignUp} className="inline-flex items-center justify-center gap-2 bg-transparent border border-slate-500 hover:border-slate-300 hover:bg-slate-800 text-white font-semibold px-8 py-4 rounded-md transition-all duration-200" data-testid="button-hero-signup">
-                Sign Up for Winter Service
-              </button>
-            </div>
-            <a href={SITE.phoneHref} onClick={trackCallClick} className="inline-flex items-center gap-2 text-sm text-slate-200 hover:text-white mt-8" data-testid="link-hero-phone">
-              <Phone size={18} className="text-sky-300" /> Prefer to talk? Call {SITE.phoneDisplay}
-            </a>
-          </div>
-
-          <div className="lg:col-span-5">
-            <div className="bg-slate-900/60 backdrop-blur-md border border-slate-700 rounded-2xl p-8 lg:p-10 shadow-2xl">
-              <p className="text-sky-300 text-xs font-bold tracking-widest uppercase mb-4">2026–27 winter plans</p>
-              <h2 className="font-display text-2xl lg:text-3xl font-semibold mb-6 leading-tight text-white">Seasonal snow removal from ${SITE.priceFrom}/month</h2>
-              <ul className="space-y-4">
-                {[
-                  `Standard driveways from $${SITE.priceFrom}/month`,
-                  `Larger driveways from $${SITE.priceLargeFrom}/month`,
-                  '4 or 5 month plans, paid upfront or monthly',
-                  'Walkways, steps, sidewalks & back-alley pads',
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm text-slate-200 pt-4 border-t border-slate-700/70">
-                    <Check size={18} className="text-sky-300 shrink-0 mt-0.5" aria-hidden="true" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link href="/snow-removal-prices" className="mt-8 inline-flex items-center gap-2 text-sky-300 hover:text-white font-semibold text-sm">
-                See snow removal prices <ArrowRight size={16} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function Services() {
   return (
-    <section className="py-24 lg:py-32 bg-slate-50 border-b border-slate-200" id="services" aria-labelledby="services-title">
-      <div className="container mx-auto px-6 max-w-7xl">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16">
-          <div className="max-w-2xl">
-            <p className="text-sky-700 font-bold text-xs tracking-widest uppercase mb-4">The whole property, ready for winter</p>
-            <h2 id="services-title" className="font-display text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 leading-[1.1]">
-              Residential Snow Removal Services
-            </h2>
-          </div>
-          <p className="text-slate-600 max-w-sm text-lg leading-relaxed">
-            From the first snowfall to the spring thaw, we keep Grande Prairie and Sexsmith driveways and walkways clear.
-          </p>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map(({ title, description, icon: Icon, href }) => (
-            <article key={title} className="bg-white border border-slate-200 rounded-xl p-8 transition-all duration-300 hover:shadow-xl hover:shadow-sky-900/5 hover:-translate-y-1 flex flex-col">
-              <div className="w-12 h-12 bg-sky-50 rounded-lg flex items-center justify-center text-sky-700 mb-10">
-                <Icon size={24} strokeWidth={2} aria-hidden="true" />
-              </div>
-              <h3 className="font-display text-xl font-semibold text-slate-900 mb-3 leading-tight">{title}</h3>
-              <p className="text-slate-600 text-sm leading-relaxed mb-6">{description}</p>
-              {href.startsWith('#') ? (
-                <a href={href} className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-sky-700 hover:text-sky-900">
-                  Ask for a commercial quote <ArrowRight size={14} aria-hidden="true" />
-                </a>
+    <ContentSection id="services" tone="snow" eyebrow="Everything outside your door" title="Our Services">
+      <div className="grid gap-5 md:grid-cols-3">
+        {services.map(({ eyebrow, title, href, cta, photo, fallback, icon: Icon }) => (
+          <Link key={href} href={href} className="group relative flex min-h-[420px] flex-col justify-end overflow-hidden rounded-3xl text-white shadow-xl" data-reveal>
+            <div className={`absolute inset-0 transition-transform duration-700 group-hover:scale-105 ${photo ? 'bg-ink' : fallback}`}>
+              {photo ? (
+                <img src={photo} alt="" loading="lazy" className="h-full w-full object-cover" />
               ) : (
-                <Link href={href} className="mt-auto inline-flex items-center gap-2 text-sm font-semibold text-sky-700 hover:text-sky-900">
-                  Learn more <span className="sr-only">about {title.toLowerCase()}</span> <ArrowRight size={14} aria-hidden="true" />
-                </Link>
+                <div className="bg-grain flex h-full items-start justify-end p-8">
+                  <Icon size={120} strokeWidth={1} className="text-white/15" aria-hidden="true" />
+                </div>
               )}
-            </article>
-          ))}
-        </div>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" aria-hidden="true" />
+            <div className="relative p-7">
+              <p className="eyebrow text-ice-soft">{eyebrow}</p>
+              <h3 className="heading-xl mt-2 text-4xl">{title}</h3>
+              <span className="mt-6 inline-flex items-center gap-2 rounded-full bg-ice px-5 py-3 text-sm font-extrabold uppercase tracking-[0.06em] text-ink transition-colors group-hover:bg-ice-soft">
+                {cta} <ArrowRight size={16} aria-hidden="true" />
+              </span>
+            </div>
+          </Link>
+        ))}
       </div>
-    </section>
+    </ContentSection>
   );
 }
 
-function HowItWorks() {
-  return (
-    <section className="py-24 lg:py-32 bg-white" id="how-it-works" aria-labelledby="process-title">
-      <div className="container mx-auto px-6 max-w-7xl">
-        <div className="mb-20 max-w-3xl">
-          <p className="text-sky-700 font-bold text-xs tracking-widest uppercase mb-4">Three steps, zero snow stress</p>
-          <h2 id="process-title" className="font-display text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 leading-[1.1]">
-            How Our Seasonal Snow Removal Contracts Work
-          </h2>
-        </div>
+const seasons = [
+  {
+    id: 'snow',
+    label: 'Snow & Ice',
+    heading: 'Winter: snow & ice management',
+    items: [
+      'Driveway and parking area plowing',
+      'Walkways, front steps and sidewalks',
+      'Back-alley parking pads',
+      'Salting and ice control where it is needed',
+      `Service from about ${SITE.triggerCm} cm of snowfall`,
+    ],
+    href: '/snow-removal-quote',
+    cta: 'Get a snow quote',
+    photo: PHOTOS.snow,
+    fallback: 'photo-fallback-snow',
+    icon: Truck,
+  },
+  {
+    id: 'turf',
+    label: 'Turf & Maintenance',
+    heading: 'Summer: landscape management',
+    items: ['Lawn mowing and trimming', 'Spring and fall yard cleanups', 'Hedge and shrub trimming', 'Tidy garden beds all season'],
+    href: '/landscaping-quote',
+    cta: 'Get a landscaping quote',
+    photo: PHOTOS.landscapeManagement,
+    fallback: 'photo-fallback-green',
+    icon: Trees,
+  },
+  {
+    id: 'enhancements',
+    label: 'Enhancements',
+    heading: 'Projects: landscape enhancements',
+    items: ['New garden beds and mulch', 'Sod and seeding', 'Planting and yard refreshes', 'Small landscape projects'],
+    href: '/landscaping-quote',
+    cta: 'Plan a project',
+    photo: PHOTOS.landscapeEnhancements,
+    fallback: 'photo-fallback-bloom',
+    icon: Flower2,
+  },
+];
 
-        <ol className="grid md:grid-cols-3 gap-12 relative">
-          {steps.map((step) => (
-            <li key={step.number} className="relative">
-              <div className="w-14 h-14 bg-white border-2 border-slate-200 rounded-full flex items-center justify-center font-display font-bold text-sky-700 text-lg mb-8 shadow-sm" aria-hidden="true">
-                {step.number}
+function AllSeasonCare() {
+  const [active, setActive] = useState(seasons[0].id);
+  return (
+    <ContentSection id="all-season-care" eyebrow="One company, all year" title="All-season care">
+      <div role="tablist" aria-label="Seasons" className="mb-8 flex flex-wrap gap-2 border-b border-slate-200" data-reveal>
+        {seasons.map((season) => (
+          <button
+            key={season.id}
+            type="button"
+            role="tab"
+            id={`tab-${season.id}`}
+            aria-selected={active === season.id}
+            aria-controls={`panel-${season.id}`}
+            onClick={() => setActive(season.id)}
+            className={`-mb-px border-b-2 px-4 py-3 text-sm font-extrabold uppercase tracking-[0.1em] transition-colors ${active === season.id ? 'border-ice-deep text-ink' : 'border-transparent text-slate-500 hover:text-ink'}`}
+          >
+            {season.label}
+          </button>
+        ))}
+      </div>
+      {seasons.map(({ id, heading, items, href, cta, photo, fallback, icon: Icon }) => (
+        <div key={id} role="tabpanel" id={`panel-${id}`} aria-labelledby={`tab-${id}`} hidden={active !== id} className="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+          <div>
+            <h3 className="heading-xl text-4xl text-ink">{heading}</h3>
+            <div className="mt-6">
+              <CheckList items={items} />
+            </div>
+            <div className="mt-8">
+              <PillLink href={href} variant="dark" track={`season-${id}`}>{cta}</PillLink>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 grid-rows-2 gap-3">
+            <PhotoPanel photo={photo} fallback={fallback} label={heading} icon={<Icon size={72} strokeWidth={1} />} className="col-span-2 row-span-2 min-h-[320px]" />
+            <PhotoPanel fallback={fallback} label="" icon={<Snowflake size={34} strokeWidth={1} />} className="min-h-[150px]" />
+            <PhotoPanel fallback="hero-fallback" label="" icon={<MapPin size={34} strokeWidth={1} />} className="min-h-[150px]" />
+          </div>
+        </div>
+      ))}
+    </ContentSection>
+  );
+}
+
+const steps = [
+  {
+    title: 'Request a quote',
+    text: 'Fill out the quick form or call us. Tell us your address and what you need cleared or cared for.',
+  },
+  {
+    title: 'Get your price & plan',
+    text: 'We call you back with a straight price. Pick a 4 or 5 month snow plan, read the agreement, and pay upfront or monthly.',
+  },
+  {
+    title: 'We handle it',
+    text: `You are on our route. Service starts at about ${SITE.triggerCm} cm of snow, all season, without you lifting a finger.`,
+  },
+];
+
+function Process() {
+  const [open, setOpen] = useState(0);
+  return (
+    <ContentSection id="how-it-works" tone="snow" bigWord="Our Process" eyebrow="Here's how to get started" title="Three steps to a clear driveway">
+      <div className="grid items-center gap-10 lg:grid-cols-2">
+        <ol className="divide-y divide-slate-300 border-y border-slate-300" data-reveal>
+          {steps.map((step, index) => (
+            <li key={step.title}>
+              <button
+                type="button"
+                onClick={() => setOpen(index)}
+                aria-expanded={open === index}
+                aria-controls={`step-${index}`}
+                className="flex w-full items-center gap-4 py-5 text-left"
+              >
+                <span className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-display text-xl font-bold ${open === index ? 'bg-ink text-ice' : 'border border-slate-400 text-slate-500'}`}>
+                  {index + 1}
+                </span>
+                <span className={`heading-xl text-3xl ${open === index ? 'text-ink' : 'text-slate-500'}`}>{step.title}</span>
+              </button>
+              <div id={`step-${index}`} className={`${open === index ? 'block' : 'hidden'} pb-6 pl-[60px]`}>
+                <p className="text-lg leading-relaxed text-slate-700">{step.text}</p>
+                {index === 0 && (
+                  <div className="mt-5">
+                    <PillLink href="/snow-removal-quote" variant="dark" track="process">Reach out</PillLink>
+                  </div>
+                )}
               </div>
-              <h3 className="font-display text-2xl font-semibold text-slate-900 mb-4">{step.title}</h3>
-              <p className="text-slate-600 leading-relaxed text-sm md:text-base">{step.description}</p>
             </li>
           ))}
         </ol>
+        <PhotoPanel photo={PHOTOS.process} fallback="hero-fallback" label="Snow removal crew in Grande Prairie" icon={<Truck size={96} strokeWidth={1} />} className="min-h-[380px]" />
       </div>
-    </section>
+    </ContentSection>
   );
 }
 
-function Contracts() {
-  const openSignUp = useSignUp();
+function Plans() {
   return (
-    <section className="py-24 lg:py-32 bg-sky-50 overflow-hidden border-y border-sky-100" id="contracts" aria-labelledby="contracts-title">
-      <div className="container mx-auto px-6 max-w-7xl">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-          <div>
-            <p className="text-sky-700 font-bold text-xs tracking-widest uppercase mb-4">Stay covered all season</p>
-            <h2 id="contracts-title" className="font-display text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 mb-6 leading-[1.1]">
-              Seasonal Snow Removal Contracts &amp; Prices
-            </h2>
-            <p className="text-slate-700 text-lg mb-8 leading-relaxed max-w-md">
-              Pick a 4 or 5 month plan and take snow off your list. Standard driveways start from ${SITE.priceFrom} a month and larger driveways from ${SITE.priceLargeFrom} a month. Simple pricing, no winter surprises.
+    <ContentSection id="plans" eyebrow="Seasonal snow plans" title="Simple pricing. No winter surprises." center>
+      <div className="mx-auto grid max-w-5xl gap-5 md:grid-cols-2">
+        {[
+          { name: 'Standard driveway', price: SITE.priceFrom, items: ['Driveway plowed all season', 'Add walkway, steps or sidewalk', '4 or 5 month plan'] },
+          { name: 'Larger driveway or lot', price: SITE.priceLargeFrom, items: ['Long, wide or double driveways', 'Parking areas and back-alley pads', '4 or 5 month plan'] },
+        ].map((plan, index) => (
+          <article key={plan.name} className={`rounded-3xl p-8 text-left ${index === 0 ? 'bg-ink text-white' : 'border border-slate-200 bg-white'}`} data-reveal>
+            <p className={`eyebrow ${index === 0 ? 'text-ice' : 'text-ice-deep'}`}>{plan.name}</p>
+            <p className="heading-xl mt-3 text-6xl">
+              <span className="align-top text-2xl">from </span>${plan.price}
+              <span className={`text-2xl ${index === 0 ? 'text-slate-400' : 'text-slate-500'}`}>/mo</span>
             </p>
-            <div className="flex flex-wrap gap-4 mb-8">
-              {[
-                { label: '4 or 5 months', icon: CalendarRange },
-                { label: 'Pay upfront or monthly', icon: Check },
-                { label: 'No hidden fees', icon: BadgeCheck },
-              ].map(({ label, icon: Icon }) => (
-                <span key={label} className="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
-                  <Icon size={16} className="text-sky-600" aria-hidden="true" /> {label}
-                </span>
-              ))}
+            <div className="mt-6">
+              <CheckList items={plan.items} tone={index === 0 ? 'dark' : 'light'} />
             </div>
-            <div className="flex flex-wrap gap-6 text-sm font-semibold">
-              <Link href="/snow-removal-prices" className="inline-flex items-center gap-2 text-sky-700 hover:text-sky-900">Snow removal prices <ArrowRight size={14} /></Link>
-              <Link href="/seasonal-snow-removal-contracts" className="inline-flex items-center gap-2 text-sky-700 hover:text-sky-900">How contracts work <ArrowRight size={14} /></Link>
-            </div>
-          </div>
-
-          <div className="bg-white border border-sky-100 shadow-xl shadow-sky-900/5 rounded-2xl p-8 lg:p-12">
-            <p className="inline-block bg-sky-50 text-sky-800 border border-sky-100 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-md mb-6">
-              Seasonal service agreement
-            </p>
-            <h3 className="font-display text-3xl font-semibold text-slate-900 mb-6 leading-tight">
-              Snow handled before it becomes your problem.
-            </h3>
-            <ul className="space-y-4 mb-10">
-              {[
-                `Service starts at about ${SITE.triggerCm} cm of snowfall`,
-                'Driveways, parking areas and the zones you choose',
-                'Clear written terms you can read online',
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-3 text-slate-700">
-                  <Check size={20} className="text-sky-600 shrink-0 mt-0.5" aria-hidden="true" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <button onClick={openSignUp} type="button" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#071118] hover:bg-slate-800 text-white font-bold px-8 py-4 rounded-md transition-all duration-200" data-testid="button-contract-signup">
-              View Contract / Sign Up <ArrowRight size={18} />
-            </button>
-          </div>
-        </div>
+          </article>
+        ))}
       </div>
-    </section>
-  );
-}
-
-function WhyChooseUs() {
-  return (
-    <section className="py-24 lg:py-32 bg-[#071118] text-white" id="why-us" aria-labelledby="why-title">
-      <div className="container mx-auto px-6 max-w-7xl">
-        <div className="max-w-3xl mb-16">
-          <p className="text-sky-300 font-bold text-xs tracking-widest uppercase mb-4">Prepared is better than surprised</p>
-          <h2 id="why-title" className="font-display text-4xl lg:text-5xl font-semibold tracking-tight mb-6 leading-[1.1]">
-            Why Grande Prairie Homeowners Choose Ai Landscaping
-          </h2>
-          <p className="text-slate-300 text-lg max-w-xl leading-relaxed">
-            A calm, accountable crew makes the difference when the driveway disappears overnight.
-          </p>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          {reasons.map(({ title, description, icon: Icon }) => (
-            <article key={title}>
-              <div className="w-12 h-12 bg-slate-800/50 border border-slate-700 rounded-lg flex items-center justify-center text-sky-300 mb-6">
-                <Icon size={22} strokeWidth={2} aria-hidden="true" />
-              </div>
-              <h3 className="font-display text-xl font-semibold mb-3 leading-tight">{title}</h3>
-              <p className="text-slate-300 text-sm leading-relaxed">{description}</p>
-            </article>
-          ))}
-        </div>
+      <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row" data-reveal>
+        <PillLink href="/snow-removal-quote" track="plans">Get my exact price</PillLink>
+        <PillLink href="/seasonal-snow-removal-contracts" variant="outline-dark">How contracts work</PillLink>
       </div>
-    </section>
+      <p className="mt-6 text-center text-sm text-slate-600">Starting prices before tax. Your exact price is set in your written agreement after a free quote.</p>
+    </ContentSection>
   );
 }
 
 function ServiceArea() {
   return (
-    <section className="py-24 lg:py-32 bg-white" id="service-area" aria-labelledby="area-title">
-      <div className="container mx-auto px-6 max-w-7xl grid lg:grid-cols-2 gap-12 lg:gap-24 items-start">
-        <div>
-          <p className="text-sky-700 font-bold text-xs tracking-widest uppercase mb-4">Where we plow</p>
-          <h2 id="area-title" className="font-display text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 leading-[1.1] mb-6">
-            Snow Removal Service Area: Grande Prairie, Sexsmith &amp; County
-          </h2>
-          <p className="text-slate-600 text-lg leading-relaxed">
-            We clear residential driveways, walkways and sidewalks across the City of Grande Prairie, the Town of Sexsmith and nearby homes in the County of Grande Prairie. Not sure if you are on our route? Send your address and we will confirm.
-          </p>
-        </div>
-        <ul className="grid sm:grid-cols-3 gap-4">
-          {[
-            { name: 'Grande Prairie', detail: 'Homes across the city' },
-            { name: 'Sexsmith', detail: 'Driveways & walkways' },
-            { name: 'County of GP', detail: 'Nearby homes' },
-          ].map((area) => (
-            <li key={area.name} className="rounded-xl border border-slate-200 bg-slate-50 p-6">
-              <MapPin size={22} className="text-sky-700 mb-4" aria-hidden="true" />
-              <h3 className="font-display text-lg font-semibold text-slate-900">{area.name}</h3>
-              <p className="text-sm text-slate-600 mt-1">{area.detail}</p>
+    <ContentSection id="service-area" tone="snow" eyebrow="Where we work" title="Grande Prairie, Sexsmith & the County">
+      <div className="grid items-start gap-10 lg:grid-cols-2">
+        <p className="text-lg leading-relaxed text-slate-700" data-reveal>
+          We clear residential driveways, walkways and sidewalks and take care of yards across the City of Grande Prairie, the Town of Sexsmith and nearby homes in the County of Grande Prairie. Not sure if you are on our route? Send your address on the quote form and we will confirm.
+        </p>
+        <ul className="grid gap-3 sm:grid-cols-3" data-reveal>
+          {['Grande Prairie', 'Sexsmith', 'County of GP'].map((area) => (
+            <li key={area} className="rounded-3xl border border-slate-200 bg-white p-6">
+              <MapPin size={22} className="text-ice-deep" aria-hidden="true" />
+              <h3 className="heading-xl mt-4 text-2xl text-ink">{area}</h3>
             </li>
           ))}
         </ul>
       </div>
-    </section>
-  );
-}
-
-function ResponseNote() {
-  return (
-    <section className="bg-slate-50 border-t border-slate-200" aria-label="Contact promise">
-      <div className="container mx-auto px-6 max-w-7xl py-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 text-slate-700">
-        <Clock3 size={22} className="text-sky-700 shrink-0" aria-hidden="true" />
-        <p>
-          Winter routes fill up. Request your quote now, or call{' '}
-          <a href={SITE.phoneHref} onClick={trackCallClick} className="font-semibold text-sky-700 underline underline-offset-4">{SITE.phoneDisplay}</a>{' '}
-          to talk to us directly.
-        </p>
-      </div>
-    </section>
+    </ContentSection>
   );
 }
 
 export default function HomePage() {
   const page = PAGES['/'];
   return (
-    <SiteLayout page={page} quoteTitle="Get Your Snow Removal Quote">
+    <SiteLayout page={page}>
       <Hero />
+      <StatsStrip />
+      <WinterPlanBand />
       <Services />
-      <HowItWorks />
-      <Contracts />
-      <WhyChooseUs />
+      <AllSeasonCare />
+      <Process />
+      <Plans />
       <ServiceArea />
-      <FaqSection faqs={page.faqs ?? []} title="Snow Removal Questions in Grande Prairie" />
-      <RelatedPages current="/" />
-      <ResponseNote />
+      <FaqSection faqs={page.faqs ?? []} title="Snow removal & landscaping questions" />
     </SiteLayout>
   );
 }
