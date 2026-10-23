@@ -174,31 +174,70 @@
   overflow: hidden;
   pointer-events: none;
 }
+/* Two layers of flakes drift down. Each layer moves exactly a whole number of tiles per loop,
+   so the loop restarts without a visible jump. Desktop gets bigger, denser flakes. */
 .snowfall::before,
 .snowfall::after {
   content: '';
   position: absolute;
-  inset: -100% 0 0 0;
+  inset: calc(-1 * var(--snow-travel)) 0 0 0;
   background-image:
     radial-gradient(2px 2px at 20px 30px, rgb(255 255 255 / 0.8), transparent 60%),
     radial-gradient(2px 2px at 140px 80px, rgb(255 255 255 / 0.6), transparent 60%),
     radial-gradient(3px 3px at 90px 150px, rgb(255 255 255 / 0.7), transparent 60%),
     radial-gradient(1.5px 1.5px at 210px 190px, rgb(255 255 255 / 0.5), transparent 60%),
     radial-gradient(2.5px 2.5px at 260px 40px, rgb(255 255 255 / 0.65), transparent 60%);
+  animation: snow-fall var(--snow-duration) linear infinite;
+  will-change: transform;
+}
+.snowfall::before {
+  --snow-travel: 880px; /* 4 tiles of 220px */
+  --snow-duration: 14s;
   background-size: 300px 220px;
-  animation: snow-fall 14s linear infinite;
   opacity: 0.55;
 }
 .snowfall::after {
+  --snow-travel: 900px; /* 3 tiles of 300px */
+  --snow-duration: 22s;
   background-size: 420px 300px;
-  animation-duration: 22s;
   opacity: 0.35;
   filter: blur(0.6px);
 }
 
+@media (min-width: 768px) {
+  .snowfall::before {
+    --snow-travel: 1120px; /* 4 tiles of 280px */
+    --snow-duration: 15s;
+    background-image:
+      radial-gradient(3px 3px at 24px 36px, rgb(255 255 255 / 0.9), transparent 60%),
+      radial-gradient(2.5px 2.5px at 150px 96px, rgb(255 255 255 / 0.75), transparent 60%),
+      radial-gradient(4px 4px at 100px 190px, rgb(255 255 255 / 0.85), transparent 60%),
+      radial-gradient(2.5px 2.5px at 236px 240px, rgb(255 255 255 / 0.65), transparent 60%),
+      radial-gradient(3.5px 3.5px at 300px 52px, rgb(255 255 255 / 0.8), transparent 60%),
+      radial-gradient(2px 2px at 330px 160px, rgb(255 255 255 / 0.6), transparent 60%),
+      radial-gradient(3px 3px at 60px 120px, rgb(255 255 255 / 0.7), transparent 60%),
+      radial-gradient(2.5px 2.5px at 196px 20px, rgb(255 255 255 / 0.7), transparent 60%);
+    background-size: 360px 280px;
+    opacity: 0.75;
+  }
+  .snowfall::after {
+    --snow-travel: 1140px; /* 3 tiles of 380px */
+    --snow-duration: 24s;
+    background-image:
+      radial-gradient(5px 5px at 40px 60px, rgb(255 255 255 / 0.8), transparent 60%),
+      radial-gradient(4px 4px at 220px 140px, rgb(255 255 255 / 0.7), transparent 60%),
+      radial-gradient(6px 6px at 400px 260px, rgb(255 255 255 / 0.75), transparent 60%),
+      radial-gradient(4.5px 4.5px at 130px 320px, rgb(255 255 255 / 0.65), transparent 60%),
+      radial-gradient(5px 5px at 470px 40px, rgb(255 255 255 / 0.7), transparent 60%);
+    background-size: 520px 380px;
+    opacity: 0.5;
+    filter: blur(1px);
+  }
+}
+
 @keyframes snow-fall {
   from { transform: translateY(0); }
-  to { transform: translateY(50%); }
+  to { transform: translateY(var(--snow-travel)); }
 }
 
 .reveal-ready [data-reveal]:not(.is-visible) {
