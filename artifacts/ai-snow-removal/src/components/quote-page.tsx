@@ -51,10 +51,10 @@ export function QuotePage({
           )}
           {note && <p className="mt-5 text-sm font-bold uppercase tracking-[0.12em] text-ice-soft">{note}</p>}
         </div>
-        <SnowDrift fill="#f2f6fa" />
+        <SnowDrift fill="#0b1822" />
       </section>
 
-      <div className="bg-snow">
+      <div className="bg-base-2">
         <Breadcrumbs label={page.breadcrumb ?? 'Quote'} />
         <section className="mx-auto grid max-w-7xl gap-10 px-4 pb-20 pt-8 sm:px-6 lg:grid-cols-[1.35fr_1fr]" aria-label="Quote request">
           <div className="order-1">
@@ -68,25 +68,25 @@ export function QuotePage({
               </a>
               <p className="mt-3 text-slate-300">Call and talk to the people who do the work.</p>
             </div>
-            <div className="rounded-3xl border border-slate-200 bg-white p-7">
-              <h2 className="heading-xl text-3xl text-ink">What you get</h2>
+            <div className="rounded-3xl border border-white/10 bg-raise p-7">
+              <h2 className="heading-xl text-3xl text-white">What you get</h2>
               <ul className="mt-5 space-y-3">
                 {benefits.map((benefit) => (
-                  <li key={benefit} className="flex items-start gap-3 text-slate-800">
-                    <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-ice-deep" aria-hidden="true" />
+                  <li key={benefit} className="flex items-start gap-3 text-slate-100">
+                    <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-ice" aria-hidden="true" />
                     <span>{benefit}</span>
                   </li>
                 ))}
               </ul>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-3xl border border-slate-200 bg-white p-5">
-                <ShieldCheck size={22} className="text-ice-deep" aria-hidden="true" />
-                <p className="mt-3 font-bold text-ink">Fully insured in Alberta</p>
+              <div className="rounded-3xl border border-white/10 bg-raise p-5">
+                <ShieldCheck size={22} className="text-ice" aria-hidden="true" />
+                <p className="mt-3 font-bold text-white">Fully insured in Alberta</p>
               </div>
-              <div className="rounded-3xl border border-slate-200 bg-white p-5">
-                <Clock3 size={22} className="text-ice-deep" aria-hidden="true" />
-                <p className="mt-3 font-bold text-ink">No commitment until you sign</p>
+              <div className="rounded-3xl border border-white/10 bg-raise p-5">
+                <Clock3 size={22} className="text-ice" aria-hidden="true" />
+                <p className="mt-3 font-bold text-white">No commitment until you sign</p>
               </div>
             </div>
           </aside>
