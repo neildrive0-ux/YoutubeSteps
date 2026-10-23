@@ -1,7 +1,8 @@
 import { Link } from 'wouter';
-import { ArrowLeft, Clock3, Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
-import { Footer } from '@/components/site-footer';
-import { Seo } from '@/components/seo';
+import { Clock3, Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
+import { SiteLayout } from '@/components/site-layout';
+import { Breadcrumbs, SnowDrift } from '@/components/page-sections';
+import { openCookieSettings } from '@/components/cookie-consent';
 import { PAGES } from '@/site';
 
 const sections = [
@@ -11,7 +12,7 @@ const sections = [
     content: (
       <>
         <p>
-          When you request a quote through our website or a Meta (Facebook or Instagram) lead form, you may provide:
+          When you request a quote through our website, a Google Ads lead form, or a Meta (Facebook or Instagram) lead form, you may provide:
         </p>
         <ul>
           <li>Your name, phone number, and email address.</li>
@@ -68,11 +69,31 @@ const sections = [
         <p>Services involved in the current website or its lead channels include:</p>
         <ul>
           <li><strong>Meta (Meta Business Suite, Facebook, and Instagram):</strong> may collect information through its lead forms and provide it to us when you submit a form there. Meta handles information submitted through its forms under its own privacy terms and practices.</li>
+          <li><strong>Google (Google Ads):</strong> measures which ads lead to quote requests and phone calls, and may collect information through Google Ads lead forms and provide it to us when you submit a form there. Google handles this information under its own privacy terms.</li>
           <li><strong>Resend:</strong> delivers quote-request email notifications and, when available, customer confirmations.</li>
           <li><strong>Replit:</strong> hosts the website and PostgreSQL database where quote requests are stored.</li>
         </ul>
         <p>
           Replit and Resend may process or store information outside Alberta or Canada, where it may be subject to the laws of those locations. We do not know their exact processing locations.
+        </p>
+      </>
+    ),
+  },
+  {
+    id: 'cookies',
+    title: 'Cookies, ads measurement and your choices',
+    content: (
+      <>
+        <p>
+          This website uses the Google tag (for Google Ads) and may use the Meta pixel. These tools use cookies and similar technologies to tell us which ads lead to quote requests and phone calls, and to show relevant ads on Google, Facebook and Instagram.
+        </p>
+        <ul>
+          <li><strong>What is measured:</strong> page visits, clicks on our phone number and quote buttons, and completed quote requests. We do not send your form answers (like your name or address) to Google or Meta from this website.</li>
+          <li><strong>Your choice:</strong> when you first visit, a banner lets you accept or decline these cookies. If you decline, Google is told not to use advertising cookies and the Meta pixel is switched off.</li>
+          <li><strong>Change your mind:</strong> use the &ldquo;Cookie settings&rdquo; link at the bottom of any page. You can also clear cookies in your browser.</li>
+        </ul>
+        <p>
+          The website also stores your cookie choice and, while you browse, a temporary note that your quote request was sent, in your own browser.
         </p>
       </>
     ),
@@ -121,8 +142,8 @@ const sections = [
           Ai Landscaping &amp; Snow Removal is a trade name of Ai Landscaping &amp; Contracting Services Inc. To ask a privacy question or make an access or correction request, contact us:
         </p>
         <address className="not-italic space-y-2">
-          <p><strong>Email:</strong> <a className="text-sky-700 underline decoration-sky-300 underline-offset-4 hover:text-sky-900" href="mailto:ailandscapinggp@gmail.com">ailandscapinggp@gmail.com</a></p>
-          <p><strong>Phone:</strong> <a className="text-sky-700 underline decoration-sky-300 underline-offset-4 hover:text-sky-900" href="tel:+17809957459">780-995-7459</a></p>
+          <p><strong>Email:</strong> <a className="text-ice-deep underline underline-offset-4 hover:text-ink" href="mailto:ailandscapinggp@gmail.com">ailandscapinggp@gmail.com</a></p>
+          <p><strong>Phone:</strong> <a className="text-ice-deep underline underline-offset-4 hover:text-ink" href="tel:+17809957459">780-995-7459</a></p>
           <p><strong>Service area:</strong> Grande Prairie and surrounding areas, Alberta</p>
         </address>
       </>
@@ -140,79 +161,71 @@ const sections = [
 ];
 
 export function PrivacyPolicy() {
-
+  const page = PAGES['/privacy-policy'];
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
-      <Seo page={PAGES['/privacy-policy']} />
-      <header id="top" className="bg-[#071118] text-white">
-        <div className="container mx-auto max-w-7xl px-6 py-5">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm font-medium text-slate-300 transition-colors hover:text-white">
-            <ArrowLeft size={16} aria-hidden="true" />
-            Back to home
-          </Link>
+    <SiteLayout page={page} cta={false}>
+      <section className="hero-fallback relative overflow-hidden text-white" aria-labelledby="page-title">
+        <div className="relative mx-auto max-w-4xl px-4 pb-24 pt-40 text-center sm:px-6 md:pt-44">
+          <p className="eyebrow text-ice-soft">Your information matters</p>
+          <h1 id="page-title" className="heading-xl mt-5 text-5xl md:text-7xl">
+            <span className="block text-ice">Privacy &amp;</span>
+            <span className="block">Cookie Policy</span>
+          </h1>
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-slate-200">
+            How we handle information you share when requesting snow removal or landscaping in Grande Prairie and surrounding areas, and how cookies are used on this website.
+          </p>
+          <p className="mt-4 text-sm text-slate-400">Last updated · October 22, 2026</p>
         </div>
-        <div className="border-t border-slate-800">
-          <div className="container mx-auto max-w-7xl px-6 py-14 md:py-20">
-            <div className="mb-5 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-sky-400">
-              <ShieldCheck size={16} aria-hidden="true" />
-              Your information matters
-            </div>
-            <h1 className="font-display max-w-3xl text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
-              Privacy Policy
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-300 md:text-lg">
-              How we handle information you share when requesting snow removal services in Grande Prairie and surrounding areas.
-            </p>
-            <p className="mt-6 text-sm text-slate-400">Last updated · October 17, 2026</p>
-          </div>
-        </div>
-      </header>
+        <SnowDrift fill="#f2f6fa" />
+      </section>
 
-      <main className="container mx-auto max-w-7xl px-6 py-10 md:py-14">
-        <div className="grid gap-10 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-16">
-          <aside className="h-fit rounded-md border border-slate-200 bg-white p-5 lg:sticky lg:top-8">
-            <h2 className="font-display text-lg font-semibold text-slate-900">On this page</h2>
+      <div className="bg-snow">
+        <Breadcrumbs label={page.breadcrumb ?? 'Privacy policy'} />
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 sm:px-6 md:py-14 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-16">
+          <aside className="h-fit rounded-3xl border border-slate-200 bg-white p-5 lg:sticky lg:top-28">
+            <h2 className="heading-xl text-2xl text-ink">On this page</h2>
             <nav aria-label="Privacy policy sections" className="mt-4">
               <ul className="space-y-3 text-sm">
                 {sections.map(({ id, title }) => (
                   <li key={id}>
-                    <a className="text-slate-600 transition-colors hover:text-sky-700" href={`#${id}`}>
+                    <a className="text-slate-700 transition-colors hover:text-ice-deep" href={`#${id}`}>
                       {title}
                     </a>
                   </li>
                 ))}
               </ul>
             </nav>
-            <div className="mt-6 border-t border-slate-200 pt-5 text-xs leading-relaxed text-slate-500">
-              <p className="flex items-center gap-2"><Clock3 size={14} aria-hidden="true" /> Last updated: October 17, 2026</p>
-              <p className="mt-3 flex items-start gap-2"><MapPin size={14} className="mt-0.5 shrink-0" aria-hidden="true" /> Grande Prairie, Alberta, Canada</p>
-              <p className="mt-3 flex items-start gap-2"><Mail size={14} className="mt-0.5 shrink-0" aria-hidden="true" /> <a className="break-all hover:text-sky-700" href="mailto:ailandscapinggp@gmail.com">ailandscapinggp@gmail.com</a></p>
-              <p className="mt-3 flex items-center gap-2"><Phone size={14} aria-hidden="true" /> <a className="hover:text-sky-700" href="tel:+17809957459">780-995-7459</a></p>
+            <div className="mt-6 space-y-3 border-t border-slate-200 pt-5 text-xs leading-relaxed text-slate-600">
+              <p className="flex items-center gap-2"><Clock3 size={14} aria-hidden="true" /> Last updated: October 22, 2026</p>
+              <p className="flex items-start gap-2"><MapPin size={14} className="mt-0.5 shrink-0" aria-hidden="true" /> Grande Prairie, Alberta, Canada</p>
+              <p className="flex items-start gap-2"><Mail size={14} className="mt-0.5 shrink-0" aria-hidden="true" /> <a className="break-all hover:text-ice-deep" href="mailto:ailandscapinggp@gmail.com">ailandscapinggp@gmail.com</a></p>
+              <p className="flex items-center gap-2"><Phone size={14} aria-hidden="true" /> <a className="hover:text-ice-deep" href="tel:+17809957459">780-995-7459</a></p>
+              <button type="button" onClick={openCookieSettings} className="mt-2 inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 font-bold text-ink hover:border-ice-deep">
+                <ShieldCheck size={14} aria-hidden="true" /> Cookie settings
+              </button>
             </div>
           </aside>
 
-          <article className="min-w-0 rounded-md border border-slate-200 bg-white px-6 py-8 shadow-sm sm:px-10 sm:py-10">
-            <p className="mb-8 text-sm leading-relaxed text-slate-600">
-              Ai Landscaping &amp; Contracting Services Inc. operates under the trade name Ai Landscaping &amp; Snow Removal (“we,” “us,” or “our”), serving Grande Prairie and surrounding areas in Alberta, Canada. This policy describes how we collect, use, disclose, and safeguard personal information in connection with our website quote requests and Meta lead forms.
+          <article className="min-w-0 rounded-3xl border border-slate-200 bg-white px-6 py-8 shadow-sm sm:px-10 sm:py-10">
+            <p className="mb-8 text-sm leading-relaxed text-slate-700">
+              Ai Landscaping &amp; Contracting Services Inc. operates under the trade name Ai Landscaping &amp; Snow Removal (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), serving Grande Prairie and surrounding areas in Alberta, Canada. This policy describes how we collect, use, disclose, and safeguard personal information in connection with our website, quote requests, cookies, and Google and Meta lead forms.
             </p>
             <div className="space-y-9">
               {sections.map(({ id, title, content }) => (
-                <section key={id} id={id} className="scroll-mt-8 border-t border-slate-200 pt-7 first:border-0 first:pt-0">
-                  <h2 className="font-display text-2xl font-semibold tracking-tight text-slate-900">{title}</h2>
-                  <div className="mt-4 space-y-4 text-[15px] leading-7 text-slate-600 [&_li]:pl-1 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6">
+                <section key={id} id={id} className="scroll-mt-28 border-t border-slate-200 pt-7 first:border-0 first:pt-0">
+                  <h2 className="heading-xl text-3xl text-ink">{title}</h2>
+                  <div className="mt-4 space-y-4 text-[15px] leading-7 text-slate-700 [&_li]:pl-1 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6">
                     {content}
                   </div>
                 </section>
               ))}
             </div>
-            <div className="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500">
-              <p>For a quote or service inquiry, return to the <Link className="font-medium text-sky-700 underline decoration-sky-300 underline-offset-4 hover:text-sky-900" href="/">Ai Landscaping &amp; Snow Removal website</Link>.</p>
+            <div className="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-600">
+              <p>For a quote, visit our <Link className="font-medium text-ice-deep underline underline-offset-4 hover:text-ink" href="/snow-removal-quote">snow removal quote</Link> or <Link className="font-medium text-ice-deep underline underline-offset-4 hover:text-ink" href="/landscaping-quote">landscaping quote</Link> page.</p>
             </div>
           </article>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </SiteLayout>
   );
 }
