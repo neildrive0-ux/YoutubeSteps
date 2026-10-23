@@ -302,7 +302,7 @@ function AllSeasonCare() {
   const [active, setActive] = useState(seasons[0].id);
   return (
     <ContentSection id="all-season-care" eyebrow="One company, all year" title="All-season care">
-      <div role="tablist" aria-label="Seasons" className="mb-8 flex gap-1 overflow-x-auto border-b border-white/10 md:gap-2" data-reveal>
+      <div role="tablist" aria-label="Seasons" className="mb-8 grid grid-cols-3 border-b border-white/10 md:flex md:gap-2" data-reveal>
         {seasons.map((season) => (
           <button
             key={season.id}
@@ -312,7 +312,7 @@ function AllSeasonCare() {
             aria-selected={active === season.id}
             aria-controls={`panel-${season.id}`}
             onClick={() => setActive(season.id)}
-            className={`-mb-px shrink-0 whitespace-nowrap border-b-2 px-3 py-3 text-xs md:px-4 md:text-sm font-extrabold uppercase tracking-[0.1em] transition-colors ${active === season.id ? 'border-ice text-white' : 'border-transparent text-slate-400 hover:text-white'}`}
+            className={`-mb-px border-b-2 px-1 py-3 text-[0.7rem] leading-tight md:whitespace-nowrap md:px-4 md:text-sm font-extrabold uppercase tracking-[0.05em] md:tracking-[0.1em] transition-colors ${active === season.id ? 'border-ice text-white' : 'border-transparent text-slate-400 hover:text-white'}`}
           >
             {season.label}
           </button>
