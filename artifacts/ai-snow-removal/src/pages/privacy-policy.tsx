@@ -142,8 +142,8 @@ const sections = [
           Ai Landscaping &amp; Snow Removal is a trade name of Ai Landscaping &amp; Contracting Services Inc. To ask a privacy question or make an access or correction request, contact us:
         </p>
         <address className="not-italic space-y-2">
-          <p><strong>Email:</strong> <a className="text-ice-deep underline underline-offset-4 hover:text-ink" href="mailto:ailandscapinggp@gmail.com">ailandscapinggp@gmail.com</a></p>
-          <p><strong>Phone:</strong> <a className="text-ice-deep underline underline-offset-4 hover:text-ink" href="tel:+17809957459">780-995-7459</a></p>
+          <p><strong>Email:</strong> <a className="text-ice underline underline-offset-4 hover:text-white" href="mailto:ailandscapinggp@gmail.com">ailandscapinggp@gmail.com</a></p>
+          <p><strong>Phone:</strong> <a className="text-ice underline underline-offset-4 hover:text-white" href="tel:+17809957459">780-995-7459</a></p>
           <p><strong>Service area:</strong> Grande Prairie and surrounding areas, Alberta</p>
         </address>
       </>
@@ -176,52 +176,52 @@ export function PrivacyPolicy() {
           </p>
           <p className="mt-4 text-sm text-slate-400">Last updated · October 22, 2026</p>
         </div>
-        <SnowDrift fill="#f2f6fa" />
+        <SnowDrift fill="#0b1822" />
       </section>
 
-      <div className="bg-snow">
+      <div className="bg-base-2">
         <Breadcrumbs label={page.breadcrumb ?? 'Privacy policy'} />
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-10 sm:px-6 md:py-14 lg:grid-cols-[250px_minmax(0,1fr)] lg:gap-16">
-          <aside className="h-fit rounded-3xl border border-slate-200 bg-white p-5 lg:sticky lg:top-28">
-            <h2 className="heading-xl text-2xl text-ink">On this page</h2>
+          <aside className="h-fit rounded-3xl border border-white/10 bg-raise p-5 lg:sticky lg:top-28">
+            <h2 className="heading-xl text-2xl text-white">On this page</h2>
             <nav aria-label="Privacy policy sections" className="mt-4">
               <ul className="space-y-3 text-sm">
                 {sections.map(({ id, title }) => (
                   <li key={id}>
-                    <a className="text-slate-700 transition-colors hover:text-ice-deep" href={`#${id}`}>
+                    <a className="text-slate-300 transition-colors hover:text-ice" href={`#${id}`}>
                       {title}
                     </a>
                   </li>
                 ))}
               </ul>
             </nav>
-            <div className="mt-6 space-y-3 border-t border-slate-200 pt-5 text-xs leading-relaxed text-slate-600">
+            <div className="mt-6 space-y-3 border-t border-white/10 pt-5 text-xs leading-relaxed text-slate-400">
               <p className="flex items-center gap-2"><Clock3 size={14} aria-hidden="true" /> Last updated: October 22, 2026</p>
               <p className="flex items-start gap-2"><MapPin size={14} className="mt-0.5 shrink-0" aria-hidden="true" /> Grande Prairie, Alberta, Canada</p>
-              <p className="flex items-start gap-2"><Mail size={14} className="mt-0.5 shrink-0" aria-hidden="true" /> <a className="break-all hover:text-ice-deep" href="mailto:ailandscapinggp@gmail.com">ailandscapinggp@gmail.com</a></p>
-              <p className="flex items-center gap-2"><Phone size={14} aria-hidden="true" /> <a className="hover:text-ice-deep" href="tel:+17809957459">780-995-7459</a></p>
-              <button type="button" onClick={openCookieSettings} className="mt-2 inline-flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 font-bold text-ink hover:border-ice-deep">
+              <p className="flex items-start gap-2"><Mail size={14} className="mt-0.5 shrink-0" aria-hidden="true" /> <a className="break-all hover:text-ice" href="mailto:ailandscapinggp@gmail.com">ailandscapinggp@gmail.com</a></p>
+              <p className="flex items-center gap-2"><Phone size={14} aria-hidden="true" /> <a className="hover:text-ice" href="tel:+17809957459">780-995-7459</a></p>
+              <button type="button" onClick={openCookieSettings} className="mt-2 inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 font-bold text-white hover:border-ice">
                 <ShieldCheck size={14} aria-hidden="true" /> Cookie settings
               </button>
             </div>
           </aside>
 
-          <article className="min-w-0 rounded-3xl border border-slate-200 bg-white px-6 py-8 shadow-sm sm:px-10 sm:py-10">
-            <p className="mb-8 text-sm leading-relaxed text-slate-700">
+          <article className="min-w-0 rounded-3xl border border-white/10 bg-raise px-6 py-8 shadow-sm sm:px-10 sm:py-10">
+            <p className="mb-8 text-sm leading-relaxed text-slate-300">
               Ai Landscaping &amp; Contracting Services Inc. operates under the trade name Ai Landscaping &amp; Snow Removal (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;), serving Grande Prairie and surrounding areas in Alberta, Canada. This policy describes how we collect, use, disclose, and safeguard personal information in connection with our website, quote requests, cookies, and Google and Meta lead forms.
             </p>
             <div className="space-y-9">
               {sections.map(({ id, title, content }) => (
-                <section key={id} id={id} className="scroll-mt-28 border-t border-slate-200 pt-7 first:border-0 first:pt-0">
-                  <h2 className="heading-xl text-3xl text-ink">{title}</h2>
-                  <div className="mt-4 space-y-4 text-[15px] leading-7 text-slate-700 [&_li]:pl-1 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6">
+                <section key={id} id={id} className="scroll-mt-28 border-t border-white/10 pt-7 first:border-0 first:pt-0">
+                  <h2 className="heading-xl text-3xl text-white">{title}</h2>
+                  <div className="mt-4 space-y-4 text-[15px] leading-7 text-slate-300 [&_li]:pl-1 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6">
                     {content}
                   </div>
                 </section>
               ))}
             </div>
-            <div className="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-600">
-              <p>For a quote, visit our <Link className="font-medium text-ice-deep underline underline-offset-4 hover:text-ink" href="/snow-removal-quote">snow removal quote</Link> or <Link className="font-medium text-ice-deep underline underline-offset-4 hover:text-ink" href="/landscaping-quote">landscaping quote</Link> page.</p>
+            <div className="mt-10 border-t border-white/10 pt-6 text-sm text-slate-400">
+              <p>For a quote, visit our <Link className="font-medium text-ice underline underline-offset-4 hover:text-white" href="/snow-removal-quote">snow removal quote</Link> or <Link className="font-medium text-ice underline underline-offset-4 hover:text-white" href="/landscaping-quote">landscaping quote</Link> page.</p>
             </div>
           </article>
         </div>
