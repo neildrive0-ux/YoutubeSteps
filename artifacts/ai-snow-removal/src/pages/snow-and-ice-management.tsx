@@ -9,8 +9,8 @@ export default function SnowAndIceManagementPage() {
       page={PAGES['/snow-and-ice-management']}
       hero={{
         eyebrow: 'Safety focused · Grande Prairie & Sexsmith',
-        accent: 'Snow & Ice',
-        title: 'Management',
+        accent: 'Snow & Ice Management',
+        title: 'Grande Prairie & Sexsmith',
         intro: <p>Driveways plowed, walkways and steps cleared, and ice under control all winter. Seasonal plans from ${SITE.priceFrom}/month.</p>,
         points: [`Service from ~${SITE.triggerCm} cm`, '4 or 5 month plans', 'Fully insured in Alberta'],
       }}
