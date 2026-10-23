@@ -143,8 +143,8 @@ export function QuoteForm({ service }: { service: ServiceKind }) {
   };
 
   const inputClass = (hasError: boolean) =>
-    `w-full rounded-xl border bg-snow px-4 py-3.5 text-base text-ink placeholder:text-slate-500 focus:outline-none focus:ring-2 transition-all ${hasError ? 'border-red-400 focus:ring-red-200' : 'border-slate-300 focus:border-ice focus:ring-ice/40'}`;
-  const labelClass = 'text-xs font-bold uppercase tracking-[0.14em] text-slate-700';
+    `w-full rounded-xl border bg-base-2 px-4 py-3.5 text-base text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 transition-all ${hasError ? 'border-red-400 focus:ring-red-500/30' : 'border-white/10 focus:border-ice focus:ring-ice/40'}`;
+  const labelClass = 'text-xs font-bold uppercase tracking-[0.14em] text-slate-300';
 
   const field = (key: 'name' | 'phone' | 'email' | 'address', label: string, props: Record<string, string>, span = false) => (
     <div className={`space-y-2 ${span ? 'sm:col-span-2' : ''}`}>
@@ -162,7 +162,7 @@ export function QuoteForm({ service }: { service: ServiceKind }) {
         data-testid={`input-${key}`}
         {...props}
       />
-      {errors[key] && <p id={`${prefix}${key}-error`} className="text-sm text-red-700">{errors[key]}</p>}
+      {errors[key] && <p id={`${prefix}${key}-error`} className="text-sm text-red-400">{errors[key]}</p>}
     </div>
   );
 
@@ -173,7 +173,7 @@ export function QuoteForm({ service }: { service: ServiceKind }) {
       noValidate
       aria-busy={isSending}
       aria-label={service === 'snow' ? 'Snow and ice removal quote request' : 'Landscaping quote request'}
-      className="relative scroll-mt-28 rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_30px_80px_-30px_rgba(5,8,12,0.45)] sm:p-9"
+      className="relative scroll-mt-28 rounded-3xl border border-white/10 bg-raise p-6 shadow-[0_30px_80px_-30px_rgba(5,8,12,0.45)] sm:p-9"
       data-testid={`form-quote-${service}`}
     >
       <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
@@ -196,7 +196,7 @@ export function QuoteForm({ service }: { service: ServiceKind }) {
                 <label
                   key={value}
                   htmlFor={`${prefix}area-${value}`}
-                  className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3.5 transition-colors ${checked ? 'border-ice bg-ice/10 text-ink' : 'border-slate-300 bg-snow text-slate-800 hover:border-ice/60'}`}
+                  className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3.5 transition-colors ${checked ? 'border-ice bg-ice/10 text-white' : 'border-white/10 bg-base-2 text-slate-100 hover:border-ice/60'}`}
                 >
                   <input
                     id={`${prefix}area-${value}`}
@@ -205,21 +205,21 @@ export function QuoteForm({ service }: { service: ServiceKind }) {
                     checked={checked}
                     onChange={() => toggleArea(value)}
                     disabled={isSending}
-                    className="h-4 w-4 accent-[#0a6db5]"
+                    className="h-4 w-4 accent-[#4ab0f5]"
                   />
                   <span className="text-sm font-semibold">{label}</span>
                 </label>
               );
             })}
           </div>
-          {errors.propertyAreas && <p id={`${prefix}areas-error`} className="text-sm text-red-700">{errors.propertyAreas}</p>}
+          {errors.propertyAreas && <p id={`${prefix}areas-error`} className="text-sm text-red-400">{errors.propertyAreas}</p>}
         </fieldset>
       </div>
 
       <button
         type="submit"
         disabled={isSending}
-        className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-8 py-4 text-base font-extrabold uppercase tracking-[0.08em] text-white transition-colors hover:bg-steel disabled:cursor-not-allowed disabled:opacity-70"
+        className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-ice px-8 py-4 text-base font-extrabold uppercase tracking-[0.08em] text-ink transition-colors hover:bg-ice-soft disabled:cursor-not-allowed disabled:opacity-70"
         data-testid="button-submit-quote"
       >
         {isSending ? (
@@ -228,12 +228,12 @@ export function QuoteForm({ service }: { service: ServiceKind }) {
           <>{submissionState === 'error' ? 'Try Again' : service === 'snow' ? 'Get My Snow Removal Quote' : 'Get My Landscaping Quote'} <Send size={18} /></>
         )}
       </button>
-      <p className="mt-4 text-center text-sm text-slate-600">
+      <p className="mt-4 text-center text-sm text-slate-400">
         Free quote. We call you back with a price. Nothing is booked until you sign.
       </p>
 
       {submissionState === 'error' && (
-        <div className="mt-5 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-red-800" role="alert">
+        <div className="mt-5 flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-300" role="alert">
           <X size={20} className="mt-0.5 shrink-0 text-red-500" />
           <span className="text-sm font-medium">{submitError}</span>
         </div>
