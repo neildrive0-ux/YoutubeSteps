@@ -173,7 +173,7 @@ export function QuoteForm({ service }: { service: ServiceKind }) {
       noValidate
       aria-busy={isSending}
       aria-label={service === 'snow' ? 'Snow and ice removal quote request' : 'Landscaping quote request'}
-      className="relative rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_30px_80px_-30px_rgba(5,8,12,0.45)] sm:p-9"
+      className="relative scroll-mt-28 rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_30px_80px_-30px_rgba(5,8,12,0.45)] sm:p-9"
       data-testid={`form-quote-${service}`}
     >
       <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
