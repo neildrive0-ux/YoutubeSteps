@@ -72,6 +72,7 @@ export function PageHero({
   photo,
   fallback = 'hero-fallback',
   driftFill = '#071118',
+  snow = true,
 }: {
   eyebrow: string;
   accent: string;
@@ -83,11 +84,13 @@ export function PageHero({
   photo?: string;
   fallback?: string;
   driftFill?: string;
+  /** Falling snow over the hero. Off on the landscaping pages. */
+  snow?: boolean;
 }) {
   return (
     <section className={`relative overflow-hidden text-white ${photo ? 'bg-ink' : fallback}`} aria-labelledby="page-title">
       {photo && <img src={photo} alt="" className="absolute inset-0 h-full w-full object-cover opacity-45" />}
-      <div className="snowfall" aria-hidden="true" />
+      {snow && <div className="snowfall" aria-hidden="true" />}
       <div className="relative mx-auto max-w-5xl px-4 pb-28 pt-40 text-center sm:px-6 md:pb-32 md:pt-48">
         <p className="eyebrow text-ice-soft">{eyebrow}</p>
         <h1 id="page-title" className="heading-xl mt-5 text-[2.6rem] sm:text-6xl md:text-7xl">
@@ -257,10 +260,10 @@ export function FaqSection({ faqs, title = 'Questions People Ask', eyebrow = 'FA
   );
 }
 
-export function QuoteCtaBand({ title = 'Ready when the snow is.', intro }: { title?: string; intro?: string }) {
+export function QuoteCtaBand({ title = 'Ready when the snow is.', intro, snow = true }: { title?: string; intro?: string; snow?: boolean }) {
   return (
     <section className="relative overflow-hidden bg-ink py-20 text-white md:py-24" aria-labelledby="quote-cta-title">
-      <div className="snowfall" aria-hidden="true" />
+      {snow && <div className="snowfall" aria-hidden="true" />}
       <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6" data-reveal>
         <p className="eyebrow text-ice">Free quotes · Grande Prairie &amp; Sexsmith</p>
         <h2 id="quote-cta-title" className="heading-xl mt-4 text-5xl md:text-7xl">{title}</h2>
