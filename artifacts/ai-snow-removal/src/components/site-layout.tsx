@@ -81,11 +81,13 @@ export function SiteLayout({
   children,
   cta = true,
   ctaTitle,
+  snow = true,
 }: {
   page: PageMeta;
   children: ReactNode;
   cta?: boolean;
   ctaTitle?: string;
+  snow?: boolean;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const modalTriggerRef = useRef<HTMLElement | null>(null);
@@ -109,7 +111,7 @@ export function SiteLayout({
           <SiteHeader />
           <main>
             {children}
-            {cta && <QuoteCtaBand title={ctaTitle} />}
+            {cta && <QuoteCtaBand title={ctaTitle} snow={snow} />}
           </main>
           <Footer />
         </div>
