@@ -1,7 +1,7 @@
 kind = "web"
 previewPath = "/"
-title = "Ai Landscaping & SnowRemoval"
-description = "A professional Canadian snow removal company website focused on reliable seasonal service contracts, clear pricing, and fast quote requests for residential and commercial customers."
+title = "Ai Landscaping & Snow Removal"
+description = "Residential snow removal website for Grande Prairie and Sexsmith, AB: seasonal snow removal contracts, prices, driveway clearing and quote requests."
 version = "1.0.0"
 id = "artifacts/ai-snow-removal"
 router = "path"
@@ -19,9 +19,31 @@ build = [ "pnpm", "--filter", "@workspace/ai-snow-removal", "run", "build" ]
 serve = "static"
 publicDir = "artifacts/ai-snow-removal/dist/public"
 
+# Each page is prerendered to its own HTML file at build time.
+# Unknown paths fall through to 404.html so Google gets a real 404 instead of a soft 404.
 [[services.production.rewrites]]
-from = "/*"
-to = "/index.html"
+from = "/seasonal-snow-removal-contracts"
+to = "/seasonal-snow-removal-contracts.html"
+
+[[services.production.rewrites]]
+from = "/snow-removal-prices"
+to = "/snow-removal-prices.html"
+
+[[services.production.rewrites]]
+from = "/driveway-snow-removal"
+to = "/driveway-snow-removal.html"
+
+[[services.production.rewrites]]
+from = "/snow-removal-for-seniors"
+to = "/snow-removal-for-seniors.html"
+
+[[services.production.rewrites]]
+from = "/privacy-policy"
+to = "/privacy-policy.html"
+
+[[services.production.rewrites]]
+from = "/thank-you"
+to = "/thank-you.html"
 
 [services.env]
 PORT = "23518"
