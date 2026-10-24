@@ -15,6 +15,7 @@ export function QuotePage({
   intro,
   points,
   note,
+  promo,
   benefits,
   fallback,
 }: {
@@ -26,6 +27,7 @@ export function QuotePage({
   intro: ReactNode;
   points?: string[];
   note?: string;
+  promo?: string;
   benefits: string[];
   fallback: string;
 }) {
@@ -34,6 +36,9 @@ export function QuotePage({
       <section className={`relative overflow-hidden text-white ${fallback}`} aria-labelledby="page-title">
         {service !== 'landscaping' && <div className="snowfall" aria-hidden="true" />}
         <div className="relative mx-auto max-w-4xl px-4 pb-20 pt-32 text-center sm:px-6 md:pb-24 md:pt-44">
+          {promo && (
+            <p className="mb-5 mt-4 inline-flex items-center rounded-full bg-ice px-4 py-2 md:mt-0 text-sm font-extrabold uppercase tracking-[0.08em] text-ink">{promo}</p>
+          )}
           <p className="eyebrow text-ice-soft">{eyebrow}</p>
           <h1 id="page-title" className="heading-xl mt-4 text-[2.4rem] sm:text-6xl md:mt-5 md:text-7xl">
             <span className="block text-ice">{accent}</span>{' '}
