@@ -19,6 +19,7 @@ export default function SnowRemovalQuotePage() {
         'No hidden fees',
         'Grande Prairie, Sexsmith & County',
       ]}
+      promo="$100 off if you book by Nov 2"
       note="Spots on our routes are limited. Book before the first big storm."
       benefits={[
         `Driveway plowed, walkways and steps cleared after every snowfall (from about ${SITE.triggerCm} cm)`,
