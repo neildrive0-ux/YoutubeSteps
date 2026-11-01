@@ -26,7 +26,7 @@ export const TRACKING = {
   snowLeadLabel: 'EAliCOLYq6YdEKPQ9u9E',
   landscapingLeadLabel: 'h-ETCOXYq6YdEKPQ9u9E',
   callLabel: 'S-VFCOjYq6YdEKPQ9u9E',
-  metaPixelId: '',
+  metaPixelId: '950178127833380',
 };
 
 // Photos live in /public/images. Swap a path here to change a photo; an empty string shows a designed fallback.
