@@ -114,7 +114,7 @@ async function sendQuoteNotification(
     `Service: ${serviceType(quote.propertyAreas)}`,
     `Name: ${quote.name}`,
     `Phone: ${quote.phone}`,
-    `Email: ${quote.email}`,
+    `Email: ${quote.email || "(not given)"}`,
     `Property address: ${quote.address}`,
     `Requested: ${formatPropertyAreas(quote.propertyAreas)}`,
   ].join("\n");
@@ -125,7 +125,7 @@ async function sendQuoteNotification(
       <tr><td><strong>Service</strong></td><td>${escapeHtml(serviceType(quote.propertyAreas))}</td></tr>
       <tr><td><strong>Name</strong></td><td>${escapeHtml(quote.name)}</td></tr>
       <tr><td><strong>Phone</strong></td><td>${escapeHtml(quote.phone)}</td></tr>
-      <tr><td><strong>Email</strong></td><td>${escapeHtml(quote.email)}</td></tr>
+      <tr><td><strong>Email</strong></td><td>${escapeHtml(quote.email || "(not given)")}</td></tr>
       <tr><td><strong>Property address</strong></td><td>${escapeHtml(quote.address)}</td></tr>
       <tr><td><strong>Requested</strong></td><td>${escapeHtml(formatPropertyAreas(quote.propertyAreas))}</td></tr>
     </table>
@@ -134,7 +134,7 @@ async function sendQuoteNotification(
   await sendEmail({
     from,
     to: [RECIPIENT_EMAIL],
-    reply_to: quote.email,
+    reply_to: quote.email || RECIPIENT_EMAIL,
     subject,
     text,
     html,
@@ -290,7 +290,7 @@ router.post("/quote-requests", async (req, res): Promise<void> => {
 
   if (
     !parsed.success ||
-    !emailPattern.test(parsed.data.email) ||
+    (parsed.data.email !== "" && !emailPattern.test(parsed.data.email)) ||
     parsed.data.phone.replace(/\D/g, "").length < 10
   ) {
     req.log.warn("Rejected invalid quote request");
@@ -336,7 +336,7 @@ router.post("/quote-requests", async (req, res): Promise<void> => {
 
     void Promise.allSettled([
       sendQuoteNotification(quoteRequest, req),
-      sendClientConfirmation(quoteRequest, req),
+      quoteRequest.email ? sendClientConfirmation(quoteRequest, req) : Promise.resolve(),
     ]).then(([businessEmail, clientEmail]) => {
       if (businessEmail.status === "rejected") {
         req.log.error(
