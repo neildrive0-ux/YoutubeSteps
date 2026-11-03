@@ -41,7 +41,8 @@ export const QUOTE_SUBMITTED_KEY = 'ai-quote-submitted';
 export function QuoteForm({ service }: { service: ServiceKind }) {
   const options = OPTIONS[service];
   const [, setLocation] = useLocation();
-  const [values, setValues] = useState<FormValues>({ name: '', phone: '', email: '', address: '', propertyAreas: [] });
+  // Snow quotes start with the driveway picked, so most people only type name, phone and address.
+  const [values, setValues] = useState<FormValues>({ name: '', phone: '', email: '', address: '', propertyAreas: service === 'snow' ? ['driveway'] : [] });
   const [errors, setErrors] = useState<FormErrors>({});
   const [website, setWebsite] = useState('');
   const [submissionState, setSubmissionState] = useState<SubmissionState>('idle');
@@ -86,10 +87,8 @@ export function QuoteForm({ service }: { service: ServiceKind }) {
     if (isSending) return;
 
     const nextErrors: FormErrors = {};
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (values.name.trim().length < 2) nextErrors.name = 'Please enter your name.';
     if (values.phone.replace(/\D/g, '').length < 10) nextErrors.phone = 'Please enter a valid phone number.';
-    if (!emailPattern.test(values.email.trim())) nextErrors.email = 'Please enter a valid email address.';
     if (values.address.trim().length < 3) nextErrors.address = 'Please enter the property address.';
     if (values.propertyAreas.length === 0) nextErrors.propertyAreas = 'Please choose at least one service.';
 
@@ -184,7 +183,6 @@ export function QuoteForm({ service }: { service: ServiceKind }) {
       <div className="grid gap-5 sm:grid-cols-2">
         {field('name', 'Name', { autoComplete: 'name', placeholder: 'Your name' })}
         {field('phone', 'Phone', { type: 'tel', autoComplete: 'tel', inputMode: 'tel', placeholder: '780-555-0123' })}
-        {field('email', 'Email', { type: 'email', autoComplete: 'email', placeholder: 'you@example.com' }, true)}
         {field('address', 'Property address', { autoComplete: 'street-address', placeholder: 'Street address, Grande Prairie or Sexsmith' }, true)}
 
         <fieldset className="space-y-3 sm:col-span-2" aria-describedby={errors.propertyAreas ? `${prefix}areas-error` : undefined}>
