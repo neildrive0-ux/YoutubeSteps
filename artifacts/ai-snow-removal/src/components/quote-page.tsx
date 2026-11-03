@@ -83,6 +83,15 @@ export function QuotePage({
                 <span className="block text-ice">{accent}</span>{' '}
                 <span className="block">{title}</span>
               </h1>
+              <a
+                href={SITE.phoneHref}
+                onClick={trackCallClick}
+                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-ice px-6 py-4 text-lg font-extrabold uppercase tracking-[0.06em] text-ink transition-colors hover:bg-ice-soft sm:w-auto"
+                data-testid="button-call-hero"
+              >
+                <Phone size={20} aria-hidden="true" /> Call {SITE.phoneDisplay}
+              </a>
+              <p className="mt-2 text-sm text-slate-300">Fastest way to get your price. Or send the short form.</p>
             </div>
             <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
               <QuoteForm service={service} />
